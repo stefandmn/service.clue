@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+	<category label="32020">
+		<setting label="32021" type="bool" id="system" default="false"/>
+		<setting label="32022" type="bool" id="system_osupgrade" visible="eq(-1,true)" default="false"/>
+		<setting label="32101" type="enum" id="system_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="system_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="system_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124" default="0"/>
+		<setting label="32103" type="time" id="system_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32023" type="bool" id="musiclib" default="false"/>
+		<setting label="32101" type="enum" id="musiclib_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="musiclib_interval" visible="eq(-2,true)" default="1"/>
+		<setting label="32102" type="enum" id="musiclib_day" visible="eq(-3,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="musiclib_time" visible="eq(-4,true) + lt(-3,2)" default="02:00"/>
+		<setting type="sep"/>
+		<setting label="32024" type="bool" id="videolib" default="false"/>
+		<setting label="32101" type="enum" id="videolib_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="videolib_interval" visible="eq(-2,true)" default="1"/>
+		<setting label="32102" type="enum" id="videolib_day" visible="eq(-3,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="videolib_time" visible="eq(-4,true) + lt(-3,2)" default="01:00"/>
+		<setting type="sep" visible="System.HasAddon(script.backuprestore)"/>
+		<setting label="32025" type="bool" id="backup" default="false" visible="System.HasAddon(script.backuprestore)" />
+		<setting label="32101" type="enum" id="backup_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="backup_interval" visible="eq(-2,true)" default="1"/>
+		<setting label="32102" type="enum" id="backup_day" visible="eq(-3,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="backup_time" visible="eq(-4,true) + lt(-3,2)" default="04:00"/>
+	</category>
+	<category label="32026">
+		<setting label="32211" type="bool" id="custom1" default="false"/>
+		<setting label="32105" type="text" id="custom1_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom1_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom1_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom1_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom1_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32212" type="bool" id="custom2" default="false"/>
+		<setting label="32105" type="text" id="custom2_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom2_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom2_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom2_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom2_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32213" type="bool" id="custom3" default="false"/>
+		<setting label="32105" type="text" id="custom3_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom3_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom3_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom3_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom3_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32214" type="bool" id="custom4" default="false"/>
+		<setting label="32105" type="text" id="custom4_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom4_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom4_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom4_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom4_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32215" type="bool" id="custom5" default="false"/>
+		<setting label="32105" type="text" id="custom5_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom5_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom5_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom5_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32118|32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom5_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+	</category>
+	<category label="32030">
+		<setting label="32031" type="bool" id="cacheserver_autostart" default="true"/>
+		<setting label="32032" type="number" id="cacheserver_port" enable="eq(-1,true)" default="59994"/>
+		<setting label="32033" type="number" id="cacheserver_timeout" enable="!eq(-1,true)" default="15"/>
+	</category>
+	<category label="32040">
+		<setting id="hideDuringPlayback" type="bool" label="32042" default="false"/>
+		<setting id="rtmp_binary" type="file" label="32043" default=""/>
+		<setting id="vlc_binary" type="file" label="32044" default=""/>
+		<setting id="mplayer_binary" type="file" label="32045" default=""/>
+		<setting id="stall_timeout" type="number" label="32046" default="15"/>
+	</category>
+</settings>

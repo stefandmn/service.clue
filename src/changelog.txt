@@ -1,0 +1,14 @@
+v1.0
+- Update language configuration
+- Adapted for Kodi 15 and 16
+- Apply changes for Kodi compatibility
+- Redesign CommonFunctions library to become the unique integration layer for all addons
+- Implement scheduler services and integrate core and optional addons from Clue distribution
+- Merge script.clue in service.clue addon adding other common functions, downloader and specific libraries
+- Change system update workflow to have user control in GUI managed by default skin
+- Add storage server (db cache layer) service
+- Add library update service
+- Design a new icon to show maintenance service for RPi, Clue OS and MCPi components
+- Service restructuring to check only operating system components
+- Optimize and adapt service to support Clue OS
+- Create a derived service add-on based on service.xbmc.versioncheck v0.1.22

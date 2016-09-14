@@ -97,7 +97,7 @@ class StorageServer():
 			self.debug("Checking socket")
 			if self.platform == "win32" or xbmc.getCondVisibility('system.platform.android'):
 				self.debug("Creating socket for Windows/Android platform")
-				port = self.settings.getSetting("cacheserver")
+				port = self.settings.getSetting("cacheserver_port")
 				self.socket = ("127.0.0.1", int(port))
 			else:
 				self.debug("Creating POSIX socket")

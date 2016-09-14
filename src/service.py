@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import platform
 import lib.CommonFunctions as common
@@ -11,12 +12,15 @@ import xbmcvfs
 
 
 packages 		= ['clue-mcpi', 'clue-mcrep']
-platforms		= ['clue', 'ubuntu', 'debian']
+platforms		= ['clue', 'debian', 'ubuntu']
 
 
 class Main:
 
 	def __init__(self):
+		# Check if it runs for the first time
+		runFirstTime()
+		# Start jobs according to the input parameters
 		if not sys.argv[0]:
 			# set to run after boot cache server and system scheduler
 			xbmc.executebuiltin('AlarmClock(Scheduler,RunScript(service.clue,scheduler),00:00:10,silent)')
@@ -32,6 +36,17 @@ class Main:
 		elif sys.argv[0] and sys.argv[1] == 'videolibupdate':
 			runVideoLibUpdate()
 
+def runFirstTime():
+	# check if first run
+	addondata = xbmc.translatePath("special://profile/addon_data/%s/" %xbmcaddon.Addon().getAddonInfo('id'))
+	firstlock = os.path.join(addondata, '.firstrun')
+	if not os.path.isfile(firstlock):
+		if not os.path.exists(addondata):
+			os.mkdir(addondata)
+		# Run plugin for configuration
+		common.notice("Run for the firt time and start Clue Plugin to review and update default system configuration")
+		xbmc.executebuiltin('XBMC.RunScript(plugin.clue)')
+		open(firstlock, 'w').close()
 
 def runSystemUpdate():
 	if xbmcaddon.Addon().getSetting("system") == "true":

@@ -1,4 +1,5 @@
 v1.0
+- Integration with plugin.clue
 - Update language configuration
 - Adapted for Kodi 15 and 16
 - Apply changes for Kodi compatibility

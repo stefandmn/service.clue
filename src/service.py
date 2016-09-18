@@ -4,12 +4,11 @@
 import os
 import sys
 import platform
-import lib.CommonFunctions as common
+
 import xbmc
 import xbmcaddon
-import xbmcgui
-import xbmcvfs
 
+import lib.CommonFunctions as common
 
 packages 		= ['clue-mcpi', 'clue-mcrep']
 platforms		= ['clue', 'debian', 'ubuntu']
@@ -91,7 +90,7 @@ def runSystemUpdate():
 			else:
 				common.error("No system update handler found", "SystemUpdate")
 		else:
-			common.error("Unsupported platform %s" %platform.dist()[0], "SystemUpdate")
+			common.warn("Unsupported platform %s" %platform.dist()[0], "SystemUpdate")
 
 
 def runMusicLibUpdate():

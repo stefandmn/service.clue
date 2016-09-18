@@ -25,7 +25,7 @@ else:
 if hasattr(sys.modules["__main__"], "opener"):
 	urllib2.install_opener(sys.modules["__main__"].opener)
 
-USERAGENT 			= u"Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1"
+USERAGENT = u"Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1"
 
 
 def log(txt, code="", level=0):
@@ -109,21 +109,64 @@ def AskRestart(msgid, s=0):
 			xbmc.executebuiltin("Reboot")
 
 
-def YesNoDialog(line1 = 0, line2 = 0):
+def YesNoDialog(line1="", line2="", line3=""):
 	if hasattr(sys.modules["__main__"], "__addonname__"):
 		__addonname__ = sys.modules["__main__"]. __addonname__
 	else:
 		__addonname__ = xbmcaddon.Addon().getAddonInfo('name')
-	return xbmcgui.Dialog().yesno(__addonname__, translate(line1), translate(line2))
+	try:
+		code = int(line1)
+		msg1 = translate(code)
+	except:
+		msg1 = line1
+	try:
+		code = int(line2)
+		msg2 = translate(code)
+	except:
+		msg2 = line2
+	try:
+		code = int(line3)
+		msg3 = translate(code)
+	except:
+		msg3 = line3
+	return xbmcgui.Dialog().yesno(__addonname__, line1=msg1, line2=msg2, line3=msg3)
+
+
+def OkDialog(line1="", line2 = "", line3=""):
+	if hasattr(sys.modules["__main__"], "__addonname__"):
+		__addonname__ = sys.modules["__main__"]. __addonname__
+	else:
+		__addonname__ = xbmcaddon.Addon().getAddonInfo('name')
+	try:
+		code = int(line1)
+		msg1 = translate(code)
+	except:
+		msg1 = line1
+	try:
+		code = int(line2)
+		msg2 = translate(code)
+	except:
+		msg2 = line2
+	try:
+		code = int(line3)
+		msg3 = translate(code)
+	except:
+		msg3 = line3
+	return xbmcgui.Dialog().ok(__addonname__, line1=msg1, line2=msg2, line3=msg3)
 
 
 # This function raises a keyboard for user input
-def getUserInput(title=u"Input", default=u"", hidden=False):
+def StringInputDialog(title=u"Input", default=u"", hidden=False):
 	result = None
 	# Fix for when this functions is called with default=None
 	if not default:
 		default = u""
-	keyboard = xbmc.Keyboard(default, title)
+	try:
+		code = int(title)
+		msg = translate(code)
+	except:
+		msg = title
+	keyboard = xbmc.Keyboard(default, msg)
 	keyboard.setHiddenInput(hidden)
 	keyboard.doModal()
 	if keyboard.isConfirmed():
@@ -132,13 +175,18 @@ def getUserInput(title=u"Input", default=u"", hidden=False):
 
 
 # This function raises a keyboard numpad for user input
-def getUserInputNumbers(title=u"Input", default=u""):
+def NumberInputDialog(title=u"Input", default=u""):
 	result = None
 	# Fix for when this functions is called with default=None
 	if not default:
 		default = u""
+	try:
+		code = int(title)
+		msg = translate(code)
+	except:
+		msg = title
 	keyboard = xbmcgui.Dialog()
-	result = keyboard.numeric(0, title, default)
+	result = keyboard.numeric(0, msg, default)
 	return str(result)
 
 

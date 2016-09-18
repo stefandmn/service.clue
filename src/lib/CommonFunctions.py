@@ -89,7 +89,7 @@ def PasswordDialog():
 	return pwd
 
 
-def NotificationMsg(msgid):
+def NotificationMsg(line, time=15000):
 	if hasattr(sys.modules["__main__"], "__addonname__"):
 		__addonname__ = sys.modules["__main__"]. __addonname__
 	else:
@@ -98,7 +98,18 @@ def NotificationMsg(msgid):
 		__addonicon__ = sys.modules["__main__"]. __addonicon__
 	else:
 		__addonicon__ = xbmcaddon.Addon().getAddonInfo('icon')
-	xbmc.executebuiltin("Notification(%s, %s, %d, %s)" %(__addonname__, translate(msgid), 15000, __addonicon__))
+	try:
+		if isinstance(line, int):
+			msg = translate(line)
+		else:
+			code = int(line)
+			msg = translate(code)
+	except:
+		if not isinstance(line, int):
+			msg = line
+		else:
+			msg = ""
+	xbmc.executebuiltin("Notification(%s, %s, %d, %s)" %(__addonname__, msg, time, __addonicon__))
 
 
 def AskRestart(msgid, s=0):

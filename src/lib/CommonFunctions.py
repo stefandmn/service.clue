@@ -82,7 +82,7 @@ def PasswordDialog():
 	else:
 		__addonname__ = xbmcaddon.Addon().getAddonInfo('name')
 	pwd = ""
-	keyboard = xbmc.Keyboard("", __addonname__ + ","  + translate(32016), True)
+	keyboard = xbmc.Keyboard("", __addonname__ + "," + translate(32016), True)
 	keyboard.doModal()
 	if (keyboard.isConfirmed()):
 		pwd = keyboard.getText()
@@ -126,18 +126,27 @@ def YesNoDialog(line1="", line2="", line3=""):
 	else:
 		__addonname__ = xbmcaddon.Addon().getAddonInfo('name')
 	try:
-		code = int(line1)
-		msg1 = translate(code)
+		if isinstance(line1, int):
+			code = int(line1)
+			msg1 = translate(code)
+		else:
+			msg1 = line1
 	except:
 		msg1 = line1
 	try:
-		code = int(line2)
-		msg2 = translate(code)
+		if isinstance(line2, int):
+			code = int(line2)
+			msg2 = translate(code)
+		else:
+			msg2 = line2
 	except:
 		msg2 = line2
 	try:
-		code = int(line3)
-		msg3 = translate(code)
+		if isinstance(line3, int):
+			code = int(line3)
+			msg3 = translate(code)
+		else:
+			msg3 = line3
 	except:
 		msg3 = line3
 	return xbmcgui.Dialog().yesno(__addonname__, line1=msg1, line2=msg2, line3=msg3)
@@ -149,18 +158,27 @@ def OkDialog(line1="", line2 = "", line3=""):
 	else:
 		__addonname__ = xbmcaddon.Addon().getAddonInfo('name')
 	try:
-		code = int(line1)
-		msg1 = translate(code)
+		if isinstance(line1, int):
+			code = int(line1)
+			msg1 = translate(code)
+		else:
+			msg1 = line1
 	except:
 		msg1 = line1
 	try:
-		code = int(line2)
-		msg2 = translate(code)
+		if isinstance(line2, int):
+			code = int(line2)
+			msg2 = translate(code)
+		else:
+			msg2 = line2
 	except:
 		msg2 = line2
 	try:
-		code = int(line3)
-		msg3 = translate(code)
+		if isinstance(line3, int):
+			code = int(line3)
+			msg3 = translate(code)
+		else:
+			msg3 = line3
 	except:
 		msg3 = line3
 	return xbmcgui.Dialog().ok(__addonname__, line1=msg1, line2=msg2, line3=msg3)
@@ -173,8 +191,11 @@ def StringInputDialog(title=u"Input", default=u"", hidden=False):
 	if not default:
 		default = u""
 	try:
-		code = int(title)
-		msg = translate(code)
+		if isinstance(title, int):
+			code = int(title)
+			msg = translate(code)
+		else:
+			msg = title
 	except:
 		msg = title
 	keyboard = xbmc.Keyboard(default, msg)
@@ -192,8 +213,11 @@ def NumberInputDialog(title=u"Input", default=u""):
 	if not default:
 		default = u""
 	try:
-		code = int(title)
-		msg = translate(code)
+		if isinstance(title, int):
+			code = int(title)
+			msg = translate(code)
+		else:
+			msg = title
 	except:
 		msg = title
 	keyboard = xbmcgui.Dialog()
@@ -558,7 +582,6 @@ def openFile(filepath, options=u"r"):
 		alternate = options + u"b"
 	else:
 		alternate = options.replace(u"b", u"")
-
 	try:
 		debug("Trying normal: %s" % options, "CommonFunctions")
 		return io.open(filepath, options)

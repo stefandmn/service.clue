@@ -1,4 +1,5 @@
 v1.0
+- Adapt and integration request library and plugin v
 - Integration with plugin.clue
 - Update language configuration
 - Adapted for Kodi 15 and 16

@@ -27,13 +27,11 @@ class Downloader():
 		else:
 			import xbmcvfs
 			self.xbmcvfs = xbmcvfs
-
 		self.common = CommonFunctions
 		self.cache = StorageServer.StorageServer("Downloader")
 		self.settings = self.xbmcaddon.Addon()
 		self.language = self.settings.getLocalizedString
 		self.hide_during_playback = self.settings.getSetting("hideDuringPlayback") == "true"
-
 		if self.settings.getSetting("rtmp_binary"):
 			self.rtmp_binary = self.settings.getSetting("rtmp_binary")
 		else:
@@ -46,7 +44,6 @@ class Downloader():
 			self.mplayer_binary = self.settings.getSetting("mplayer_binary")
 		else:
 			self.mplayer_binary = "mplayer"
-
 		self.__workersByName = {}
 		self.temporary_path = self.xbmc.translatePath(self.settings.getAddonInfo("profile"))
 		if not self.xbmcvfs.exists(self.temporary_path):
@@ -54,10 +51,8 @@ class Downloader():
 			self.xbmcvfs.mkdir(self.temporary_path)
 		self.cur_dl = {}
 
-
 	def debug(self, txt):
 		self.common.debug(txt, "Downloader")
-
 
 	def download(self, filename, params={}, async=True):
 		if async:
@@ -66,7 +61,6 @@ class Downloader():
 		else:
 			self.debug("Start normal download")
 			self._startDownload(filename, params)
-
 
 	def _startDownload(self, filename, params={}):
 		if self.cache.lock("DownloaderLock"):
@@ -78,7 +72,6 @@ class Downloader():
 			self.debug("Downloader is active, Queueing item.")
 			self._addItemToQueue(filename, params)
 
-
 	def _setPaths(self, filename, params={}):
 		# Check utf-8 stuff here
 		params["path_incomplete"] = os.path.join(self.temporary_path.decode("utf-8"), self.common.makeUTF8(filename))
@@ -89,7 +82,6 @@ class Downloader():
 		if self.xbmcvfs.exists(params["path_incomplete"]):
 			self.debug("Removing incomplete %s" % repr(params["path_incomplete"]))
 			self.xbmcvfs.delete(params["path_incomplete"])
-
 
 	def _processQueue(self):
 		item = self._getNextItemFromQueue()
@@ -130,7 +122,6 @@ class Downloader():
 				self.debug("Finished download queue")
 				self.cache.set("StopQueue", "")
 
-
 	def _runCommand(self, args):
 		self.debug("Run command:" + " ".join(args))
 		try:
@@ -143,13 +134,11 @@ class Downloader():
 			self.debug("Returning process")
 			return proc
 
-
 	def _readPipe(self, proc):
 		try:
 			return proc.communicate()[0]
 		except:
 			return ""
-
 
 	def _rtmpDetectArgs(self, probe_args, item):
 		get = item.get
@@ -214,7 +203,6 @@ class Downloader():
 		self.debug("Done for probe args: " + repr(probe_args))
 		return probe_args
 
-
 	def _detectStream(self, filename, item):
 		get = item.get
 		self.debug("URL: " + get("url"))
@@ -239,7 +227,6 @@ class Downloader():
 						item["total_size"] = int(float(output[output.find("filesize") + len("filesize"):output.find("\n", output.find("filesize"))]))
 					elif get("live"):
 						item["total_size"] = 0
-
 					cmd_call = self._rtmpDetectArgs([self.rtmp_binary], item)
 					cmd_call += ["--flv", item["path_incomplete"]]
 					item["cmd_call"] = cmd_call
@@ -247,7 +234,6 @@ class Downloader():
 					proc.kill()
 				except:
 					pass
-
 		# VLC - Fix getting filesize
 		if ("total_size" not in item and "cmd_call" not in item) or get("use_vlc"):
 			self.debug("Trying vlc")
@@ -279,7 +265,6 @@ class Downloader():
 					proc.kill()
 				except:
 					pass
-
 		# Mplayer - endpos doesn't work with dumpstream.
 		if ("total_size" not in item and "cmd_call" not in item) or get("use_mplayer"):
 			self.debug("Trying mplayer")
@@ -305,10 +290,8 @@ class Downloader():
 					proc.kill()
 				except:
 					pass
-
 		if not "total_size" in item:
 			item["total_size"] = 0
-
 
 	def _stopCurrentDownload(self):
 		if "proc" in self.cur_dl:
@@ -319,7 +302,6 @@ class Downloader():
 				self.debug("Killed")
 			except:
 				self.debug("Couldn't kill")
-
 
 	def _downloadStream(self, filename, item):
 		get = item.get
@@ -399,7 +381,6 @@ class Downloader():
 			return 500
 		return 200
 
-
 	def _downloadURL(self, filename, item):
 		url = urllib2.Request(item["url"])
 		if "useragent" in item:
@@ -449,12 +430,10 @@ class Downloader():
 				self.debug("Failed to close file handle")
 			self._showMessage(self.language(204), self.language(32049))
 			return 500
-
 		if "quit" in params:
 			self.debug("Download aborted.")
 			return 300
 		return 200
-
 
 	def _convertSecondsToHuman(self, seconds):
 		seconds = int(seconds)
@@ -462,7 +441,6 @@ class Downloader():
 			return "~%ss" % (seconds)
 		elif seconds < 3600:
 			return "~%sm" % (seconds / 60)
-
 
 	def _generatePercent(self, item, params):
 		get = params.get
@@ -479,8 +457,7 @@ class Downloader():
 		elif iget("duration") and get("mark") != 0.0 and new_delta:
 			time_spent = time.time() - get("mark")
 			item["percent"] = time_spent / int(iget("duration")) * 100
-			self.debug("Time spent: %s. Duration: %s. Time left: %s (%s)" % (int(time_spent), int(iget("duration")),
-																			 int(int(iget("duration")) - time_spent), self._convertSecondsToHuman(int(iget("duration")) - time_spent)))
+			self.debug("Time spent: %s. Duration: %s. Time left: %s (%s)" % (int(time_spent), int(iget("duration")),																			 int(int(iget("duration")) - time_spent), self._convertSecondsToHuman(int(iget("duration")) - time_spent)))
 		elif new_delta:
 			self.debug("Cycle: " + str(time.time() - item["last_delta"]))
 			delta = time.time() - item["last_delta"]
@@ -493,7 +470,6 @@ class Downloader():
 		if new_delta:
 			item["last_delta"] = time.time()
 
-
 	def _getQueue(self):
 		queue = self.cache.get("DownloaderQueue")
 		try:
@@ -501,7 +477,6 @@ class Downloader():
 		except:
 			items = {}
 		return items
-
 
 	def _updateProgress(self, filename, item, params):
 		get = params.get
@@ -526,7 +501,6 @@ class Downloader():
 			self.debug("Updating %s - %s" % (heading, self.common.makeUTF8(filename)))
 			params["queue_mark"] = new_mark
 
-
 	# Download Queue methods
 	def _getNextItemFromQueue(self):
 		if self.cache.lock("DownloaderQueueLock"):
@@ -550,7 +524,6 @@ class Downloader():
 					return False
 			else:
 				self.debug("Couldn't acquire lock")
-
 
 	def _addItemToQueue(self, filename, params={}):
 		if self.cache.lock("DownloaderQueueLock"):
@@ -582,7 +555,6 @@ class Downloader():
 		else:
 			self.debug("Couldn't lock")
 
-
 	def _removeItemFromQueue(self, filename):
 		if self.cache.lock("DownloaderQueueLock"):
 			items = []
@@ -604,7 +576,6 @@ class Downloader():
 				self.cache.unlock("DownloaderQueueLock")
 			else:
 				self.debug("Queue is null or empty")
-
 
 	def movieItemToPosition(self, filename, position):
 		if position > 0 and self.cache.lock("DownloaderQueueLock"):
@@ -632,7 +603,6 @@ class Downloader():
 		else:
 			self.debug("Couldn't lock")
 
-
 	def isRTMPInstalled(self):
 		basic_args = ["rtmpdump", "-V"]
 		try:
@@ -641,7 +611,6 @@ class Downloader():
 			return output.find("RTMPDump") > -1
 		except:
 			return False
-
 
 	def isVLCInstalled(self):
 		basic_args = ["vlc", "--version"]
@@ -652,7 +621,6 @@ class Downloader():
 		except:
 			return False
 
-
 	def isMPlayerInstalled(self):
 		basic_args = ["mplayer"]
 		try:
@@ -662,15 +630,12 @@ class Downloader():
 		except:
 			return False
 
-
 	def _run_async(self, func, *args, **kwargs):
 		from threading import Thread
-
 		worker = Thread(target=func, args=args, kwargs=kwargs)
 		self.__workersByName[worker.getName()] = worker
 		worker.start()
 		return worker
-
 
 	# Shows a more user-friendly notification
 	def _showMessage(self, heading, message):

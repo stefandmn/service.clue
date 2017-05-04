@@ -4,9 +4,9 @@
 import os
 import sys
 import platform
-
 import xbmc
 import xbmcaddon
+
 
 import lib.CommonFunctions as common
 
@@ -14,9 +14,10 @@ packages 		= ['clue-mcpi', 'clue-mcrep']
 platforms		= ['clue', 'debian', 'ubuntu']
 
 
-class Main:
+class ClueService:
 
 	def __init__(self):
+		common.info('%s version %s has been started' %(xbmcaddon.Addon().getAddonInfo('name'), xbmcaddon.Addon().getAddonInfo('version') ))
 		# Check if it runs for the first time
 		runFirstTime()
 		# Start jobs according to the input parameters
@@ -34,6 +35,7 @@ class Main:
 			runMusicLibUpdate()
 		elif sys.argv[0] and sys.argv[1] == 'videolibupdate':
 			runVideoLibUpdate()
+		common.debug('%s version %s has been terminated' %(xbmcaddon.Addon().getAddonInfo('name'), xbmcaddon.Addon().getAddonInfo('version') ))
 
 def runFirstTime():
 	# check if first run
@@ -60,7 +62,6 @@ def runSystemUpdate():
 				from lib.AptShellHandler import AptShellHandler
 				handler = AptShellHandler(False)
 				common.debug("Running AptShell handler..", "SystemUpdate")
-
 			if handler:
 				found = False
 				for package in packages:
@@ -130,6 +131,4 @@ def runScheduler():
 
 
 if (__name__ == "__main__"):
-	common.info('%s version %s has been started' %(xbmcaddon.Addon().getAddonInfo('name'), xbmcaddon.Addon().getAddonInfo('version') ))
-	Main()
-	common.debug('%s version %s has been terminated' %(xbmcaddon.Addon().getAddonInfo('name'), xbmcaddon.Addon().getAddonInfo('version') ))
+	ClueService()

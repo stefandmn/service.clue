@@ -36,7 +36,6 @@ class StorageServer():
 			self.debug("Making path structure: " + self.path)
 			xbmcvfs.mkdir(self.path)
 		self.path = os.path.join(self.path, 'Cache.db')
-
 		self.socket = ""
 		self.clientsocket = False
 		self.sql2 = False
@@ -47,19 +46,15 @@ class StorageServer():
 			self.idle = int(self.settings.getSetting("cacheserver_timeout"))
 		else:
 			self.idle = 3
-
 		self.platform = sys.platform
 		self.modules = sys.modules
 		self.network_buffer_size = 4096
-
 		if isinstance(table, str) and len(table) > 0:
 			self.table = ''.join(c for c in table if c in "%s%s" % (string.ascii_letters, string.digits))
 			self.debug("Setting table to: %s" % self.table)
 		elif table != False:
 			self.debug("No table defined")
-
 		self.setCacheTimeout(timeout)
-
 
 	def _StartDatabase(self):
 		try:
@@ -74,14 +69,12 @@ class StorageServer():
 			else:
 				self.debug("No sql engine found")
 				return False
-
 			self.curs = self.conn.cursor()
 			return True
 		except Exception, e:
 			self.error("Exception: " + repr(e))
 			xbmcvfs.delete(self.path)
 			return False
-
 
 	def _Aborting(self):
 		if self.instance:
@@ -90,7 +83,6 @@ class StorageServer():
 		else:
 			return xbmc.abortRequested
 		return False
-
 
 	def _SocketInit(self, check_stale=False):
 		if not self.socket or check_stale:
@@ -107,7 +99,6 @@ class StorageServer():
 					xbmcvfs.delete(self.socket)
 		self.info("Socket initialized: " + repr(self.socket))
 
-
 	def _ReceiveData(self):
 		data = self._recv(self.clientsocket)
 		try:
@@ -116,7 +107,6 @@ class StorageServer():
 			self.warn("Couldn't evaluate message: " + repr(data))
 			data = {"action": "stop"}
 		return data
-
 
 	def _RunCommand(self, data):
 		res = ""
@@ -137,11 +127,9 @@ class StorageServer():
 		if len(res) > 0:
 			self._send(self.clientsocket, repr(res))
 
-
 	def _ShowMessage(self, heading, message):
 		duration = 10 * 1000
 		xbmc.executebuiltin((u'Notification("%s", "%s", %s)' % (heading, message, duration)).encode("utf-8"))
-
 
 	def _recv(self, sock):
 		data = "   "
@@ -172,9 +160,7 @@ class StorageServer():
 				if start + 10 < time.time():
 					self.debug("Receive over time")
 					break
-
 		return data.strip()
-
 
 	def _send(self, sock, data):
 		idle = True
@@ -209,9 +195,7 @@ class StorageServer():
 					if start + 10 < time.time():
 						self.debug("Send over time")
 						break
-
 		return status.find("COMPLETE\r\n") > -1
-
 
 	def _lock(self, table, name):
 		locked = True
@@ -232,13 +216,11 @@ class StorageServer():
 		self.debug("Failed for: " + name.decode('utf8', 'ignore'))
 		return "false"
 
-
 	def _unlock(self, table, name):
 		self._CheckTable(table)
 		self._sqlExecute("DELETE FROM " + table + " WHERE name = %s", (name,))
 		self.conn.commit()
 		return "true"
-
 
 	def _sqlSetMulti(self, table, pre, inp_data):
 		self._CheckTable(table)
@@ -251,7 +233,6 @@ class StorageServer():
 				self._sqlExecute("INSERT INTO " + table + " VALUES ( %s , %s )", (pre + name, inp_data[name]))
 		self.conn.commit()
 		return ""
-
 
 	def _sqlGetMulti(self, table, pre, items):
 		self._CheckTable(table)
@@ -266,7 +247,6 @@ class StorageServer():
 		self.debug("Returning: " + repr(ret_val))
 		return ret_val
 
-
 	def _sqlSet(self, table, name, data):
 		self._CheckTable(table)
 		if self._sqlGet(table, name).strip():
@@ -278,7 +258,6 @@ class StorageServer():
 		self.conn.commit()
 		return ""
 
-
 	def _sqlGet(self, table, name):
 		self._CheckTable(table)
 		self._sqlExecute("SELECT data FROM " + table + " WHERE name = %s", name)
@@ -288,13 +267,11 @@ class StorageServer():
 		self.debug("Returning empty")
 		return " "
 
-
 	def _sqlDel(self, table, name):
 		self._CheckTable(table)
 		self._sqlExecute("DELETE FROM " + table + " WHERE name LIKE %s", name)
 		self.conn.commit()
 		return "true"
-
 
 	def _sqlExecute(self, sql, data):
 		try:
@@ -316,7 +293,6 @@ class StorageServer():
 		except:
 			self.error("Uncaught exception")
 
-
 	def _CheckTable(self, table):
 		try:
 			self.curs.execute("create table " + table + " (name text unique, data text)")
@@ -325,7 +301,6 @@ class StorageServer():
 		except:
 			pass
 
-
 	def _Evaluate(self, data):
 		try:
 			data = eval(data)
@@ -333,7 +308,6 @@ class StorageServer():
 		except:
 			self.error("Couldn't evaluate message: " + repr(data))
 			return ""
-
 
 	def _GenerateKey(self, funct, *args):
 		name = repr(funct)
@@ -358,7 +332,6 @@ class StorageServer():
 		self.debug("Generate key: " + repr(name))
 		return name
 
-
 	def _getCache(self, name, cache):
 		if name in cache:
 			if "timeout" not in cache[name]:
@@ -372,7 +345,6 @@ class StorageServer():
 
 		return False
 
-
 	def _setCache(self, cache, name, ret_val):
 		if len(ret_val) > 0:
 			if not isinstance(cache, dict):
@@ -383,7 +355,6 @@ class StorageServer():
 			self.debug("Saving cache: " + name + str(repr(cache[name]["res"]))[0:50])
 			self.set("cache" + name, repr(cache))
 		return ret_val
-
 
 	def _connect(self):
 		self._SocketInit()
@@ -402,14 +373,11 @@ class StorageServer():
 				self.error("Exception: " + repr(e) + " - " + repr(self.socket))
 		return connected
 
-
 	def debug(self, description):
 		common.debug(description, "StorageServer")
 
-
 	def info(self, description):
 		common.info(description, "StorageServer")
-
 
 	def warn(self, description):
 		common.warn(description, "StorageServer")
@@ -417,7 +385,6 @@ class StorageServer():
 
 	def error(self, description):
 		common.error(description, "StorageServer")
-
 
 	def run(self):
 		self._SocketInit(True)
@@ -433,7 +400,6 @@ class StorageServer():
 			self.error("Exception: " + repr(e))
 			self._ShowMessage(common.translate(100), common.translate(200))
 			return False
-
 		sock.listen(1)
 		sock.setblocking(0)
 		idle_since = time.time()
@@ -461,21 +427,18 @@ class StorageServer():
 				self.error("Exception: " + repr(e))
 			except:
 				pass
-
 			if waiting:
 				self.debug("Continue: " + repr(waiting))
 				continue
 			data = self._ReceiveData()
 			self._RunCommand(data)
 			idle_since = time.time()
-
 		self.debug("Closing down")
 		sock.close()
 		if not self.platform == "win32" and not xbmc.getCondVisibility('system.platform.android'):
 			if xbmcvfs.exists(self.socket):
 				self.debug("Deleting socket file")
 				xbmcvfs.delete(self.socket)
-
 
 	def cacheFunction(self, funct=False, *args):
 		self.debug("Function: " + repr(funct) + " - table name: " + repr(self.table))
@@ -500,13 +463,11 @@ class StorageServer():
 		self.error("Error. Returning []")
 		return []
 
-
 	def cacheDelete(self, name):
 		if self._connect() and self.table:
 			temp = repr({"action": "del", "table": self.table, "name": "cache" + name})
 			self._send(self.soccon, temp)
 			res = self._recv(self.soccon)
-
 
 	def cacheClean(self, empty=False):
 		if self.table:
@@ -527,7 +488,6 @@ class StorageServer():
 				return True
 		return False
 
-
 	def lock(self, name):
 		if self._connect() and self.table:
 			data = repr({"action": "lock", "table": self.table, "name": name})
@@ -539,7 +499,6 @@ class StorageServer():
 					return True
 		return False
 
-
 	def unlock(self, name):
 		if self._connect() and self.table:
 			data = repr({"action": "unlock", "table": self.table, "name": name})
@@ -549,15 +508,12 @@ class StorageServer():
 				res = self._Evaluate(res)
 				if res == "true":
 					return True
-
 		return False
-
 
 	def setMulti(self, name, data):
 		if self._connect() and self.table:
 			temp = repr({"action": "set_multi", "table": self.table, "name": name, "data": data})
 			res = self._send(self.soccon, temp)
-
 
 	def getMulti(self, name, items):
 		if self._connect() and self.table:
@@ -571,19 +527,16 @@ class StorageServer():
 					return res
 		return ""
 
-
 	def delete(self, name):
 		if self._connect() and self.table:
 			temp = repr({"action": "del", "table": self.table, "name": name})
 			self._send(self.soccon, temp)
 			res = self._recv(self.soccon)
 
-
 	def set(self, name, data):
 		if self._connect() and self.table:
 			temp = repr({"action": "set", "table": self.table, "name": name, "data": data})
 			res = self._send(self.soccon, temp)
-
 
 	def get(self, name):
 		if self._connect() and self.table:
@@ -593,7 +546,6 @@ class StorageServer():
 				res = self._Evaluate(res)
 				return res.strip()  # We return " " as nothing. Strip it out.
 		return ""
-
 
 	def setCacheTimeout(self, timeout):
 		self.timeout = float(timeout) * 3600

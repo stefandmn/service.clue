@@ -15,7 +15,6 @@ class AptDaemonHandler:
 	def __init__(self, package=''):
 		self.aptclient = client.AptClient()
 
-
 	def _CheckVersions(self, package):
 		if not self._UpdateCache():
 			return False, False
@@ -34,7 +33,6 @@ class AptDaemonHandler:
 			info("Exception while checking versions: %s" %error, "SystemUpdate")
 			return False, False
 
-
 	def _UpdateCache(self):
 		try:
 			if self.aptclient.update_cache(wait=True) == "exit-success":
@@ -47,7 +45,6 @@ class AptDaemonHandler:
 		except Exception as err:
 			info("Exception while checking versions: %s" %err, "SystemUpdate")
 			return False
-
 
 	# Returns True if newer package is available in the repositories
 	def CheckUpgradeAvailable(self, package):
@@ -65,7 +62,6 @@ class AptDaemonHandler:
 		else:
 			return False
 
-
 	def UpgradePackage(self, package):
 		try:
 			info("Installing new version", "SystemUpdate")
@@ -76,7 +72,6 @@ class AptDaemonHandler:
 			error("Exception during upgrade: %s" %err, "SystemUpdate")
 		return False
 
-
 	def UpgradeSystem(self):
 		try:
 			info("Upgrading system", "SystemUpdate")
@@ -86,16 +81,13 @@ class AptDaemonHandler:
 			error("Exception during system upgrade: %s" %err, "SystemUpdate")
 		return False
 
-
 	def _getPassword(self):
 		if len(self._pwd) == 0:
 			self._pwd = PasswordDialog()
 		return self._pwd
 
-
 	def _aptTransStarted(self):
 		pass
-
 
 	def _aptErrorHandler(self, err):
 		error("Apt Error %s" %err, "SystemUpdate")

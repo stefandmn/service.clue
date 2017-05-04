@@ -16,7 +16,6 @@ class AptShellHandler:
 	def __init__(self, usesudo=False):
 		self.sudo = usesudo
 
-
 	def _CheckVersions(self, package, update=True):
 		_cmd = "apt-cache policy " + package
 		if update and not self._UpdateCache():
@@ -38,7 +37,6 @@ class AptShellHandler:
 			error("Error during version check", "SystemUpdate")
 			return False, False
 
-
 	def _UpdateCache(self):
 		_cmd = 'apt-get update'
 		try:
@@ -51,7 +49,6 @@ class AptShellHandler:
 			return False
 
 		return True
-
 
 	#Returns True if newer package is available in the repositories
 	def CheckUpgradeAvailable(self, package):
@@ -69,7 +66,6 @@ class AptShellHandler:
 		else:
 			return False
 
-
 	def UpgradePackage(self, package):
 		_cmd = "apt-get install -y " + package
 		try:
@@ -81,9 +77,7 @@ class AptShellHandler:
 		except Exception as err:
 			error("Exception while executing shell command %s: %s" %(_cmd, err), "SystemUpdate")
 			return False
-
 		return True
-
 
 	def UpgradeSystem(self):
 		_cmd = "apt-get upgrade -y"
@@ -96,9 +90,7 @@ class AptShellHandler:
 		except Exception as err:
 			error("Exception while executing shell command %s: %s" %(_cmd, err), "SystemUpdate")
 			return False
-
 		return True
-
 
 	def _getPassword(self):
 		if len(self._pwd) == 0:

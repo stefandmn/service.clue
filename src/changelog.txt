@@ -1,6 +1,6 @@
 v1.1
 - Integration with plugin.youtube
-- Move 'clueunit' namespace from plugin.youtube to service.clue
+- Move 'mediadir' namespace from plugin.youtube to service.clue
 - Adapt and integration of 'requests' library and plugin, v2.12.4
 
 v1.0

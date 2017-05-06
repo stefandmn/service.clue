@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import xbmcgui
-from resources.lib.mediadir.utils import InfoLabels
-from resources.lib.mediadir.items.VideoItem import VideoItem
-from resources.lib.mediadir.items.AudioItem import AudioItem
-from resources.lib.mediadir.items.UriItem import UriItem
+from mediadir.utils import InfoLabels
+from mediadir.items.VideoItem import VideoItem
+from mediadir.items.AudioItem import AudioItem
+from mediadir.items.UriItem import UriItem
 
 
 def to_video_item(context, video_item):

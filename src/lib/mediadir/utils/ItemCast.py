@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-from resources.lib.mediadir.items.VideoItem import VideoItem
-from resources.lib.mediadir.items.DirectoryItem import DirectoryItem
-from resources.lib.mediadir.items.AudioItem import AudioItem
-from resources.lib.mediadir.items.ImageItem import ImageItem
+from mediadir.items.VideoItem import VideoItem
+from mediadir.items.DirectoryItem import DirectoryItem
+from mediadir.items.AudioItem import AudioItem
+from mediadir.items.ImageItem import ImageItem
 
 
 def from_json(json_data):

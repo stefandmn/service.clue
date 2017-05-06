@@ -2,8 +2,8 @@
 
 import xbmc
 import xbmcgui
-from resources.lib.mediadir.utils.Utilities import to_unicode, to_utf8
-from resources.lib.mediadir.AbstractContextUI import AbstractContextUI
+from mediadir.utils.Utilities import to_unicode, to_utf8
+from mediadir.AbstractContextUI import AbstractContextUI
 from .ClueProgressDialog import ClueProgressDialog
 from .ClueProgressDialogBG import ClueProgressDialogBG
 

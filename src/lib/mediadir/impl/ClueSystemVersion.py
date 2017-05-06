@@ -2,7 +2,7 @@
 
 import json
 import xbmc
-from resources.lib.mediadir.AbstractSystemVersion import AbstractSystemVersion
+from mediadir.AbstractSystemVersion import AbstractSystemVersion
 
 
 class ClueSystemVersion(AbstractSystemVersion):

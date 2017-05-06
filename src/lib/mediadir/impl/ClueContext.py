@@ -11,8 +11,8 @@ import xbmcvfs
 import xbmcaddon
 import xbmcplugin
 import CommonFunctions as common
-from resources.lib.mediadir.utils.Utilities import to_unicode
-from resources.lib.mediadir.AbstractContext import AbstractContext
+from mediadir.utils.Utilities import to_unicode
+from mediadir.AbstractContext import AbstractContext
 from .CluePluginSettings import CluePluginSettings
 from .ClueContextUI import ClueContextUI
 from .ClueSystemVersion import ClueSystemVersion

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from resources.lib.mediadir.utils import DatetimeParser
-from resources.lib.mediadir.items.ImageItem import ImageItem
-from resources.lib.mediadir.items.AudioItem import AudioItem
-from resources.lib.mediadir.items.VideoItem import VideoItem
+from mediadir.utils import DatetimeParser
+from mediadir.items.ImageItem import ImageItem
+from mediadir.items.AudioItem import AudioItem
+from mediadir.items.VideoItem import VideoItem
 
 
 def createFromItem(context, base_item):

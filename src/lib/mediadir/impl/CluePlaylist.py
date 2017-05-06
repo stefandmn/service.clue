@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import xbmc
-from resources.lib.mediadir.AbstractPlaylist import AbstractPlaylist
-from resources.lib.mediadir.utils import MediaItems
+from mediadir.AbstractPlaylist import AbstractPlaylist
+from mediadir.utils import MediaItems
 
 
 class CluePlaylist(AbstractPlaylist):

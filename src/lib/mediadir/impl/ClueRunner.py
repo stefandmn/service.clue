@@ -2,15 +2,15 @@
 
 import xbmcgui
 import xbmcplugin
-from resources.lib.mediadir.AbstractRunner import AbstractRunner
-from resources.lib.mediadir.FrameworkException import FrameworkException
-from resources.lib.mediadir.items.DirectoryItem import DirectoryItem
-from resources.lib.mediadir.items.VideoItem import VideoItem
-from resources.lib.mediadir.items.AudioItem import AudioItem
-from resources.lib.mediadir.items.ImageItem import ImageItem
-from resources.lib.mediadir.items.UriItem import UriItem
-from resources.lib.mediadir import AbstractProvider
-from resources.lib.mediadir.utils import MediaItems, InfoLabels
+from mediadir.AbstractRunner import AbstractRunner
+from mediadir.FrameworkException import FrameworkException
+from mediadir.items.DirectoryItem import DirectoryItem
+from mediadir.items.VideoItem import VideoItem
+from mediadir.items.AudioItem import AudioItem
+from mediadir.items.ImageItem import ImageItem
+from mediadir.items.UriItem import UriItem
+from mediadir import AbstractProvider
+from mediadir.utils import MediaItems, InfoLabels
 
 
 class ClueRunner(AbstractRunner):

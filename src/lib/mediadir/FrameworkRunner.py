@@ -5,8 +5,8 @@ __all__ = ['run']
 import platform
 import traceback
 import CommonFunctions as common
-from resources.lib.mediadir.impl.ClueRunner import ClueRunner as Runner
-from resources.lib.mediadir.impl.ClueContext import ClueContext as Context
+from mediadir.impl.ClueRunner import ClueRunner as Runner
+from mediadir.impl.ClueContext import ClueContext as Context
 
 
 def run(provider, context=None):

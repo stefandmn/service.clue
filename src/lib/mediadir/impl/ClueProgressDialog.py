@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xbmcgui
-from resources.lib.mediadir.AbstractProgressDialog import AbstractProgressDialog
+from mediadir.AbstractProgressDialog import AbstractProgressDialog
 
 
 class ClueProgressDialog(AbstractProgressDialog):

@@ -3,12 +3,12 @@
 import os
 import urllib
 import CommonFunctions as common
-from resources.lib.mediadir.utils.Utilities import *
-from resources.lib.mediadir.utils.FunctionCache import FunctionCache
-from resources.lib.mediadir.utils.SearchHistory import SearchHistory
-from resources.lib.mediadir.utils.FavoriteList import FavoriteList
-from resources.lib.mediadir.utils.WatchLaterList import WatchLaterList
-from resources.lib.mediadir.utils.AccessManager import AccessManager
+from mediadir.utils.Utilities import *
+from mediadir.utils.FunctionCache import FunctionCache
+from mediadir.utils.SearchHistory import SearchHistory
+from mediadir.utils.FavoriteList import FavoriteList
+from mediadir.utils.WatchLaterList import WatchLaterList
+from mediadir.utils.AccessManager import AccessManager
 
 
 class AbstractContext(object):

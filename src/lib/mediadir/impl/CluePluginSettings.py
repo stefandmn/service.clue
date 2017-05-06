@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from resources.lib.mediadir.AbstractSettings import AbstractSettings
+from mediadir.AbstractSettings import AbstractSettings
 
 
 class CluePluginSettings(AbstractSettings):

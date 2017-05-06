@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xbmc
-from resources.lib.mediadir.AbstractPlayer import AbstractPlayer
+from mediadir.AbstractPlayer import AbstractPlayer
 
 
 class CluePlayer(AbstractPlayer):

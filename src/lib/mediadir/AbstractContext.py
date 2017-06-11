@@ -2,7 +2,7 @@
 
 import os
 import urllib
-import CommonFunctions as common
+import Commons as commons
 from mediadir.utils.Utilities import *
 from mediadir.utils.FunctionCache import FunctionCache
 from mediadir.utils.SearchHistory import SearchHistory
@@ -171,19 +171,19 @@ class AbstractContext(object):
 		raise NotImplementedError()
 
 	def warn(self, text):
-		common.warn(text)
+		commons.warn(text)
 
 	def error(self, text):
-		common.error(text)
+		commons.error(text)
 
 	def notice(self, text):
-		common.notice(text)
+		commons.notice(text)
 
 	def debug(self, text):
-		common.debug(text)
+		commons.debug(text)
 
 	def info(self, text):
-		common.info(text)
+		commons.info(text)
 
 	def clone(self, new_path=None, new_params=None):
 		raise NotImplementedError()

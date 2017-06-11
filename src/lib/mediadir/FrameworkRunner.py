@@ -4,7 +4,7 @@ __all__ = ['run']
 
 import platform
 import traceback
-import CommonFunctions as common
+import Commons as commons
 from mediadir.impl.ClueRunner import ClueRunner as Runner
 from mediadir.impl.ClueContext import ClueContext as Context
 
@@ -24,11 +24,11 @@ def run(provider, context=None):
 		runner.run(provider, context)
 		context.debug('Shutdown of Media Directory framework')
 	except BaseException as bex:
-		common.error("Error executing Media Directory framework: " + str(bex))
+		commons.error("Error executing Media Directory framework: " + str(bex))
 		if context is not None:
 			context.getUI().closeBusyDialog()
 			context.getUI().onOk(context.getName(), "Error running Media Directory framework: " + str(bex))
 		else:
-			common.OkDialog("Error running Media Directory framework: " + str(bex))
+			commons.OkDialog("Error running Media Directory framework: " + str(bex))
 		traceback.print_exc()
 	pass

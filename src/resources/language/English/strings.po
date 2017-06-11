@@ -49,7 +49,7 @@ msgid "Enable System Update"
 msgstr ""
 
 msgctxt "#32022"
-msgid "     Update complete operating system"
+msgid "     Update entire operating system"
 msgstr ""
 
 msgctxt "#32023"
@@ -66,6 +66,14 @@ msgstr ""
 
 msgctxt "#32026"
 msgid "Custom Scheduling"
+msgstr ""
+
+msgctxt "#32027"
+msgid "     Check integrity of operating system"
+msgstr ""
+
+msgctxt "#32028"
+msgid "     Cleaning database"
 msgstr ""
 
 msgctxt "#32101"
@@ -102,10 +110,6 @@ msgstr ""
 
 msgctxt "#32117"
 msgid "Minutes"
-msgstr ""
-
-msgctxt "#32118"
-msgid "None"
 msgstr ""
 
 msgctxt "#32119"
@@ -174,61 +178,5 @@ msgstr ""
 
 msgctxt "#32215"
 msgid "Enable Custom #5 Builtin Function Scheduling"
-msgstr ""
-
-msgctxt "#32030"
-msgid "Cache Service"
-msgstr ""
-
-msgctxt "#32031"
-msgid "Cache service auto-start"
-msgstr ""
-
-msgctxt "#32032"
-msgid "Cache server port (Windows only)"
-msgstr ""
-
-msgctxt "#32033"
-msgid "Cache server connection timeout (in seconds)"
-msgstr ""
-
-msgctxt "#32040"
-msgid "Downloader"
-msgstr ""
-
-msgctxt "#32041"
-msgid "Vlc/MPlayer/RtmpDump binary not found"
-msgstr ""
-
-msgctxt "#32042"
-msgid "Hide progress during playback"
-msgstr ""
-
-msgctxt "#32043"
-msgid "Location of rtmpdump executable"
-msgstr ""
-
-msgctxt "#32044"
-msgid "Location of vlc executable"
-msgstr ""
-
-msgctxt "#32045"
-msgid "Location of mplayer executable"
-msgstr ""
-
-msgctxt "#32046"
-msgid "Stall timeout"
-msgstr ""
-
-msgctxt "#32047"
-msgid "Download complete"
-msgstr ""
-
-msgctxt "#32048"
-msgid "Download failed"
-msgstr ""
-
-msgctxt "#32049"
-msgid "Error"
 msgstr ""
 

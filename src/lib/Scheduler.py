@@ -4,24 +4,14 @@ import time
 import datetime
 import functools
 import threading
-import CommonFunctions as common
 import xbmc
 import xbmcaddon
-
-
-true	= True
-false	= False
-null	= None
-
-videolibScript		= "RunScript(service.clue, videolibupdate)"
-musiclibScript		= "RunScript(service.clue, musiclibupdate)"
-sysupdateScript		= "RunScript(service.clue, systemupdate)"
-backupScript		= "RunScript(script.backuprestore, mode=backup)"
+import Commons as common
 
 
 def runBuiltinFunction(function):
-	common.debug("Starting builtin function: %s" %(function), "Scheduler")
-	xbmc.executebuiltin("%s" % function)
+	common.debug("Starting builtin function: %s" %function, "Scheduler")
+	xbmc.executebuiltin("%s" %function)
 
 
 class SchedulerManager():
@@ -29,9 +19,9 @@ class SchedulerManager():
 
 	def __init__(self, *args, **kwargs):
 		self.addon = xbmcaddon.Addon()
-		self.jobs = [ "videolib", "musiclib", "backup", "system", "custom1", "custom2", "custom3", "custom4", "custom5" ]
+		self.jobs = [ "videolib", "musiclib", "backup", "system", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6"]
+		self.monitor = SchedulerSettingsMonitor(updateSettingsMethod=self.setup)
 		self.schedule = Scheduler()
-		self.monitor = SchedulerSettingsMonitor(updateSettingsMethod = self.setup)
 		self.setup()
 
 	def onInit(self):
@@ -42,8 +32,8 @@ class SchedulerManager():
 		self.load()
 
 	def load(self):
-		common.debug("Loading setting..", "Scheduler")
-		weekdays = [ "null", 'monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" ]
+		common.debug("Loading scheduler setting..", "Scheduler")
+		weekdays = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 		for jobname in self.jobs:
 			jobconfig = {"enabled": eval(self.addon.getSetting(jobname)),
 						"cycle": int(self.addon.getSetting(jobname + "_cycle")), # cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
@@ -52,14 +42,14 @@ class SchedulerManager():
 						"time": self.addon.getSetting(jobname + "_time"),
 						"interval": int(self.addon.getSetting(jobname + "_interval")) }
 			if jobname == "backup":
-				jobconfig["script"] = backupScript
+				jobconfig["script"] = "RunScript(script.backuprestore, mode=backup)"
 			elif jobname == "system":
-				jobconfig["script"] = sysupdateScript
+				jobconfig["script"] = "RunScript(service.clue, systemupdate)"
 			elif jobname == "videolib":
-				jobconfig["script"] = videolibScript
+				jobconfig["script"] = "RunScript(service.clue, videolibupdate)"
 			elif jobname == "musiclib":
-				jobconfig["script"] = musiclibScript
-			if jobconfig["day"] > 0:
+				jobconfig["script"] = "RunScript(service.clue, musiclibupdate)"
+			if jobconfig["day"] >= 0:
 				jobconfig["day"] = weekdays[jobconfig["day"]]
 			# Create jobs and schedule them for execution
 			if jobconfig["enabled"]:
@@ -87,11 +77,12 @@ class SchedulerManager():
 	def start(self):
 		while (not xbmc.abortRequested):
 			self.schedule.run()
-			xbmc.sleep(1000)
+			time.sleep(1000)
 
 
 class SchedulerSettingsMonitor(xbmc.Monitor):
 	updateSettingsMethod = None
+
 	def __init__(self,*args, **kwargs):
 		xbmc.Monitor.__init__(self)
 		self.updateSettingsMethod = kwargs['updateSettingsMethod']

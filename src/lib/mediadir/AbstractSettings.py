@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import CommonFunctions as common
+import Commons as commons
 
 
 class AbstractSettings(object):
@@ -27,7 +27,7 @@ class AbstractSettings(object):
 		try:
 			return converter(int(value))
 		except Exception, ex:
-			common.error("Failed to get setting '%s' as 'int' (%s)" % setting_id, ex.__str__())
+			commons.error("Failed to get setting '%s' as 'int' (%s)" % setting_id, ex.__str__())
 			pass
 		return default_value
 

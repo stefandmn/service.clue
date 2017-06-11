@@ -10,7 +10,7 @@ import xbmc
 import xbmcvfs
 import xbmcaddon
 import xbmcplugin
-import CommonFunctions as common
+import Commons as common
 from mediadir.utils.Utilities import to_unicode
 from mediadir.AbstractContext import AbstractContext
 from .CluePluginSettings import CluePluginSettings

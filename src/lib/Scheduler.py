@@ -1,86 +1,79 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import time
 import datetime
-import functools
 import threading
-import xbmc
-import xbmcaddon
-import Commons as common
-
-
-def runBuiltinFunction(function):
-	common.debug("Starting builtin function: %s" %function, "Scheduler")
-	xbmc.executebuiltin("%s" %function)
+import Commons as commons
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
 
 
 class SchedulerManager():
 	monitor = None
+	weekdays = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+	jobnames = [ "videolib", "musiclib", "backup", "system", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6"]
 
 	def __init__(self, *args, **kwargs):
-		self.addon = xbmcaddon.Addon()
-		self.jobs = [ "videolib", "musiclib", "backup", "system", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6"]
-		self.monitor = SchedulerSettingsMonitor(updateSettingsMethod=self.setup)
-		self.schedule = Scheduler()
+		self.monitor = SettingsMonitor(updateSettingsMethod=self.setup)
+		self.scheduler = Scheduler()
 		self.setup()
 
 	def onInit(self):
 		self.start()
 
 	def setup(self):
-		self.schedule.removeAll()
+		self.scheduler.removeAll()
 		self.load()
 
 	def load(self):
-		common.debug("Loading scheduler setting..", "Scheduler")
-		weekdays = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-		for jobname in self.jobs:
-			jobconfig = {"enabled": eval(self.addon.getSetting(jobname)),
-						"cycle": int(self.addon.getSetting(jobname + "_cycle")), # cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
-						"script": self.addon.getSetting(jobname + "_script"),
-						"day": int(self.addon.getSetting(jobname + "_day")),
-						"time": self.addon.getSetting(jobname + "_time"),
-						"interval": int(self.addon.getSetting(jobname + "_interval")) }
+		commons.debug("Loading scheduler setting..", "Scheduler")
+		for jobname in self.jobnames:
+			job = None
+			cfg = {
+					"enabled": commons.setting(jobname),
+					"cycle": commons.setting(jobname + "_cycle"), # cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
+					"script": commons.setting(jobname + "_script"),
+					"day": commons.setting(jobname + "_day"),
+					"time": commons.setting(jobname + "_time"),
+					"interval": commons.setting(jobname + "_interval")}
+			cfg["day"] = self.weekdays[cfg["day"]] if cfg["day"] >= 0 else -1
+			# Adapt job script
 			if jobname == "backup":
-				jobconfig["script"] = "RunScript(script.backuprestore, mode=backup)"
-			elif jobname == "system":
-				jobconfig["script"] = "RunScript(service.clue, systemupdate)"
-			elif jobname == "videolib":
-				jobconfig["script"] = "RunScript(service.clue, videolibupdate)"
-			elif jobname == "musiclib":
-				jobconfig["script"] = "RunScript(service.clue, musiclibupdate)"
-			if jobconfig["day"] >= 0:
-				jobconfig["day"] = weekdays[jobconfig["day"]]
-			# Create jobs and schedule them for execution
-			if jobconfig["enabled"]:
-				job = None
-				if jobconfig["cycle"] == 0:
-					job = self.schedule.newJob(jobname).every(jobconfig["interval"]).weeks.weekday(jobconfig["day"]).at(jobconfig["time"])
-				elif jobconfig["cycle"] == 1:
-					job = self.schedule.newJob(jobname).every(jobconfig["interval"]).days.at(jobconfig["time"])
-				elif jobconfig["cycle"] == 2:
-					job = self.schedule.newJob(jobname).every(jobconfig["interval"]).hours
-				elif jobconfig["cycle"] == 3:
-					job = self.schedule.newJob(jobname).every(jobconfig["interval"]).minutes
-				if job is None:
-					common.error("Error creating job based on configuration: %s" %jobname, "Scheduler")
+				cfg["script"] = "RunScript(script.backuprestore, mode=backup)"
+			elif not jobname.lower().startswith("runscript"):
+				cfg["script"] = "RunScript(%s, %s)" %(commons.AddonId(), jobname)
+			# Create job instance
+			if cfg["enabled"]:
+				if cfg["cycle"] == 0:
+					job = self.scheduler.newJob(jobname).every(cfg["interval"]).weeks.weekday(cfg["day"]).at(cfg["time"])
+				elif cfg["cycle"] == 1:
+					job = self.scheduler.newJob(jobname).every(cfg["interval"]).days.at(cfg["time"])
+				elif cfg["cycle"] == 2:
+					job = self.scheduler.newJob(jobname).every(cfg["interval"]).hours
+				elif cfg["cycle"] == 3:
+					job = self.scheduler.newJob(jobname).every(cfg["interval"]).minutes
+				# Apply job script
+				if job is not None and cfg["script"]:
+					job.setScript(cfg["script"])
+					commons.debug("Creating job: %s" %str(job), "Scheduler")
+				elif job is not None and not cfg["script"]:
+					commons.error("Job '%s' is removed because no script has been configured to run" %jobname, "Scheduler")
+					self.scheduler.remove(job)
 				else:
-					if not jobconfig["script"]:
-						common.error("Job '%s' is removed because no script has been configured to run" %jobname, "Scheduler")
-						self.schedule.remove(job)
-					else:
-						job.doScript(jobconfig["script"])
-						common.debug("Creating job: %s" %str(job), "Scheduler")
+					commons.error("Error creating job based on configuration: %s" %jobname, "Scheduler")
 			else:
-				common.debug("Job '%s' is not enabled" %jobname, "Scheduler")
+				commons.debug("Job '%s' is not enabled" %jobname, "Scheduler")
 
 	def start(self):
 		while (not xbmc.abortRequested):
-			self.schedule.run()
-			time.sleep(1000)
+			self.scheduler.run()
+			xbmc.sleep(1000)
 
 
-class SchedulerSettingsMonitor(xbmc.Monitor):
+class SettingsMonitor(xbmc.Monitor):
 	updateSettingsMethod = None
 
 	def __init__(self,*args, **kwargs):
@@ -88,6 +81,7 @@ class SchedulerSettingsMonitor(xbmc.Monitor):
 		self.updateSettingsMethod = kwargs['updateSettingsMethod']
 
 	def onSettingsChanged(self):
+		commons.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "SettingsMonitor")
 		self.updateSettingsMethod()
 
 
@@ -176,7 +170,7 @@ class Job(object):
 	def __init__(self, code, interval=1):
 		self.code = code # job code
 		self.interval = interval  # pause interval * unit between runs
-		self.function = None  # the job job_func to run
+		self.script = None  # the job job_func to run
 		self.unit = None  # time units, e.g. 'minutes', 'hours', ...
 		self.atTime = None  # optional time at which this job runs
 		self.lastRun = None  # datetime of the last run
@@ -188,25 +182,18 @@ class Job(object):
 		"""
 		PeriodicJobs are sortable based on the scheduled time they run next.
 		"""
-		return self.nextRun < other.NextRun
+		return self.nextRun < other.nextRun
 
 	def __repr__(self):
 		def format_time(t):
 			return t.strftime("%Y-%m-%d %H:%M:%S") if t else '[never]'
 		timestats = 'Last run: %s, Next run: %s' % (format_time(self.lastRun), format_time(self.nextRun))
-		jobFunctionName = self.function.__name__
-		args = [repr(x) for x in self.function.args]
-		kwargs = ['%s=%s' % (k, repr(v))
-			for k, v in self.function.keywords.items()]
-		callRepresentation = jobFunctionName + '(' + ', '.join(args + kwargs) + ')'
 		if self.atTime is not None:
 			return '%s - Runs every %s %s at %s, do %s, %s' % (self.code.capitalize(), self.interval,
-				self.unit[:-1] if self.interval == 1 else self.unit,
-				self.atTime, callRepresentation, timestats)
+				self.unit[:-1] if self.interval == 1 else self.unit, self.atTime, self.script, timestats)
 		else:
 			return '%s - Runs every %s %s, do %s, %s' % (self.code.capitalize(), self.interval,
-				self.unit[:-1] if self.interval == 1 else self.unit,
-				callRepresentation, timestats)
+				self.unit[:-1] if self.interval == 1 else self.unit, self.script, timestats)
 
 	@property
 	def second(self):
@@ -327,28 +314,10 @@ class Job(object):
 		self.atTime = datetime.time(hour, minute)
 		return self
 
-	def doCode(self, function, *args, **kwargs):
-		"""
-		Specifies the function that should be called every time the job runs.
-		Any additional arguments are passed on to job_func when
-		the job runs.
-		"""
-		self.function = functools.partial(function, *args, **kwargs)
-		functools.update_wrapper(self.function, function)
+	def setScript(self, script):
+		self.script = script
 		self._setNextRun()
 		return self
-
-
-	def doScript(self, function):
-		self.doCode(runBuiltinFunction, function)
-		return self
-
-	@property
-	def isReady(self):
-		"""
-		True if the job should be run now.
-		"""
-		return datetime.datetime.now() >= self.nextRun
 
 	def run(self):
 		"""
@@ -362,11 +331,18 @@ class Job(object):
 		"""
 		Run the job and immediately reschedule it.
 		"""
-		self.function()
+		commons.debug("Starting job: %s" %str(self), "Scheduler")
+		xbmc.executebuiltin(self.script)
 		self.lastRun = datetime.datetime.now()
 		self._setNextRun()
-		common.debug("Run job: %s" %str(self), "Scheduler")
+		commons.debug("Finishing job: %s" %str(self), "Scheduler")
 
+	@property
+	def isReady(self):
+		"""
+		True if the job should be run now.
+		"""
+		return datetime.datetime.now() >= self.nextRun
 
 	def _setNextRun(self):
 		"""

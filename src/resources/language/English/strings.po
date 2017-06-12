@@ -13,27 +13,15 @@ msgstr ""
 
 
 msgctxt "#32010"
-msgid "Would you like to remove this reminder? (you can enable/disable it through add-on settings)"
+msgid "Starting system update .."
 msgstr ""
 
 msgctxt "#32011"
-msgid "New versions of Clue MCPi packages are available, do you want to upgrade them now?"
-msgstr ""
-
-msgctxt "#32012"
-msgid "Clue MCPi packages have been updated successfully"
-msgstr ""
-
-msgctxt "#32013"
 msgid "Clue system has been updated successfully"
 msgstr ""
 
-msgctxt "#32014"
-msgid "Clue MCPi has been updated. Do you want to restart it?"
-msgstr ""
-
-msgctxt "#32015"
-msgid "Clue OS and MCPi packages have been updated. Do you want to restart the entire system?"
+msgctxt "#32012"
+msgid "Error(s) encountered during system update, check system log file!"
 msgstr ""
 
 msgctxt "#32016"
@@ -161,22 +149,26 @@ msgid "Every 12 hours"
 msgstr ""
 
 msgctxt "#32211"
-msgid "Enable Custom #1 Builtin Function Scheduling"
+msgid "Enable Custom #1 Scheduler Script"
 msgstr ""
 
 msgctxt "#32212"
-msgid "Enable Custom #2 Builtin Function Scheduling"
+msgid "Enable Custom #2 Scheduler Script"
 msgstr ""
 
 msgctxt "#32213"
-msgid "Enable Custom #3 Builtin Function Scheduling"
+msgid "Enable Custom #3 Scheduler Script"
 msgstr ""
 
 msgctxt "#32214"
-msgid "Enable Custom #4 Builtin Function Scheduling"
+msgid "Enable Custom #4 Scheduler Script"
 msgstr ""
 
 msgctxt "#32215"
-msgid "Enable Custom #5 Builtin Function Scheduling"
+msgid "Enable Custom #5 Scheduler Script"
+msgstr ""
+
+msgctxt "#32216"
+msgid "Enable Custom #6 Scheduler Script"
 msgstr ""
 

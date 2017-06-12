@@ -1,4 +1,7 @@
 v1.1
+- Reimplementation of service runners
+- Redesign Scheduler service
+- Remove CacheServer and Downloader components
 - Integration with plugin.youtube
 - Move 'mediadir' namespace from plugin.youtube to service.clue
 - Adapt and integration of 'requests' library and plugin, v2.12.4
@@ -17,4 +20,3 @@ v1.0
 - Design a new icon to show maintenance service for RPi, Clue OS and MCPi components
 - Service restructuring to check only operating system components
 - Optimize and adapt service to support Clue OS
-- Create a derived service add-on based on service.xbmc.versioncheck v0.1.22

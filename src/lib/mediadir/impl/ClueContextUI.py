@@ -101,9 +101,9 @@ class ClueContextUI(AbstractContextUI):
 		xbmc.executebuiltin("Container.Refresh")
 
 	def showBusyDialog(self):
-		xbmc.executebuiltin("Skin.SetBool(Busy4Loading)")
+		xbmc.executebuiltin("Skin.SetBool(ShowLoading)")
 		xbmc.executebuiltin("ActivateWindow(busydialog)")
 
 	def closeBusyDialog(self):
-		xbmc.executebuiltin("Skin.Reset(Busy4Loading)")
+		xbmc.executebuiltin("Skin.Reset(ShowLoading)")
 		xbmc.executebuiltin("Dialog.Close(busydialog)")

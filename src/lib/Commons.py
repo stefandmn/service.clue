@@ -32,8 +32,16 @@ def AddonIcon():
 	return xbmcaddon.Addon().getAddonInfo('icon')
 
 
+def AddonPath():
+	return xbmcaddon.Addon().getAddonInfo('path')
+
+
 def AddonVersion():
 	return xbmcaddon.Addon().getAddonInfo('version')
+
+
+def AddonProfile():
+	return xbmcaddon.Addon().getAddonInfo('profile')
 
 
 def log(txt, code="", level=0):

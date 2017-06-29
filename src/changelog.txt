@@ -1,5 +1,5 @@
 v1.1
-- Reimplementation of service runners
+- Reimplementation of service runners and put them into a separate source file
 - Redesign Scheduler service
 - Remove CacheServer and Downloader components
 - Integration with plugin.youtube

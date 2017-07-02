@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
 	<category label="32020">
-		<setting label="32021" type="bool" id="system" default="false"/>
+		<setting label="32021" type="bool" id="system" default="true"/>
 		<setting label="32022" type="bool" id="system_osupgrade" visible="eq(-1,true)" default="false"/>
 		<setting label="32027" type="bool" id="system_osintegrity" visible="eq(-2,true)" default="false"/>
 		<setting label="32101" type="enum" id="system_cycle" visible="eq(-3,true)" lvalues="32114|32115|32116|32117" default="1"/>
@@ -9,14 +9,14 @@
 		<setting label="32102" type="enum" id="system_day" visible="eq(-5,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124" default="0"/>
 		<setting label="32103" type="time" id="system_time" visible="eq(-6,true) + lt(-3,2)" default="06:00"/>
 		<setting type="sep"/>
-		<setting label="32023" type="bool" id="musiclib" default="false"/>
+		<setting label="32023" type="bool" id="musiclib" default="true"/>
 		<setting label="32028" type="bool" id="musiclib_clean" visible="eq(-1,true)" default="false"/>
 		<setting label="32101" type="enum" id="musiclib_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
 		<setting label="32104" type="number" id="musiclib_interval" visible="eq(-3,true)" default="1"/>
 		<setting label="32102" type="enum" id="musiclib_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
 		<setting label="32103" type="time" id="musiclib_time" visible="eq(-5,true) + lt(-3,2)" default="05:00"/>
 		<setting type="sep"/>
-		<setting label="32024" type="bool" id="videolib" default="false"/>
+		<setting label="32024" type="bool" id="videolib" default="true"/>
 		<setting label="32028" type="bool" id="videolib_clean" visible="eq(-1,true)" default="false"/>
 		<setting label="32101" type="enum" id="videolib_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
 		<setting label="32104" type="number" id="videolib_interval" visible="eq(-3,true)" default="1"/>

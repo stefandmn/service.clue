@@ -1,8 +1,6 @@
 # Clue Service for MCPi
 
-**Clue Service** package is designed to become the system configurator tool for Clue MCPi 
-media player ( Kodi fork for Raspberry Pi) - and for the entire Clue system. **Clue Plugin** 
-provides a dedicated GUI environment developed over MCPi in order to allow end-user to 
-set-up the system services and components in a graphical manner. This plugin should 
-work also on Kodi v15 and it will work 100% if is running on RPi devices and if some 
-other Clue packages are already installed.
+**Clue Service** package is designed to e used as primary service application for MCPi but
+might be used also as service add-on for Kodi providing APIs and common routines that might
+be used bu other plugins/add-ons, cron service with many builtin jobs for various tasks
+(database updates, backup, restore,  sync skin, etc.) and other functions.

@@ -1,4 +1,5 @@
 v1.1
+- Reimplementation of scheduler manager and default configuration
 - Reimplementation of service runners and put them into a separate source file
 - Redesign Scheduler service
 - Remove CacheServer and Downloader components

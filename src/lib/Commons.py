@@ -100,6 +100,16 @@ def setting(id):
 		return _value
 
 
+def getSetting(id):
+	return xbmcaddon.Addon().getSetting(id)
+
+
+def setSetting(id, value):
+	if value is None:
+		value = ''
+	xbmcaddon.Addon().setSetting(id, value)
+
+
 def PasswordDialog():
 	pwd = ""
 	keyboard = xbmc.Keyboard("", AddonName() + "," + translate(32016), True)

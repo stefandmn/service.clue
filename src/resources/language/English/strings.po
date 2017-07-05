@@ -41,11 +41,11 @@ msgid "     Update entire operating system"
 msgstr ""
 
 msgctxt "#32023"
-msgid "Enable Music Library Update"
+msgid "Enable Media Library Update"
 msgstr ""
 
 msgctxt "#32024"
-msgid "Enable Video Library Update"
+msgid "Enable Media Library Clean"
 msgstr ""
 
 msgctxt "#32025"
@@ -61,8 +61,21 @@ msgid "     Check integrity of operating system"
 msgstr ""
 
 msgctxt "#32028"
-msgid "     Cleaning database"
+msgid "     Update Audio database"
 msgstr ""
+
+msgctxt "#32029"
+msgid "     Update Video database"
+msgstr ""
+
+msgctxt "#32030"
+msgid "     Clean Audio database"
+msgstr ""
+
+msgctxt "#32031"
+msgid "     Clean Video database"
+msgstr ""
+
 
 msgctxt "#32101"
 msgid "     Type of schedule"

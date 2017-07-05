@@ -4,7 +4,7 @@
 		<import addon="xbmc.addon" version="15.2"/>
 		<import addon="xbmc.python" version="2.20.0"/>
 	</requires>
-	<extension point="xbmc.service" library="service.py" start="startup"/>
+	<extension point="xbmc.service" library="default.py" start="startup"/>
 	<extension point="xbmc.python.module" library="lib"/>
 	<extension point="xbmc.addon.metadata">
 		<summary>Clue Service for MCPi</summary>

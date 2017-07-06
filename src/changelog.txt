@@ -1,4 +1,5 @@
 v1.1
+- Makes service to run also as executable script and redesign media DB cleaner and updater
 - Reimplementation of scheduler manager and default configuration
 - Reimplementation of service runners and put them into a separate source file
 - Redesign Scheduler service

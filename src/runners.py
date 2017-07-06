@@ -26,106 +26,165 @@ class ServiceRunner(object):
 		pass
 
 
-class LibraryUpdater(ServiceRunner):
+class LibraryUpdater(ServiceRunner, xbmc.Monitor):
+
+	def __init__(self):
+		xbmc.Monitor.__init__(self)
+		self.music = False
+		self.video = False
 
 	def code(self):
 		return "libupdater"
 
-	def run(self, *arg):
-		music = False
-		video = False
-		if len(arg) == 1:
+	def detect(self, arg):
+		if arg is not None and len(arg) == 1:
 			if str(arg[0]).strip().lower() in ('music', 'audio'):
-				music = True
+				self.music = True
 			elif str(arg[0]).strip().lower() in ('video', 'movies'):
-				video = True
+				self.video = True
 			else:
-				music = commons.any2bool(arg[0])
-		if len(arg) >= 2:
-			music = commons.any2bool(arg[0])
-			video = commons.any2bool(arg[1])
-		# scan music
-		if music:
-			if not xbmc.getCondVisibility('Library.IsScanningMusic'):
-				xbmc.executebuiltin("UpdateLibrary(music)")
-				xbmc.sleep(1000)
-				# wait to finish music scan
-				while xbmc.getCondVisibility('Library.IsScanningMusic'):
-					xbmc.sleep(1000)
-				commons.info("Update of music library have been executed successfully", "MusicUpdate")
-			else:
-				commons.warn("Music library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
-		# scan video
-		if video:
-			if not xbmc.getCondVisibility('Library.IsScanningVideo'):
-				xbmc.executebuiltin("UpdateLibrary(video)")
-				xbmc.sleep(1000)
-				# wait to finish video part
-				while xbmc.getCondVisibility('Library.IsScanningVideo'):
-					xbmc.sleep(1000)
-				commons.info("Update of video library have been successfully executed", "VideoUpdate")
-			else:
-				commons.warn("Video library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+				self.music = commons.any2bool(arg[0])
+		if arg is not None and len(arg) >= 2:
+			self.music = commons.any2bool(arg[0])
+			self.video = commons.any2bool(arg[1])
+
+	def apply(self):
+		if self.music:
+			self.apply4Music()
+		elif self.video:
+			self.apply4Video()
+
+	def apply4Music(self):
+		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
+			xbmc.executebuiltin("UpdateLibrary(music)")
+			xbmc.sleep(500)
+			commons.info("Update of music library have been successfully triggered", "LibraryUpdater")
+		else:
+			commons.warn("Music library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			self.music = False
+
+	def apply4Video(self):
+		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
+			xbmc.executebuiltin("UpdateLibrary(video)")
+			xbmc.sleep(500)
+			commons.info("Update of video library have been successfully triggered", "LibraryUpdater")
+		else:
+			commons.warn("Video library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			self.video = False
+
+	def onScanFinished(self, library):
+		if library == "music":
+			commons.info("Update of music library have been successfully finished", "LibraryUpdater")
+			self.music = False
+		elif library == "video":
+			commons.info("Update of video library have been successfully finished", "LibraryUpdater")
+			self.video = False
+		xbmc.sleep(1000)
+		if self.music or self.video:
+			self.apply()
+
+	def run(self, *arg):
+		self.detect(arg)
+		self.apply()
+		while self.music or self.video:
+			xbmc.sleep(1000)
 
 
-class LibraryCleaner(ServiceRunner):
+class LibraryCleaner(ServiceRunner, xbmc.Monitor):
+
+	def __init__(self):
+		xbmc.Monitor.__init__(self)
+		self.music = False
+		self.video = False
 
 	def code(self):
 		return "libcleaner"
 
-	def run(self, *arg):
-		music = False
-		video = False
-		if len(arg) == 1:
+	def detect(self, arg):
+		if arg is not None and len(arg) == 1:
 			if str(arg[0]).strip().lower() in ('music', 'audio'):
-				music = True
+				self.music = True
 			elif str(arg[0]).strip().lower() in ('video', 'movies'):
-				video = True
+				self.video = True
 			else:
-				music = commons.any2bool(arg[0])
-		if len(arg) >= 2:
-			music = commons.any2bool(arg[0])
-			video = commons.any2bool(arg[1])
-		# clean music
-		if music:
-			if not xbmc.getCondVisibility('Library.IsScanningMusic'):
-				xbmc.executebuiltin("CleanLibrary(music)")
-				xbmc.sleep(1000)
-				# wait to finish music scan
-				while xbmc.getCondVisibility('Library.IsScanningMusic'):
-					xbmc.sleep(1000)
-				commons.info("Cleaning of music library have been successfully executed", "MusicUpdate")
-			else:
-				commons.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
-		# clean video
-		if video:
-			if not xbmc.getCondVisibility('Library.IsScanningVideo'):
-				xbmc.executebuiltin("CleanLibrary(video)")
-				xbmc.sleep(1000)
-				# wait to finish video part
-				while xbmc.getCondVisibility('Library.IsScanningVideo'):
-					xbmc.sleep(1000)
-				commons.info("Cleaning of video library have been successfully executed", "VideoUpdate")
-			else:
-				commons.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+				self.music = commons.any2bool(arg[0])
+		if arg is not None and len(arg) >= 2:
+			self.music = commons.any2bool(arg[0])
+			self.video = commons.any2bool(arg[1])
+
+	def apply(self):
+		if self.music:
+			self.apply4Music()
+		elif self.video:
+			self.apply4Video()
+
+	def apply4Music(self):
+		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
+			xbmc.executebuiltin("CleanLibrary(music)")
+			xbmc.sleep(500)
+			commons.info("Cleaning of music library have been successfully triggered", "LibraryCleaner")
+		else:
+			commons.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			self.music = False
+
+	def apply4Video(self):
+		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
+			xbmc.executebuiltin("CleanLibrary(video)")
+			xbmc.sleep(500)
+			commons.info("Cleaning of video library have been successfully triggered", "LibraryCleaner")
+		else:
+			commons.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			self.video = False
+
+	def onCleanFinished(self, library):
+		if library == "music":
+			commons.info("Cleaning of music library have been successfully finished", "LibraryCleaner")
+			self.music = False
+		elif library == "video":
+			commons.info("Cleaning of video library have been successfully finished", "LibraryCleaner")
+			self.video = False
+		xbmc.sleep(1000)
+		if self.music or self.video:
+			self.apply()
+
+	def run(self, *arg):
+		self.detect(arg)
+		self.apply()
+		while self.music or self.video:
+			xbmc.sleep(1000)
 
 
 class SystemUpdater(ServiceRunner):
 
+	def __init__(self):
+		self.osupgrade = False
+		self.integrity = False
+
 	def code(self):
 		return "sysupdater"
 
+	def detect(self, arg):
+		if arg is not None and len(arg) == 1:
+			if str(arg[0]).strip().lower() in ('upgrade', 'osupgrade'):
+				self.osupgrade = True
+			elif str(arg[0]).strip().lower() in ('integrity', 'osintegrity'):
+				self.integrity = True
+			else:
+				self.osupgrade = commons.any2bool(arg[0])
+		if arg is not None and len(arg) >= 2:
+			self.osupgrade = commons.any2bool(arg[0])
+			self.integrity = commons.any2bool(arg[1])
+
 	def run(self, *arg):
-		osupgrade = commons.any2bool(arg[0]) if len(arg) >= 1 else False
-		integrity = commons.any2bool(arg[1]) if len(arg) >= 2 else False
+		self.detect(arg)
 		(_status,_content) = commons.procexec("/opt/clue/bin/setup -g update")
 		if _status and commons.any2int(_content.strip()) == 0:
 			commons.NotificationMsg(commons.translate(32010))
 			_cmd = "/opt/clue/bin/setup -s update -p"
-			_opt = "-a" if osupgrade else ""
+			_opt = "-a" if self.osupgrade else ""
 			(_status,_content) = commons.procexec("%s %s" %(_cmd,_opt))
 			# Run system integrity procedure
-			if _status and integrity:
+			if _status and self.integrity:
 				_cmd = "/opt/clue/bin/setup -s update -s"
 				(_status,_content) = commons.procexec(_cmd)
 			if _status:

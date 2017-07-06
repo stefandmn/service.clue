@@ -9,6 +9,11 @@ if hasattr(sys.modules["__main__"], "xbmc"):
 else:
 	import xbmc
 
+if hasattr(sys.modules["__main__"], "xbmcgui"):
+	xbmcgui = sys.modules["__main__"].xbmcgui
+else:
+	import xbmcgui
+
 
 class ServiceSettings(xbmc.Monitor):
 	updateSettingsMethod = None
@@ -68,10 +73,15 @@ class ClueService:
 			open(firstlock, 'w').close()
 
 	def initScheduler(self):
-		self.settings = ServiceSettings(updateSettingsMethod=self.setupScheduler)
-		self.scheduler = Scheduler()
-		self.setupScheduler()
-		self.startScheduler()
+		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(SchedulerService)"))
+		if not infoFlag:
+			xbmcgui.Window(10000).setProperty("SchedulerService", "true")
+			self.settings = ServiceSettings(updateSettingsMethod=self.setupScheduler)
+			self.scheduler = Scheduler()
+			self.setupScheduler()
+			self.startScheduler()
+		else:
+			commons.notice("Service component is already running!")
 
 	def setupScheduler(self):
 		self.scheduler.removeAll()

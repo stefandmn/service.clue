@@ -33,7 +33,7 @@ msgid "System Scheduling"
 msgstr ""
 
 msgctxt "#32021"
-msgid "Enable System Update"
+msgid "System Update"
 msgstr ""
 
 msgctxt "#32022"
@@ -41,15 +41,15 @@ msgid "     Update entire operating system"
 msgstr ""
 
 msgctxt "#32023"
-msgid "Enable Media Library Update"
+msgid "Media Library Update"
 msgstr ""
 
 msgctxt "#32024"
-msgid "Enable Media Library Clean"
+msgid "Media Library Clean"
 msgstr ""
 
 msgctxt "#32025"
-msgid "Enable System Backup"
+msgid "System Backup"
 msgstr ""
 
 msgctxt "#32026"
@@ -162,26 +162,42 @@ msgid "Every 12 hours"
 msgstr ""
 
 msgctxt "#32211"
-msgid "Enable Custom #1 Scheduler Script"
+msgid "Custom #01 Scheduler Script"
 msgstr ""
 
 msgctxt "#32212"
-msgid "Enable Custom #2 Scheduler Script"
+msgid "Custom #02 Scheduler Script"
 msgstr ""
 
 msgctxt "#32213"
-msgid "Enable Custom #3 Scheduler Script"
+msgid "Custom #03 Scheduler Script"
 msgstr ""
 
 msgctxt "#32214"
-msgid "Enable Custom #4 Scheduler Script"
+msgid "Custom #04 Scheduler Script"
 msgstr ""
 
 msgctxt "#32215"
-msgid "Enable Custom #5 Scheduler Script"
+msgid "Custom #05 Scheduler Script"
 msgstr ""
 
 msgctxt "#32216"
-msgid "Enable Custom #6 Scheduler Script"
+msgid "Custom #06 Scheduler Script"
+msgstr ""
+
+msgctxt "#32217"
+msgid "Custom #07 Scheduler Script"
+msgstr ""
+
+msgctxt "#32218"
+msgid "Custom #08 Scheduler Script"
+msgstr ""
+
+msgctxt "#32219"
+msgid "Custom #09 Scheduler Script"
+msgstr ""
+
+msgctxt "#32220"
+msgid "Custom #10 Scheduler Script"
 msgstr ""
 

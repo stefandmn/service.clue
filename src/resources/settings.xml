@@ -73,5 +73,33 @@
 		<setting label="32104" type="number" id="custom6_interval" visible="eq(-3,true)" default="1"/>
 		<setting label="32102" type="enum" id="custom6_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
 		<setting label="32103" type="time" id="custom6_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32217" type="bool" id="custom7" default="false"/>
+		<setting label="32105" type="text" id="custom7_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom7_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom7_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom7_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom7_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32218" type="bool" id="custom8" default="false"/>
+		<setting label="32105" type="text" id="custom8_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom8_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom8_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom8_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom8_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32219" type="bool" id="custom9" default="false"/>
+		<setting label="32105" type="text" id="custom9_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom9_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom9_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom9_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom9_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
+		<setting type="sep"/>
+		<setting label="32220" type="bool" id="custom10" default="false"/>
+		<setting label="32105" type="text" id="custom10_script" visible="eq(-1,true)" default=""/>
+		<setting label="32101" type="enum" id="custom10_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="custom10_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="custom10_day" visible="eq(-4,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="custom10_time" visible="eq(-5,true) + lt(-3,2)" default="00:00"/>
 	</category>
 </settings>

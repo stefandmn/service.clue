@@ -59,6 +59,11 @@ def log(txt, code="", level=0):
 		xbmc.log(message.encode("utf-8"), level)
 
 
+def trace(txt, code=""):
+	if any2bool(setting('debug')):
+		log(txt, code, xbmc.LOGDEBUG)
+
+
 def debug(txt, code=""):
 	log(txt, code, xbmc.LOGDEBUG)
 

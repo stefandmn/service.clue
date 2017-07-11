@@ -93,10 +93,11 @@ class Job(object):
 	A periodic job as used by `Scheduler`.
 	"""
 
-	def __init__(self, code, interval=1):
+	def __init__(self, code, interval=1, type='script'):
 		self.code = code # job code
 		self.interval = interval  # pause interval * unit between runs
 		self.script = None  # the job job_func to run
+		self.type = type  # the job type to run: script, addon, plugin, command, process, json, object
 		self.unit = None  # time units, e.g. 'minutes', 'hours', ...
 		self.atTime = None  # optional time at which this job runs
 		self.lastRun = None  # datetime of the last run
@@ -116,10 +117,10 @@ class Job(object):
 		timestats = 'Last run: %s, Next run: %s' % (format_time(self.lastRun), format_time(self.nextRun))
 		if self.atTime is not None:
 			return '%s - Runs every %s %s at %s, do %s, %s' % (self.code.capitalize(), self.interval,
-				self.unit[:-1] if self.interval == 1 else self.unit, self.atTime, str(self.script), timestats)
+				self.unit[:-1] if self.interval == 1 else self.unit, self.atTime, self.scriptbytype, timestats)
 		else:
 			return '%s - Runs every %s %s, do %s, %s' % (self.code.capitalize(), self.interval,
-				self.unit[:-1] if self.interval == 1 else self.unit, str(self.script), timestats)
+				self.unit[:-1] if self.interval == 1 else self.unit, self.scriptbytype, timestats)
 
 	@property
 	def second(self):
@@ -245,6 +246,52 @@ class Job(object):
 		self._setNextRun()
 		return self
 
+	def setType(self, type='script'):
+		if type in ('script', 'addon', 'plugin', 'command', 'process', 'json'):
+			self.type = type
+		return self
+
+	@property
+	def scriptbytype(self):
+		action = None
+		if self.script is not None:
+			if self.type is None or self.type == 'script':
+				if self.script.strip().lower().startswith("runscript"):
+					action = self.script
+				else:
+					action = "RunScript(" + self.script + ")"
+			elif self.type == 'addon':
+				if self.script.strip().lower().startswith("runaddon"):
+					action = self.script
+				else:
+					action = "RunAddon(" + self.script + ")"
+			elif self.type == 'plugin':
+				if self.script.strip().lower().startswith("runplugin"):
+					action = self.script
+				else:
+					action = "RunPlugin(" + self.script + ")"
+			elif self.type == 'command':
+				if self.script.strip().lower().startswith("runcommand"):
+					action = self.script
+				else:
+					action = "RunCommand(" + self.script + ")"
+			elif self.type == 'process':
+				if self.script.strip().lower().startswith("runprocess"):
+					action = self.script
+				else:
+					action = "RunProcess(" + self.script + ")"
+			elif self.type == 'json':
+				if self.script.strip().lower().startswith("runjson"):
+					return self.script
+				else:
+					action = "RunJSON(" + self.script + ")"
+			elif self.type == 'object':
+				if self.script.strip().lower().startswith("callobject"):
+					return self.script
+				else:
+					action = "CallObject(" + self.script + ")"
+		return action
+
 	def run(self):
 		"""
 		Run the job and immediately reschedule it.
@@ -258,19 +305,31 @@ class Job(object):
 		Run the job and immediately reschedule it.
 		"""
 		commons.debug("Starting job: %s" %str(self), "Scheduler")
-		if isinstance(self.script, str) and self.script.strip().lower().startswith("runscript"):
-			xbmc.executebuiltin(self.script)
-		if isinstance(self.script, str) and self.script.strip().lower().startswith("/"):
-			commons.procexec(self.script)
-		elif inspect.isclass(self.script):
-			if isinstance(self.script, threading.Thread):
-				self.script.start()
-			elif "start" in dir(self.script):
-				self.script.start()
-			elif "run" in dir(self.script):
-				self.script.run()
-		elif hasattr(self.script, '__call__'):
-			self.script()
+		if self.script is not None:
+			if self.type is ('script', 'addon', 'plugin'):
+				xbmc.executebuiltin(self.scriptbytype)
+			elif str(self.type) == 'process':
+				process = self.scriptbytype.strip()[len("runprocess"):].strip()[1:-1].strip()
+				commons.procexec(process)
+			elif str(self.type) == 'command':
+				command = self.scriptbytype.strip()[len("runcommand"):].strip()[1:-1].strip()
+				xbmc.executebuiltin(command)
+			elif str(self.type) == 'json':
+				expression = self.scriptbytype.strip()[len("runjson"):].strip()[1:-1].strip()
+				xbmc.executeJSONRPC(expression)
+			elif str(self.type) == 'object':
+				if isinstance(self.script, str):
+					function = self.scriptbytype.strip()[len("callobject"):].strip()[1:-1].strip()
+					eval(function)
+				elif inspect.isclass(self.script):
+					if isinstance(self.script, threading.Thread):
+						self.script.start()
+					elif "start" in dir(self.script):
+						self.script.start()
+					elif "run" in dir(self.script):
+						self.script.run()
+				elif hasattr(self.script, '__call__'):
+					self.script()
 		self.lastRun = datetime.datetime.now()
 		self._setNextRun()
 		commons.debug("Finishing job: %s" %str(self), "Scheduler")

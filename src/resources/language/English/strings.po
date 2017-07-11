@@ -94,8 +94,13 @@ msgid "     Number of cycles"
 msgstr ""
 
 msgctxt "#32105"
-msgid "Built-in script"
+msgid "Execution script"
 msgstr ""
+
+msgctxt "#32106"
+msgid "Execution type"
+msgstr ""
+
 
 msgctxt "#32114"
 msgid "Weekly"

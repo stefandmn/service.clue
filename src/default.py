@@ -98,8 +98,9 @@ class ClueService:
 			job = None
 			cfg = {
 					"enabled": commons.setting(jobname),
-					"cycle": commons.setting(jobname + "_cycle"), # cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
+					"cycle": commons.setting(jobname + "_cycle"),	# cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
 					"script": commons.setting(jobname + "_script"),
+					"type": commons.setting(jobname + "_type"),		# script, addon, plugin, command, process, json
 					"day": commons.setting(jobname + "_day"),
 					"time": commons.setting(jobname + "_time"),
 					"interval": commons.setting(jobname + "_interval")}
@@ -107,16 +108,18 @@ class ClueService:
 			# Adapt job script
 			if jobname == "sysupdater":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_osupgrade"), commons.getSetting(jobname + "_osintegrity"))
+				cfg["type"] = "script"
 			elif jobname == "libupdater":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
+				cfg["type"] = "script"
 			elif jobname == "libcleaner":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
+				cfg["type"] = "script"
 			elif jobname == "sysbackup":
 				cfg["script"] = "RunScript(script.backuprestore, mode=backup)"
-			elif not jobname.lower().startswith("runscript") and not jobname.lower().startswith("/"):
-				cfg["script"] = "RunScript(%s, %s)" %(commons.AddonId(), cfg["script"])
+				cfg["type"] = "script"
 			# Create job instance
-			if cfg["enabled"]:
+			if cfg["enabled"] and cfg["script"] is not None and cfg["script"] != '':
 				if cfg["cycle"] == 0:
 					job = self.scheduler.newJob(jobname).every(cfg["interval"]).weeks.weekday(cfg["day"]).at(cfg["time"])
 				elif cfg["cycle"] == 1:
@@ -128,6 +131,7 @@ class ClueService:
 				# Apply job script
 				if job is not None and cfg["script"]:
 					job.setScript(cfg["script"])
+					job.setType(cfg["type"])
 					commons.debug("Creating job: %s" %str(job))
 				elif job is not None and not cfg["script"]:
 					commons.error("Job '%s' is removed because no script has been configured to run" %jobname)

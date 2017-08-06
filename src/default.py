@@ -88,7 +88,7 @@ class ClueService:
 		self.loadScheduler()
 
 	def startScheduler(self):
-		while (not xbmc.abortRequested):
+		while not xbmc.abortRequested:
 			self.scheduler.run()
 			xbmc.sleep(1000)
 

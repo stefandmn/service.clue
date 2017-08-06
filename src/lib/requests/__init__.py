@@ -18,7 +18,7 @@ except ImportError:
 import warnings
 
 # urllib3's DependencyWarnings should be silenced.
-from .packages.urllib3.exceptions import DependencyWarning
+from .packages.urllib3.exceptions import DependencyWarning, InsecurePlatformWarning
 warnings.simplefilter('ignore', DependencyWarning)
 
 from . import utils

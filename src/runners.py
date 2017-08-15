@@ -9,6 +9,11 @@ if hasattr(sys.modules["__main__"], "xbmc"):
 else:
 	import xbmc
 
+if hasattr(sys.modules["__main__"], "xbmcgui"):
+	xbmcgui = sys.modules["__main__"].xbmcgui
+else:
+	import xbmcgui
+
 
 class ServiceRunner(object):
 	__metaclass__ = abc.ABCMeta
@@ -196,43 +201,97 @@ class SystemUpdater(ServiceRunner):
 
 
 class GuiUpdater(ServiceRunner):
+	PROPERTIES = ('NetworkRepeater', 'NetworkRouter', 'NetworkWireless', 'NetworkMobile')
+
+	def __init__(self):
+		self.id = 10000
+		self.win = xbmcgui.Window(self.id)
 
 	def code(self):
 		return "guiupdater"
+
+	def setProperty(self, property):
+		self.win.setProperty(property, "true")
+
+	def resetProperty(self, property):
+		self.win.setProperty(property, "")
+
+	def getProperty(self, property):
+		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" %(str(self.id),property)))
+
+	@property
+	def isNetworkRepeater(self):
+		return self.getProperty(self.PROPERTIES[0])
+
+	@property
+	def isNetworkRouter(self):
+		return self.getProperty(self.PROPERTIES[1])
+
+	@property
+	def isNetworkWireless(self):
+		return self.getProperty(self.PROPERTIES[2])
+
+	@property
+	def isNetworkMobile(self):
+		return self.getProperty(self.PROPERTIES[3])
+
+	def setNetworkRepeater(self):
+		return self.setProperty(self.PROPERTIES[0])
+
+	def setNetworkRouter(self):
+		return self.setProperty(self.PROPERTIES[1])
+
+	def setNetworkWireless(self):
+		return self.setProperty(self.PROPERTIES[2])
+
+	def setNetworkMobile(self):
+		return self.setProperty(self.PROPERTIES[3])
+
+	def resetNetworkRepeater(self):
+		return self.resetProperty(self.PROPERTIES[0])
+
+	def resetNetworkRouter(self):
+		return self.resetProperty(self.PROPERTIES[1])
+
+	def resetNetworkWireless(self):
+		return self.resetProperty(self.PROPERTIES[2])
+
+	def resetNetworkMobile(self):
+		return self.resetProperty(self.PROPERTIES[3])
 
 	def run(self, *arg):
 		# Check network mode
 		_status,_content = commons.procexec("/opt/clue/bin/setup -g network -m")
 		if _status:
 			if _content is not None and _content == "repeater":
-				xbmc.executebuiltin("Skin.SetBool(NetworkRepeater)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkRouter)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkRouter)")
+				self.setNetworkRepeater()
+				if self.isNetworkRouter:
+					self.resetNetworkRouter()
 			elif _content is not None and _content == "router":
-				xbmc.executebuiltin("Skin.SetBool(NetworkRouter)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkRepeater)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkRepeater)")
+				self.setNetworkRouter()
+				if self.isNetworkRepeater:
+					self.resetNetworkRepeater()
 			else:
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkRepeater)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkRepeater)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkRouter)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkRouter)")
+				if self.isNetworkRepeater:
+					self.resetNetworkRepeater()
+				if self.isNetworkRouter:
+					self.resetNetworkRouter()
 		# Check network interface
 		_status,_content = commons.procexec("/opt/clue/bin/setup -g network -a")
 		if _status:
 			if _content is not None and _content.startswith("wlan"):
-				xbmc.executebuiltin("Skin.SetBool(NetworkWireless)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkMobile)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkMobile)")
+				self.setNetworkWireless()
+				if self.isNetworkMobile:
+					self.resetNetworkMobile()
 			elif _content is not None and (_content.startswith("ppp") or _content.startswith("wwlan")):
-				xbmc.executebuiltin("Skin.SetBool(NetworkMobile)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkWireless)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkWireless)")
+				self.setNetworkMobile()
+				if self.isNetworkWireless:
+					self.resetNetworkWireless()
 			else:
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkWireless)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkWireless)")
-				if xbmc.getCondVisibility("Skin.HasSetting(NetworkMobile)"):
-					xbmc.executebuiltin("Skin.ToggleSetting(NetworkMobile)")
+				if self.isNetworkWireless:
+					self.resetNetworkWireless()
+				if self.isNetworkMobile:
+					self.resetNetworkMobile()
 
 
 class CecTrigger(ServiceRunner):

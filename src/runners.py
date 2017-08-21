@@ -200,15 +200,15 @@ class SystemUpdater(ServiceRunner):
 			commons.warn("System update is currently running, so the update procedure will be skipped this time", "SystemUpdate")
 
 
-class GuiUpdater(ServiceRunner):
-	PROPERTIES = ('NetworkRepeater', 'NetworkRouter', 'NetworkWireless', 'NetworkMobile')
+class SkinInfo(ServiceRunner):
+	NETWORKS = ('ServiceClue.NetworkRepeater', 'ServiceClue.NetworkRouter', 'ServiceClue.NetworkWireless', 'ServiceClue.NetworkMobile')
 
-	def __init__(self):
-		self.id = 10000
+	def __init__(self, id=1000):
+		self.id = id
 		self.win = xbmcgui.Window(self.id)
 
 	def code(self):
-		return "guiupdater"
+		return "skininfo"
 
 	def setProperty(self, property):
 		self.win.setProperty(property, "true")
@@ -217,47 +217,47 @@ class GuiUpdater(ServiceRunner):
 		self.win.setProperty(property, "")
 
 	def getProperty(self, property):
-		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" %(str(self.id),property)))
+		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" %(str(self.id), property)))
 
 	@property
 	def isNetworkRepeater(self):
-		return self.getProperty(self.PROPERTIES[0])
+		return self.getProperty(self.NETWORKS[0])
 
 	@property
 	def isNetworkRouter(self):
-		return self.getProperty(self.PROPERTIES[1])
+		return self.getProperty(self.NETWORKS[1])
 
 	@property
 	def isNetworkWireless(self):
-		return self.getProperty(self.PROPERTIES[2])
+		return self.getProperty(self.NETWORKS[2])
 
 	@property
 	def isNetworkMobile(self):
-		return self.getProperty(self.PROPERTIES[3])
+		return self.getProperty(self.NETWORKS[3])
 
 	def setNetworkRepeater(self):
-		return self.setProperty(self.PROPERTIES[0])
+		return self.setProperty(self.NETWORKS[0])
 
 	def setNetworkRouter(self):
-		return self.setProperty(self.PROPERTIES[1])
+		return self.setProperty(self.NETWORKS[1])
 
 	def setNetworkWireless(self):
-		return self.setProperty(self.PROPERTIES[2])
+		return self.setProperty(self.NETWORKS[2])
 
 	def setNetworkMobile(self):
-		return self.setProperty(self.PROPERTIES[3])
+		return self.setProperty(self.NETWORKS[3])
 
 	def resetNetworkRepeater(self):
-		return self.resetProperty(self.PROPERTIES[0])
+		return self.resetProperty(self.NETWORKS[0])
 
 	def resetNetworkRouter(self):
-		return self.resetProperty(self.PROPERTIES[1])
+		return self.resetProperty(self.NETWORKS[1])
 
 	def resetNetworkWireless(self):
-		return self.resetProperty(self.PROPERTIES[2])
+		return self.resetProperty(self.NETWORKS[2])
 
 	def resetNetworkMobile(self):
-		return self.resetProperty(self.PROPERTIES[3])
+		return self.resetProperty(self.NETWORKS[3])
 
 	def run(self, *arg):
 		# Check network mode

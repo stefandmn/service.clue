@@ -20,28 +20,32 @@ if hasattr(sys.modules["__main__"], "opener"):
 	urllib2.install_opener(sys.modules["__main__"].opener)
 
 
+def Addon():
+	return xbmcaddon.Addon()
+
+
 def AddonId():
-	return xbmcaddon.Addon().getAddonInfo('id')
+	return Addon().getAddonInfo('id')
 
 
 def AddonName():
-	return xbmcaddon.Addon().getAddonInfo('name')
+	return Addon().getAddonInfo('name')
 
 
 def AddonIcon():
-	return xbmcaddon.Addon().getAddonInfo('icon')
+	return Addon().getAddonInfo('icon')
 
 
 def AddonPath():
-	return xbmcaddon.Addon().getAddonInfo('path')
+	return Addon().getAddonInfo('path')
 
 
 def AddonVersion():
-	return xbmcaddon.Addon().getAddonInfo('version')
+	return Addon().getAddonInfo('version')
 
 
 def AddonProfile():
-	return xbmcaddon.Addon().getAddonInfo('profile')
+	return Addon().getAddonInfo('profile')
 
 
 def log(txt, code="", level=0):
@@ -85,19 +89,19 @@ def error(txt, code=""):
 
 
 def translate(id):
-	string = xbmcaddon.Addon().getLocalizedString(id).encode('utf-8', 'ignore')
+	string = Addon().getLocalizedString(id).encode('utf-8', 'ignore')
 	return string
 
 
 def setting(id):
-	_value = xbmcaddon.Addon().getSetting(id)
+	_value = Addon().getSetting(id)
 	if _value is not None and _value.lower() == "true":
 		return True
 	elif _value is not None and _value.lower() == "false":
 		return False
 	elif _value is not None and _value.isdigit():
 		return int(_value)
-	elif _value is not None and not _value.isdigit() and _value.replace('.','',1).isdigit():
+	elif _value is not None and not _value.isdigit() and _value.replace('.', '', 1).isdigit():
 		return float(_value)
 	elif _value is not None and _value.lower() == "null":
 		return None
@@ -106,13 +110,13 @@ def setting(id):
 
 
 def getSetting(id):
-	return xbmcaddon.Addon().getSetting(id)
+	return Addon().getSetting(id)
 
 
 def setSetting(id, value):
 	if value is None:
 		value = ''
-	xbmcaddon.Addon().setSetting(id, value)
+	Addon().setSetting(id, value)
 
 
 def PasswordDialog():
@@ -124,7 +128,7 @@ def PasswordDialog():
 	return pwd
 
 
-def NotificationMsg(line, time=15000):
+def NotificationMsg(line, time=15000, icon=AddonIcon()):
 	try:
 		if isinstance(line, int):
 			msg = translate(line)
@@ -136,7 +140,22 @@ def NotificationMsg(line, time=15000):
 			msg = line
 		else:
 			msg = ""
-	xbmc.executebuiltin("Notification(%s, %s, %d, %s)" %(AddonName(), msg, time, AddonIcon()))
+	xbmc.executebuiltin("Notification(%s, %s, %d, %s)" % (AddonName(), msg, time, icon))
+
+
+def DlgNotificationMsg(line, time=5000, icon=AddonIcon()):
+	try:
+		if isinstance(line, int):
+			msg = translate(line)
+		else:
+			code = int(line)
+			msg = translate(code)
+	except:
+		if not isinstance(line, int):
+			msg = line
+		else:
+			msg = ""
+	xbmcgui.Dialog().notification(AddonName(), msg, time=time, icon=icon)
 
 
 def AskRestart(msgid, s=0):
@@ -175,7 +194,7 @@ def YesNoDialog(line1="", line2="", line3=""):
 	return xbmcgui.Dialog().yesno(AddonName(), line1=msg1, line2=msg2, line3=msg3)
 
 
-def OkDialog(line1="", line2 = "", line3=""):
+def OkDialog(line1="", line2="", line3=""):
 	try:
 		if isinstance(line1, int):
 			code = int(line1)
@@ -201,6 +220,33 @@ def OkDialog(line1="", line2 = "", line3=""):
 	except:
 		msg3 = line3
 	return xbmcgui.Dialog().ok(AddonName(), line1=msg1, line2=msg2, line3=msg3)
+
+
+# This functions displays select dialog
+def SelectDialog(line='', options=None):
+	try:
+		if isinstance(line, int):
+			code = int(line)
+			msg = translate(code)
+		else:
+			msg = line
+	except:
+		msg = line
+	if msg is None or msg == '':
+		msg = AddonName()
+	if not isinstance(options, list):
+		if str(options).count('\n') > 0:
+			options = str(options).split('\n')
+		elif str(options).count(',') > 0:
+			options = str(options).split(',')
+		elif str(options).count(';') > 0:
+			options = str(options).split(';')
+		elif str(options).count(':') > 0:
+			options = str(options).split(':')
+	if isinstance(options, list) and len(options) > 0:
+		return xbmcgui.Dialog().select(msg, options)
+	else:
+		return None
 
 
 # This function raises a keyboard for user input
@@ -242,6 +288,24 @@ def NumberInputDialog(title=u"Input", default=u""):
 	keyboard = xbmcgui.Dialog()
 	result = keyboard.numeric(0, msg, default)
 	return str(result)
+
+
+# Function: sleep
+def sleep(ms=1000):
+	xbmc.sleep(ms)
+
+
+# Function: restart
+def restart():
+	xbmc.restart()
+
+
+# Function: getSpecialPath
+def getSpecialPath(path):
+	if path is not None and path.startswith("special://"):
+		return xbmc.translatePath(path)
+	else:
+		return path
 
 
 # Function: str2bool
@@ -337,21 +401,21 @@ def any2str(v, error=False, none=True):
 def procexec(cmd):
 	try:
 		if isinstance(cmd, list):
-			debug("Preparing command for execution: %s" %(" ".join(cmd)), "Commons")
+			debug("Preparing command for execution: %s" % (" ".join(cmd)), "Commons")
 			_output = subprocess.check_output(cmd)
 		else:
-			debug("Preparing command for execution: %s" %cmd)
+			debug("Preparing command for execution: %s" % cmd)
 			_output = subprocess.check_output(cmd, shell=True)
 		_status = True
 		if _output is not None:
 			_output = _output.strip()
 		debug("Command execution output: [%s] %s" % (str(_status), _output))
 	except subprocess.CalledProcessError as grepexc:
-		error("Exception while executing shell command: [%s] %s" %(grepexc.returncode, grepexc.output))
+		error("Exception while executing shell command: [%s] %s" % (grepexc.returncode, grepexc.output))
 		_status = False
 		_output = str(grepexc.output)
 	except BaseException as err:
-		error("Exception while executing shell command: %s" %str(err))
+		error("Exception while executing shell command: %s" % str(err))
 		_status = False
 		_output = str(err)
 	return _status, _output

@@ -116,7 +116,7 @@ class ClueService:
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "sysbackup":
-				cfg["script"] = "RunScript(script.backuprestore, mode=backup)"
+				cfg["script"] = "RunScript(plugin.recovery, mode=backup)"
 				cfg["type"] = "script"
 			# Create job instance
 			if cfg["enabled"] and cfg["script"] is not None and cfg["script"] != '':

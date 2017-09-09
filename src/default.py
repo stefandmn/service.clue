@@ -106,13 +106,13 @@ class ClueService:
 					"interval": commons.setting(jobname + "_interval")}
 			cfg["day"] = self.WEEKDAYS[cfg["day"]] if cfg["day"] >= 0 else -1
 			# Adapt job script
-			if jobname == "sysupdater":
+			if jobname == "sysupdate":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_osupgrade"), commons.getSetting(jobname + "_osintegrity"))
 				cfg["type"] = "script"
-			elif jobname == "libupdater":
+			elif jobname == "libupdate":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
 				cfg["type"] = "script"
-			elif jobname == "libcleaner":
+			elif jobname == "libclean":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "sysbackup":

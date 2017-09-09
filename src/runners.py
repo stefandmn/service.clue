@@ -39,7 +39,7 @@ class LibraryUpdater(ServiceRunner, xbmc.Monitor):
 		self.video = False
 
 	def code(self):
-		return "libupdater"
+		return "libupdate"
 
 	def detect(self, arg):
 		if arg is not None and len(arg) == 1:
@@ -103,7 +103,7 @@ class LibraryCleaner(ServiceRunner, xbmc.Monitor):
 		self.video = False
 
 	def code(self):
-		return "libcleaner"
+		return "libclean"
 
 	def detect(self, arg):
 		if arg is not None and len(arg) == 1:
@@ -166,7 +166,7 @@ class SystemUpdater(ServiceRunner):
 		self.integrity = False
 
 	def code(self):
-		return "sysupdater"
+		return "sysupdate"
 
 	def detect(self, arg):
 		if arg is not None and len(arg) == 1:
@@ -203,7 +203,7 @@ class SystemUpdater(ServiceRunner):
 class SkinInfo(ServiceRunner):
 	NETWORKS = ('ServiceClue.NetworkRepeater', 'ServiceClue.NetworkRouter', 'ServiceClue.NetworkWireless', 'ServiceClue.NetworkMobile')
 
-	def __init__(self, id=1000):
+	def __init__(self, id=10000):
 		self.id = id
 		self.win = xbmcgui.Window(self.id)
 

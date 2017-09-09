@@ -29,7 +29,7 @@ class ServiceSettings(xbmc.Monitor):
 
 class ClueService:
 	WEEKDAYS = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-	JOBNAMES = [ "sysupdater", "libupdater", "libcleaner", "sysbackup", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
+	JOBNAMES = [ "sysupdate", "libupdate", "libclean", "sysbackup", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
 	RUNNERS = {}
 
 	def __init__(self):

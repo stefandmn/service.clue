@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import xbmc
+import sys
 from mediadir.AbstractPlaylist import AbstractPlaylist
 from mediadir.utils import MediaItems
+
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
 
 
 class CluePlaylist(AbstractPlaylist):

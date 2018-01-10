@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import xbmcgui
+import sys
 from mediadir.AbstractProgressDialog import AbstractProgressDialog
+
+if hasattr(sys.modules["__main__"], "xbmcgui"):
+	xbmcgui = sys.modules["__main__"].xbmcgui
+else:
+	import xbmcgui
 
 
 class ClueProgressDialog(AbstractProgressDialog):

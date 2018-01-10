@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
-import xbmc
-import xbmcgui
+import sys
 from mediadir.utils.Utilities import to_unicode, to_utf8
 from mediadir.AbstractContextUI import AbstractContextUI
 from .ClueProgressDialog import ClueProgressDialog
 from .ClueProgressDialogBG import ClueProgressDialogBG
+
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
+
+if hasattr(sys.modules["__main__"], "xbmcgui"):
+	xbmcgui = sys.modules["__main__"].xbmcgui
+else:
+	import xbmcgui
 
 
 class ClueContextUI(AbstractContextUI):

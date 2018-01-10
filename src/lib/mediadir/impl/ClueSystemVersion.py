@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import json
-import xbmc
 from mediadir.AbstractSystemVersion import AbstractSystemVersion
+
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
 
 
 class ClueSystemVersion(AbstractSystemVersion):
@@ -33,3 +38,5 @@ class ClueSystemVersion(AbstractSystemVersion):
 			self._releasename = 'Jarvis'
 		if self._version >= (17, 0):
 			self._releasename = 'Krypton'
+		if self._version >= (18, 0):
+			self._releasename = 'Leia'

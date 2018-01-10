@@ -95,7 +95,6 @@ class AbstractProvider(object):
 			return result
 
 	def _internal_favorite(self, context, re_match):
-		#context.addSortMethod('SORT_METHOD_LABEL_IGNORE_THE')
 		params = context.getParams()
 		command = re_match.group('command')
 		if command == 'add':

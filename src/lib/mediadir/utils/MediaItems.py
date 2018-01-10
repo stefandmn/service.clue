@@ -31,7 +31,7 @@ def to_video_item(context, video_item):
 		item.setProperty('inputstreamaddon', 'inputstream.adaptive')
 		item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
 	item.setProperty(u'IsPlayable', u'true')
-	if video_item.subtitles:
+	if video_item.getSubtitles():
 		item.setSubtitles(video_item.subtitles)
 	_info_labels = InfoLabels.createFromItem(context, video_item)
 	# This should work for all versions of XBMC/KODI.

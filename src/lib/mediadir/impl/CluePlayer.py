@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import xbmc
+import sys
 from mediadir.AbstractPlayer import AbstractPlayer
+
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
 
 
 class CluePlayer(AbstractPlayer):
@@ -19,20 +24,6 @@ class CluePlayer(AbstractPlayer):
 		the cache. So this is the solution to prevent a locked database (sqlite).
 		"""
 		self._context.execute('Playlist.PlayOffset(%s,%d)' % (self._player_type, playlist_index))
-		"""
-		playlist = None
-		if self._player_type == 'video':
-			playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
-			pass
-		elif self._player_type == 'music':
-			playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
-			pass
-		if playlist_index >= 0:
-			xbmc.Player().play(item=playlist, startpos=playlist_index)
-		else:
-			xbmc.Player().play(item=playlist)
-			pass
-		"""
 		pass
 
 	def stop(self):

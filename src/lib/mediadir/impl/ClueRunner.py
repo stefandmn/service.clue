@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import xbmcgui
-import xbmcplugin
+import sys
 from mediadir.AbstractRunner import AbstractRunner
 from mediadir.FrameworkException import FrameworkException
 from mediadir.items.DirectoryItem import DirectoryItem
@@ -11,6 +10,16 @@ from mediadir.items.ImageItem import ImageItem
 from mediadir.items.UriItem import UriItem
 from mediadir import AbstractProvider
 from mediadir.utils import MediaItems, InfoLabels
+
+if hasattr(sys.modules["__main__"], "xbmcgui"):
+	xbmcgui = sys.modules["__main__"].xbmcgui
+else:
+	import xbmcgui
+
+if hasattr(sys.modules["__main__"], "xbmcplugin"):
+	xbmcplugin = sys.modules["__main__"].xbmcplugin
+else:
+	import xbmcplugin
 
 
 class ClueRunner(AbstractRunner):
@@ -42,7 +51,7 @@ class ClueRunner(AbstractRunner):
 					elif isinstance(item, ImageItem):
 						self._add_image(context, item, item_count)
 				xbmcplugin.endOfDirectory(context.getHandle(), succeeded=True, cacheToDisc=options.get(AbstractProvider.RESULT_CACHE_TO_DISC, True))
-		except FrameworkException, ex:
+		except FrameworkException as ex:
 			if provider.handleException(context, ex):
 				context.error(ex.__str__())
 				xbmcgui.Dialog().ok("Exception in ContentProvider", ex.__str__())

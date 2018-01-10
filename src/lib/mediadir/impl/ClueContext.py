@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import json
 import urllib
 import urlparse
 import weakref
 import datetime
-import json
-import xbmc
-import xbmcvfs
-import xbmcaddon
-import xbmcplugin
 import Commons as common
 from mediadir.utils.Utilities import to_unicode
 from mediadir.AbstractContext import AbstractContext
@@ -18,6 +14,26 @@ from .ClueContextUI import ClueContextUI
 from .ClueSystemVersion import ClueSystemVersion
 from .CluePlaylist import CluePlaylist
 from .CluePlayer import CluePlayer
+
+if hasattr(sys.modules["__main__"], "xbmc"):
+	xbmc = sys.modules["__main__"].xbmc
+else:
+	import xbmc
+
+if hasattr(sys.modules["__main__"], "xbmcvfs"):
+	xbmcvfs = sys.modules["__main__"].xbmcvfs
+else:
+	import xbmcvfs
+
+if hasattr(sys.modules["__main__"], "xbmcaddon"):
+	xbmcaddon = sys.modules["__main__"].xbmcaddon
+else:
+	import xbmcaddon
+
+if hasattr(sys.modules["__main__"], "xbmcplugin"):
+	xbmcplugin = sys.modules["__main__"].xbmcplugin
+else:
+	import xbmcplugin
 
 
 class ClueContext(AbstractContext):

@@ -37,16 +37,13 @@ def findBestFit(data, compare_method=None):
 	return result
 
 def getSelectedStream(context, stream_data_list, quality_map_override=None):
-	#
 	# sort - best stream first
 	def _sort_stream_data(_stream_data):
 		return _stream_data.get('sort', 0)
 	video_quality = context.getSettings().getVideoQuality(quality_map_override=quality_map_override)
-	#
 	# find - best stream first
 	def _find_best_fit_video(_stream_data):
 		return video_quality - _stream_data.get('video', {}).get('height', 0)
-	#
 	sorted_stream_data_list = sorted(stream_data_list, key=_sort_stream_data, reverse=True)
 	context.debug('selectable streams: %d' % len(sorted_stream_data_list))
 	for sorted_stream_data in sorted_stream_data_list:

@@ -1,3 +1,7 @@
+v1.2
+- Adapted for Kodi 17
+- Add Favourites service class to add in Favourites container any media resources
+
 v1.1
 - Improve scheduler to define type of execution and allows to execute many type of jobs
 - Makes service to run also as executable script and redesign media DB clean and update

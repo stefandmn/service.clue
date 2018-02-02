@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import os
 import abc
 import sys
+import json
+import urlparse
 import lib.Commons as commons
 
 if hasattr(sys.modules["__main__"], "xbmc"):
@@ -30,9 +33,18 @@ class ServiceRunner(object):
 	def run(self, *arg):
 		pass
 
+	def input(self, *args):
+		params = {}
+		if len(args) > 1:
+			for i in args:
+				arg = i
+				if arg.startswith('?'):
+					arg = arg[1:]
+				params.update(dict(urlparse.parse_qsl(arg)))
+		return params
+
 
 class LibraryUpdater(ServiceRunner, xbmc.Monitor):
-
 	def __init__(self):
 		xbmc.Monitor.__init__(self)
 		self.music = False
@@ -96,7 +108,6 @@ class LibraryUpdater(ServiceRunner, xbmc.Monitor):
 
 
 class LibraryCleaner(ServiceRunner, xbmc.Monitor):
-
 	def __init__(self):
 		xbmc.Monitor.__init__(self)
 		self.music = False
@@ -160,7 +171,6 @@ class LibraryCleaner(ServiceRunner, xbmc.Monitor):
 
 
 class SystemUpdater(ServiceRunner):
-
 	def __init__(self):
 		self.osupgrade = False
 		self.integrity = False
@@ -182,16 +192,16 @@ class SystemUpdater(ServiceRunner):
 
 	def run(self, *arg):
 		self.detect(arg)
-		(_status,_content) = commons.procexec("/opt/clue/bin/setup -g update")
+		(_status, _content) = commons.procexec("/opt/clue/bin/setup -g update -s")
 		if _status and commons.any2int(_content.strip()) == 0:
 			commons.NotificationMsg(commons.translate(32010))
 			_cmd = "/opt/clue/bin/setup -s update -p"
-			_opt = "-a" if self.osupgrade else ""
-			(_status,_content) = commons.procexec("%s %s" %(_cmd,_opt))
+			_opt = "all" if self.osupgrade else ""
+			(_status, _content) = commons.procexec("%s %s" % (_cmd, _opt))
 			# Run system integrity procedure
 			if _status and self.integrity:
 				_cmd = "/opt/clue/bin/setup -s update -s"
-				(_status,_content) = commons.procexec(_cmd)
+				(_status, _content) = commons.procexec(_cmd)
 			if _status:
 				commons.NotificationMsg(commons.translate(32011))
 			else:
@@ -217,7 +227,7 @@ class SkinInfo(ServiceRunner):
 		self.win.setProperty(property, "")
 
 	def getProperty(self, property):
-		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" %(str(self.id), property)))
+		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" % (str(self.id), property)))
 
 	@property
 	def isNetworkRepeater(self):
@@ -261,7 +271,7 @@ class SkinInfo(ServiceRunner):
 
 	def run(self, *arg):
 		# Check network mode
-		_status,_content = commons.procexec("/opt/clue/bin/setup -g network -m")
+		_status, _content = commons.procexec("/opt/clue/bin/setup -g network -m")
 		if _status:
 			if _content is not None and _content == "repeater":
 				self.setNetworkRepeater()
@@ -277,7 +287,7 @@ class SkinInfo(ServiceRunner):
 				if self.isNetworkRouter:
 					self.resetNetworkRouter()
 		# Check network interface
-		_status,_content = commons.procexec("/opt/clue/bin/setup -g network -a")
+		_status, _content = commons.procexec("/opt/clue/bin/setup -g network -a")
 		if _status:
 			if _content is not None and _content.startswith("wlan"):
 				self.setNetworkWireless()
@@ -295,7 +305,6 @@ class SkinInfo(ServiceRunner):
 
 
 class CecTrigger(ServiceRunner):
-
 	def code(self):
 		return "cectrigger"
 
@@ -307,3 +316,33 @@ class CecTrigger(ServiceRunner):
 			xbmc.executebuiltin("CECActivateSource")
 		elif action == 'standby':
 			xbmc.executebuiltin("CECStandby")
+
+
+class Favourites(ServiceRunner):
+	def code(self):
+		return "favourites"
+
+	def run(self, *args):
+		params = self.input(args)
+		if not "type" in params:
+			params['type'] = "media"
+		if not "path" in params:
+			if xbmc.Player().isPlayingAudio():
+				params['path'] = xbmc.Player().getPlayingFile()
+				if not "title" in params:
+					params['title'] = xbmc.Player().getMusicInfoTag().getArtist().strip() + " - " + xbmc.Player().getMusicInfoTag().getTitle().strip()
+			elif xbmc.Player().isPlayingVideo():
+				params['path'] = xbmc.Player().getPlayingFile()
+				if not "title" in params:
+					params['title'] = xbmc.Player().getVideoInfoTag().getTitle().strip()
+		if not "title" in params:
+			params['title'] = os.path.basename(params['path'])
+		if "path" in params:
+			self.add(params)
+		else:
+			commons.error("No reference specified for the new item in Favourites container!", "Favourites")
+
+	def add(self, params):
+		cmd = {"jsonrpc": "2.0", "method": "Favourites.AddFavourite", "params": {"title": params["title"], "type": params["type"], "path": params["path"]}, "id": "1"}
+		answer = json.loads(xbmc.executeJSONRPC(json.dumps(cmd)))
+		commons.info("Adding favourite item: %s" % answer, "Favourites")

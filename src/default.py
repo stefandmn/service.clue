@@ -68,14 +68,14 @@ class ClueService:
 			if not os.path.exists(addondata):
 				os.mkdir(addondata)
 			# Run plugin for configuration
-			commons.notice("Runing for the first time and start Clue Plugin to review and update default system configuration")
+			commons.notice("Running for the first time and start Clue Plugin to review and update default system configuration")
 			xbmc.executebuiltin('XBMC.RunScript(plugin.clue)')
 			open(firstlock, 'w').close()
 
 	def initScheduler(self):
-		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(SchedulerService)"))
+		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(ServiceClue.SchedulerStatus)"))
 		if not infoFlag:
-			xbmcgui.Window(10000).setProperty("SchedulerService", "true")
+			xbmcgui.Window(10000).setProperty("ServiceClue.SchedulerStatus", "true")
 			self.settings = ServiceSettings(updateSettingsMethod=self.setupScheduler)
 			self.scheduler = Scheduler()
 			self.setupScheduler()
@@ -98,9 +98,9 @@ class ClueService:
 			job = None
 			cfg = {
 					"enabled": commons.setting(jobname),
-					"cycle": commons.setting(jobname + "_cycle"),	# cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
+					"cycle": commons.setting(jobname + "_cycle"),		# cycles: Weekly(0), Daily(1), Hourly(2), Minutes(3)
 					"script": commons.setting(jobname + "_script"),
-					"type": commons.setting(jobname + "_type"),		# script, addon, plugin, command, process, json
+					"type": commons.setting(jobname + "_type"),			# script, addon, plugin, command, process, json
 					"day": commons.setting(jobname + "_day"),
 					"time": commons.setting(jobname + "_time"),
 					"interval": commons.setting(jobname + "_interval")}
@@ -142,5 +142,5 @@ class ClueService:
 				commons.debug("Job '%s' is not enabled" %jobname)
 
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
 	ClueService()

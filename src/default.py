@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import os
 from runners import *
-from lib.Scheduler import Scheduler
+from scheduler import *
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc

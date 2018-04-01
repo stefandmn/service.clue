@@ -4,8 +4,8 @@ import os
 import abc
 import sys
 import json
+import commons
 import urlparse
-import lib.Commons as commons
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc

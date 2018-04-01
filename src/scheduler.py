@@ -3,13 +3,15 @@
 import sys
 import time
 import inspect
+import commons
 import datetime
 import threading
-import Commons as commons
+
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
 else:
 	import xbmc
+
 
 class Scheduler(object):
 

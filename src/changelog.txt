@@ -1,46 +1,26 @@
 v1.4
-- Add Settings option in home secondary menu
-- Adapt Favourites screen to allow adding the current playing media
-- Fix Playlist editor (classic playlist and smart playlist)
-- Adapt Weather, Movie and Music screens
-- Create themes: Blue, Crimson, Magenta and Lime (beside the default one)
-- Create MyPlaylist screen and aggregate all music components into a file.
-- Replace DialogKaiToast.xml with DialogNotification.xml
-- Adapt add-on components for Kodi v17
+- Adapted for Kodi 17
+- Add Favourites service class to add in Favourites container any media resources
+- Improve scheduler to define type of execution and allows to execute many type of jobs
+- Makes service to run also as executable script and redesign media DB clean and update
+- Reimplementation of scheduler manager and default configuration
+- Reimplementation of service runners and put them into a separate source file
+- Redesign Scheduler service
+- Remove CacheServer and Downloader components
+- Integration with plugin.youtube
+- Move 'mediadir' namespace from plugin.youtube to service.clue
 
 v1.0
-- Update color schemes and default color theme
-- Dialog Extended ProgressBar and MusicOverlay have been improved
-- Update and extend skin settings and define default values
-- Remove PVR functions
-- Update Video screen to simplify the navigation and improve LatestVideo list
-- Clue plugin has been integrated in skin.clue
-- Add Home control in all main screens just to prepare the skin for touch interface
-- Update slide mechanism in Weather screen
-- Fix music playlist editor
-- Adapted for Kodi v16
-- Change Home screen adding a secondary menu
-- Improve MusicOverlay screen
-- Adapted for Kodi v15
-- Addon icon has been changed (rebranding)
-- Adapted to integrate optional or builtin addons
-- Standardization of used color in interface screens
-- Extend weather adding map and alerts on the first screen
-- Fix Latest menus in Music and Video navigation screens
-- Adapt MusicOverlay labels and append music progress-bar control
-- Add Hourly forecast to MyWeather screen, correlate it with weather.clue add-on
-- Update of MusicVisualization GUI and functions: date, show/hide OSD, rating, etc.
-- Add additional color themes
-- Update of MyMusicNav, MyMusicPlaylist and MyMusicSongs screens
-- Update of MyVideoNav, MyVideoPlaylist, MyPVR and MyPics screens
-- Update menu-items from all navigation screens (music, video and photo)
-- Update languages
-- Update of graphical resources (background pictures, logos and controls)
-- Apply fixes related to the Home screen
-- Artist slideshow has been included in Home screen through general background
-- Define skin configuration of Artist slideshow integration
-- Update of MusicOverlay (permutation of displayed content and add next song)
-- Create a derived skin add-on based on skin.maximinimalism v1.0.4
-- MusicNav and VideoNav have been revised
-- Home screen has been adapted to the new concept
-- general background updated
+- Integration with plugin.clue
+- Update language configuration
+- Adapted for Kodi 15 and 16
+- Apply changes for Kodi compatibility
+- Redesign CommonFunctions library to become the unique integration layer for all addons
+- Implement scheduler services and integrate core and optional addons from Clue distribution
+- Merge script.clue in service.clue addon adding other common functions, downloader and specific libraries
+- Change system update workflow to have user control in GUI managed by default skin
+- Add storage server (db cache layer) service
+- Add library update service
+- Design a new icon to show maintenance service for RPi, Clue OS and MCPi components
+- Service restructuring to check only operating system components
+- Optimize and adapt service to support Clue OS

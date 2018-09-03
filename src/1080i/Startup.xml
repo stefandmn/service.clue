@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">10</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<onload condition="Library.HasContent(Movies) | Library.HasContent(TVShows) | Library.HasContent(MusicVideos)">Skin.SetString(showRecentVideoItems,true)</onload>
+	<onload condition="Library.HasContent(Music)">Skin.SetString(showRecentMusicItems,true)</onload>
+	<onload condition="!Skin.HasSetting(HomeSlideshow)">Skin.SetString(HomeSlideshow,true)</onload>
+	<onload condition="!Skin.HasSetting(MusicSlideshow)">Skin.SetString(MusicSlideshow,true)</onload>
+	<coordinates>
+		<posx>15</posx>
+		<posy>15</posy>
+	</coordinates>
+
+	<controls>
+		<control type="button" id="10">
+			<description>Startup Trigger</description>
+			<onfocus>ReplaceWindow(home)</onfocus>
+			<texturenofocus>-</texturenofocus>
+			<texturefocus>-</texturefocus>
+		</control>
+	</controls>
+</window>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="false">6300</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<onload condition="Skin.hasSetting(StopVideoOnMenu) + !Player.HasAudio">PlayerControl(stop)</onload>
+	<previouswindow>home</previouswindow>
+
+	<controls>
+		<include>globalBackground</include>
+
+		<!--page container group-->
+		<control type="group">
+			<!--window fader-->
+			<animation type="conditional" condition="window.next(0) | window.next(1)">
+				<effect type="fade" start="100" end="0" time="300"/>
+			</animation>
+
+			<!--shift page for certain modal dialogs-->
+			<include>modalDialogContentShift</include>
+			<!--date and time-->
+			<include>dateTime</include>
+
+			<!--content provider-->
+			<control type="group">
+				<posx>0</posx>
+				<posy>0</posy>
+
+				
+				<!-- Main menu -->
+				<control type="group">
+					<posx>96</posx>
+					<posy>50</posy>
+					
+					<!-- Menu Items -->
+					<control type="grouplist" id="6300">
+						<posx>-50</posx>
+						<posy>180</posy>
+						<onleft>62</onleft>
+						<onright>6000</onright>
+						<onup>1111</onup>
+						<ondown>62</ondown>
+						<control type="button" id="301">
+							<description>Picture Library</description>
+							<height>40</height>
+							<width>236</width>
+							<font>menuTitle</font>
+							<textcolor>unselected</textcolor>
+							<focusedcolor>selected</focusedcolor>
+							<texturefocus>masks/selected.png</texturefocus>
+							<textoffsetx>12</textoffsetx>
+							<label>31056</label>
+							<onclick>ReplaceWindow(pictures)</onclick>
+						</control>
+						<control type="button" id="302">
+							<description>customPictureAddon1</description>
+							<visible>!isempty(Skin.String(customPictureAddon1))</visible>
+							<height>40</height>
+							<width>236</width>
+							<font>menuTitle</font>
+							<textcolor>white</textcolor>
+							<focusedcolor>selected</focusedcolor>
+							<texturefocus>masks/selected.png</texturefocus>
+							<textoffsetx>12</textoffsetx>
+							<label>$INFO[System.AddonTitle(Skin.String(customPictureAddon1))]</label>
+							<onclick>RunAddon($INFO[Skin.String(customPictureAddon1)])</onclick>
+							<onclick>Control.SetFocus(52)</onclick>
+						</control>
+						<control type="button" id="303">
+							<description>customPictureAddon2</description>
+							<visible>!isempty(Skin.String(customPictureAddon2))</visible>
+							<height>40</height>
+							<width>236</width>
+							<font>menuTitle</font>
+							<textcolor>unselected</textcolor>
+							<focusedcolor>selected</focusedcolor>
+							<texturefocus>masks/selected.png</texturefocus>
+							<textoffsetx>12</textoffsetx>
+							<label>$INFO[System.AddonTitle(Skin.String(customPictureAddon2))]</label>
+							<onclick>RunAddon($INFO[Skin.String(customPictureAddon2)])</onclick>
+							<onclick>Control.SetFocus(52)</onclick>
+						</control>
+						<control type="button" id="304">
+							<description>customPictureAddon3</description>
+							<visible>!isempty(Skin.String(customPictureAddon3))</visible>
+							<height>40</height>
+							<width>236</width>
+							<font>menuTitle</font>
+							<textcolor>unselected</textcolor>
+							<focusedcolor>selected</focusedcolor>
+							<texturefocus>masks/selected.png</texturefocus>
+							<textoffsetx>12</textoffsetx>
+							<label>$INFO[System.AddonTitle(Skin.String(customPictureAddon3))]</label>
+							<onclick>RunAddon($INFO[Skin.String(customPictureAddon3)])</onclick>
+							<onclick>Control.SetFocus(52)</onclick>
+						</control>
+						<control type="button" id="305">
+							<description>Favorites</description>
+							<height>40</height>
+							<width>236</width>
+							<font>menuTitle</font>
+							<textcolor>unselected</textcolor>
+							<focusedcolor>selected</focusedcolor>
+							<texturefocus>masks/selected.png</texturefocus>
+							<textoffsetx>12</textoffsetx>
+							<label>1036</label>
+							<onclick>ActivateWindow(favourites,return)</onclick>
+						</control>
+					</control>
+					
+					<!-- Menu Options -->
+					<control type="group">
+						<posx>-50</posx>
+						<posy>440</posy>
+						<control type="label">
+							<posx>-10</posx>
+							<posy>45</posy>
+							<width>24-col</width>
+							<font>menuTitle</font>
+							<label>$LOCALIZE[33063]</label>
+							<textcolor>selected</textcolor>
+							<shadowcolor>-</shadowcolor>
+						</control>
+						<control type="grouplist" id="62">
+							<posx>0</posx>
+							<posy>90</posy>
+							<width>4-col</width>
+							<height>12-row</height>
+							<itemgap>0</itemgap>
+							<onleft>6300</onleft>
+							<onright>6000</onright>
+							<onup>6300</onup>
+							<ondown>62</ondown>
+							<control type="button" id="3">
+								<description>Sort by</description>
+								<height>40</height>
+								<width>236</width>
+								<font>smallMedium</font>
+								<textcolor>unselected</textcolor>
+								<focusedcolor>selected</focusedcolor>
+								<texturefocus>masks/selected.png</texturefocus>
+								<textoffsetx>12</textoffsetx>
+								<label>103</label>
+							</control>
+							<control type="togglebutton" id="4">
+								<description>Sort direction</description>
+								<label>31109</label>
+								<altlabel>31110</altlabel>
+								<align>left</align>
+								<height>40</height>
+								<width>236</width>
+								<font>smallMedium</font>
+								<textcolor>unselected</textcolor>
+								<focusedcolor>selected</focusedcolor>
+								<texturefocus>masks/selected.png</texturefocus>
+								<alttexturefocus>masks/selected.png</alttexturefocus>
+								<textoffsetx>12</textoffsetx>
+							</control>
+							<control type="button" id="500">
+								<description>Files (pictures)</description>
+								<height>40</height>
+								<width>236</width>
+								<font>smallMedium</font>
+								<textcolor>unselected</textcolor>
+								<focusedcolor>selected</focusedcolor>
+								<texturefocus>masks/selected.png</texturefocus>
+								<textoffsetx>12</textoffsetx>
+								<label>31008</label>
+								<onclick>right</onclick>
+								<onclick>ActivateWindow(pictures,root)</onclick>
+							</control>
+						</control>
+					</control>
+				</control>
+
+
+				<!--Folder titles-->
+				<control type="group">
+					<posx>312</posx>
+					<posy>50</posy>
+					<!--source title-->
+					<control type="label">
+						<visible>IntegerGreaterThan(container.Numitems,0)</visible>
+						<posx>0</posx>
+						<posy>0</posy>
+						<width>14-col</width>
+						<font>pageTitle</font>
+						<label>31056</label>
+						<textcolor>selected</textcolor>
+					</control>
+					<!--source subtitle-->
+					<control type="label">
+						<visible>IntegerGreaterThan(container.Numitems,0) + Container.HasFolders</visible>
+						<posx>0</posx>
+						<posy>45</posy>
+						<width>24-col</width>
+						<font>regular</font>
+						<label>$INFO[container.Numitems,, $LOCALIZE[31037]]</label>
+						<textcolor>selected</textcolor>
+					</control>
+					<control type="label">
+						<visible>IntegerGreaterThan(container.Numitems,0) + !Container.HasFolders</visible>
+						<posx>0</posx>
+						<posy>45</posy>
+						<width>24-col</width>
+						<font>regular</font>
+						<label>$INFO[container.Numitems,, $LOCALIZE[31050]]$INFO[container.foldername, - ,]</label>
+						<textcolor>selected</textcolor>
+					</control>
+				</control>
+
+
+				<!--Main content listing-->
+				<control type="group" id="6000">
+					<posx>312</posx>
+					<posy>266</posy>
+					<!--source content-->
+					<control type="group">
+						<!--Photo Grid Browser-->
+						<control type="panel" id="52">
+							<visible>true</visible>
+							<posx>-12</posx>
+							<posy>0</posy>
+							<width>22-col</width>
+							<height>708</height>
+							<onleft>6300</onleft>
+							<onright>60</onright>
+							<ondown>52</ondown>
+							<onup>52</onup>
+							<pagecontrol>60</pagecontrol>
+							<itemlayout width="312" height="366">
+								<control type="image">
+									<posx>0</posx>
+									<posy>0</posy>
+									<width>276</width>
+									<height>273</height>
+									<aspectratio>scale</aspectratio>
+									<texture fallback="masks/offblack.png">$INFO[Listitem.icon]</texture>
+									<bordertexture border="3" colordiffuse="33FFFFFF">masks/selected.png</bordertexture>
+									<bordersize>3</bordersize>
+									<colordiffuse>ffFFFFFF</colordiffuse>
+								</control>
+								<control type="group">
+									<posx>0</posx>
+									<posy>276</posy>
+									<control type="image">
+										<posx>0</posx>
+										<posy>0</posy>
+										<width>276</width>
+										<height>64</height>
+										<aspectratio>stretch</aspectratio>
+										<texture>masks/black.png</texture>
+										<bordersize>0</bordersize>
+										<colordiffuse>77FFFFFF</colordiffuse>
+									</control>
+									<control type="label">
+										<posx>12</posx>
+										<posy>-12</posy>
+										<width>252</width>
+										<font>itemTitleSmallCondensed</font>
+										<textcolor>unselected</textcolor>
+										<label>$INFO[ListItem.label]</label>
+									</control>
+									<control type="label">
+										<posx>12</posx>
+										<posy>18</posy>
+										<width>252</width>
+										<font>smallMedium</font>
+										<textcolor>unselected</textcolor>
+										<label>$INFO[ListItem.PictureResolution,, • ]$INFO[ListItem.label2]</label>
+									</control>
+								</control>
+							</itemlayout>
+							<focusedlayout width="312" height="366">
+								<control type="image">
+									<posx>0</posx>
+									<posy>0</posy>
+									<width>276</width>
+									<height>273</height>
+									<aspectratio>scale</aspectratio>
+									<texture fallback="masks/offblack.png">$INFO[Listitem.icon]</texture>
+									<bordertexture border="3" colordiffuse="ffFFFFFF">masks/selected.png</bordertexture>
+									<bordersize>3</bordersize>
+									<colordiffuse>ffFFFFFF</colordiffuse>
+								</control>
+								<control type="group">
+									<posx>0</posx>
+									<posy>276</posy>
+									<control type="image">
+										<posx>0</posx>
+										<posy>0</posy>
+										<width>276</width>
+										<height>64</height>
+										<aspectratio>stretch</aspectratio>
+										<texture>masks/selected.png</texture>
+										<bordersize>0</bordersize>
+										<colordiffuse>ffFFFFFF</colordiffuse>
+									</control>
+									<control type="label">
+										<posx>12</posx>
+										<posy>-12</posy>
+										<width>252</width>
+										<font>itemTitleSmallCondensed</font>
+										<textcolor>black</textcolor>
+										<shadowcolor>-</shadowcolor>
+										<label>$INFO[ListItem.Label]</label>
+										<scroll>true</scroll>
+									</control>
+									<control type="label">
+										<posx>12</posx>
+										<posy>18</posy>
+										<width>252</width>
+										<font>smallMedium</font>
+										<textcolor>black</textcolor>
+										<shadowcolor>-</shadowcolor>
+										<label>$INFO[ListItem.PictureResolution,, • ]$INFO[ListItem.label2]</label>
+									</control>
+								</control>
+							</focusedlayout>
+						</control>
+					</control>
+				</control>
+				<!--page scrollbar-->
+				<control type="group" id="6200">
+					<visible>Control.IsVisible(60)</visible>
+					<animation effect="fade" start="100" end="70" time="100" condition="!controlgroup(6200).hasfocus">conditional</animation>
+					<control type="scrollbar" id="60">
+						<posx>84r</posx>
+						<posy>265</posy>
+						<height>710</height>
+						<onleft>6000</onleft>
+					</control>
+				</control>
+
+				<!--Sort / misc labels (footer)-->
+				<control type="group">
+					<posx>312</posx>
+					<posy>1007</posy>
+					<include>mediaListFooter</include>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

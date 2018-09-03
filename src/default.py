@@ -66,10 +66,14 @@ class ClueService:
 		if not os.path.isfile(firstlock):
 			if not os.path.exists(addondata):
 				os.mkdir(addondata)
-			# Run plugin for configuration
-			commons.notice("Running for the first time and start Clue Plugin to review and update default system configuration")
-			xbmc.executebuiltin('XBMC.RunScript(plugin.clue)')
 			open(firstlock, 'w').close()
+			firstrun = threading.Thread(target=self._runFirstTime)
+			firstrun.start()
+
+	def _runFirstTime(self):
+		xbmc.sleep(5000)
+		commons.notice("Running for the first time and start Clue Plugin to review and update default system configuration")
+		xbmc.executebuiltin('XBMC.RunScript(plugin.clue)')
 
 	def initScheduler(self):
 		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(ServiceClue.SchedulerStatus)"))

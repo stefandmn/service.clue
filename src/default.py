@@ -73,12 +73,12 @@ class ClueService:
 	def _runFirstTime(self):
 		xbmc.sleep(5000)
 		commons.notice("Running for the first time and start Clue Plugin to review and update default system configuration")
-		xbmc.executebuiltin('XBMC.RunScript(plugin.clue)')
+		xbmc.executebuiltin('XBMC.RunScript(program.clue)')
 
 	def initScheduler(self):
-		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(ServiceClue.SchedulerStatus)"))
+		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(SystemSetup.SchedulerStatus)"))
 		if not infoFlag:
-			xbmcgui.Window(10000).setProperty("ServiceClue.SchedulerStatus", "true")
+			xbmcgui.Window(10000).setProperty("SystemSetup.SchedulerStatus", "true")
 			self.settings = ServiceSettings(updateSettingsMethod=self.setupScheduler)
 			self.scheduler = Scheduler()
 			self.setupScheduler()
@@ -119,7 +119,7 @@ class ClueService:
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "sysbackup":
-				cfg["script"] = "RunScript(plugin.recovery, mode=backup)"
+				cfg["script"] = "RunScript(program.recovery, mode=backup)"
 				cfg["type"] = "script"
 			# Create job instance
 			if cfg["enabled"] and cfg["script"] is not None and cfg["script"] != '':

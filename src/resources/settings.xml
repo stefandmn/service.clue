@@ -25,7 +25,7 @@
 		<setting label="32102" type="enum" id="libclean_day" visible="eq(-5,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
 		<setting label="32103" type="time" id="libclean_time" visible="eq(-6,true) + lt(-3,2)" default="04:30"/>
 		<setting type="sep"/>
-		<setting label="32025" type="bool" id="sysbackup" default="false" enable="System.HasAddon(plugin.recovery)"/>
+		<setting label="32025" type="bool" id="sysbackup" default="false" enable="System.HasAddon(program.recovery)"/>
 		<setting label="32101" type="enum" id="sysbackup_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
 		<setting label="32104" type="number" id="sysbackup_interval" visible="eq(-2,true)" default="1"/>
 		<setting label="32102" type="enum" id="sysbackup_day" visible="eq(-3,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>

@@ -211,7 +211,7 @@ class SystemUpdater(ServiceRunner):
 
 
 class SkinInfo(ServiceRunner):
-	NETWORKS = ('ServiceClue.NetworkRepeater', 'ServiceClue.NetworkRouter', 'ServiceClue.NetworkWireless', 'ServiceClue.NetworkMobile')
+	NETWORKS = ('SystemSetup.NetworkRepeater', 'SystemSetup.NetworkRouter', 'SystemSetup.NetworkWireless', 'SystemSetup.NetworkMobile')
 
 	def __init__(self, id=10000):
 		self.id = id

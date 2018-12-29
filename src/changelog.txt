@@ -11,7 +11,7 @@ v1.4
 - Move 'mediadir' namespace from plugin.youtube to service.clue
 
 v1.0
-- Integration with plugin.clue
+- Integration with program.clue
 - Update language configuration
 - Adapted for Kodi 15 and 16
 - Apply changes for Kodi compatibility

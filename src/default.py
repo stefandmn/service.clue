@@ -110,13 +110,13 @@ class ClueService:
 			cfg["day"] = self.WEEKDAYS[cfg["day"]] if cfg["day"] >= 0 else -1
 			# Adapt job script
 			if jobname == "sysupdate":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_osupgrade"), commons.getSetting(jobname + "_osintegrity"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getAddonSetting(jobname + "_osupgrade"), commons.getAddonSetting(jobname + "_osintegrity"))
 				cfg["type"] = "script"
 			elif jobname == "libupdate":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getAddonSetting(jobname + "_music"), commons.getAddonSetting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "libclean":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getSetting(jobname + "_music"), commons.getSetting(jobname + "_video"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(commons.AddonId(), jobname, commons.getAddonSetting(jobname + "_music"), commons.getAddonSetting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "sysbackup":
 				cfg["script"] = "RunScript(program.recovery, mode=backup)"

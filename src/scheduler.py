@@ -13,10 +13,12 @@ else:
 	import xbmc
 
 
+
 class Scheduler(object):
 
 	def __init__(self):
 		self.jobs = []
+
 
 	def run(self):
 		"""
@@ -31,6 +33,7 @@ class Scheduler(object):
 		for job in sorted(runnableJobs):
 			job.run()
 
+
 	def runAllNow(self, delaySeconds=0):
 		"""
 		Run all jobs regardless if they are scheduled to run or not.
@@ -42,11 +45,13 @@ class Scheduler(object):
 			job.run()
 			time.sleep(delaySeconds)
 
+
 	def removeAll(self):
 		"""
-		eletes all scheduled jobs.
+		Deletes all scheduled jobs.
 		"""
 		del self.jobs[:]
+
 
 	def remove(self, job):
 		"""
@@ -57,6 +62,7 @@ class Scheduler(object):
 		except ValueError:
 			pass
 
+
 	@property
 	def NextRun(self):
 		"""
@@ -66,12 +72,14 @@ class Scheduler(object):
 			return None
 		return min(self.jobs).NextRun
 
+
 	@property
 	def idle(self):
 		"""
 		Number of seconds until `next_run`.
 		"""
 		return (self.NextRun - datetime.datetime.now()).total_seconds()
+
 
 	def newJob(self, code, interval=1):
 		"""
@@ -81,6 +89,7 @@ class Scheduler(object):
 		self.jobs.append(job)
 		return job
 
+
 	def getJob(self, code):
 		selectedJob = None
 		for job in self.jobs:
@@ -88,6 +97,7 @@ class Scheduler(object):
 				selectedJob = job
 				break
 		return selectedJob
+
 
 
 class Job(object):
@@ -107,72 +117,85 @@ class Job(object):
 		self.period = None  # timedelta between runs, only valid for
 		self.startDay = None  # Specific day of the week to start on
 
+
 	def __lt__(self, other):
 		"""
 		PeriodicJobs are sortable based on the scheduled time they run next.
 		"""
 		return self.nextRun < other.nextRun
 
+
 	def __repr__(self):
 		def format_time(t):
 			return t.strftime("%Y-%m-%d %H:%M:%S") if t else '[never]'
 		timestats = 'Last run: %s, Next run: %s' % (format_time(self.lastRun), format_time(self.nextRun))
 		if self.atTime is not None:
-			return '%s - Runs every %s %s at %s, do %s, %s' % (self.code.capitalize(), self.interval,
+			return '%s (%s) - Runs every %s %s at %s, do %s, %s' % (self.code.capitalize(), self.type, self.interval,
 				self.unit[:-1] if self.interval == 1 else self.unit, self.atTime, self.scriptbytype, timestats)
 		else:
-			return '%s - Runs every %s %s, do %s, %s' % (self.code.capitalize(), self.interval,
+			return '%s (%s)- Runs every %s %s, do %s, %s' % (self.code.capitalize(), self.type, self.interval,
 				self.unit[:-1] if self.interval == 1 else self.unit, self.scriptbytype, timestats)
+
 
 	@property
 	def second(self):
 		assert self.interval == 1
 		return self.seconds
 
+
 	@property
 	def seconds(self):
 		self.unit = 'seconds'
 		return self
+
 
 	@property
 	def minute(self):
 		assert self.interval == 1
 		return self.minutes
 
+
 	@property
 	def minutes(self):
 		self.unit = 'minutes'
 		return self
+
 
 	@property
 	def hour(self):
 		assert self.interval == 1
 		return self.hours
 
+
 	@property
 	def hours(self):
 		self.unit = 'hours'
 		return self
+
 
 	@property
 	def day(self):
 		assert self.interval == 1
 		return self.days
 
+
 	@property
 	def days(self):
 		self.unit = 'days'
 		return self
+
 
 	@property
 	def week(self):
 		assert self.interval == 1
 		return self.weeks
 
+
 	def weekday(self, day):
 		assert self.interval == 1
 		self.startDay = day
 		return self.weeks
+
 
 	@property
 	def sunday(self):
@@ -180,11 +203,13 @@ class Job(object):
 		self.startDay = 'sunday'
 		return self.weeks
 
+
 	@property
 	def monday(self):
 		assert self.interval == 1
 		self.startDay = 'monday'
 		return self.weeks
+
 
 	@property
 	def tuesday(self):
@@ -192,11 +217,13 @@ class Job(object):
 		self.startDay = 'tuesday'
 		return self.weeks
 
+
 	@property
 	def wednesday(self):
 		assert self.interval == 1
 		self.startDay = 'wednesday'
 		return self.weeks
+
 
 	@property
 	def thursday(self):
@@ -204,11 +231,13 @@ class Job(object):
 		self.startDay = 'thursday'
 		return self.weeks
 
+
 	@property
 	def friday(self):
 		assert self.interval == 1
 		self.startDay = 'friday'
 		return self.weeks
+
 
 	@property
 	def saturday(self):
@@ -216,14 +245,17 @@ class Job(object):
 		self.startDay = 'saturday'
 		return self.weeks
 
+
 	@property
 	def weeks(self):
 		self.unit = 'weeks'
 		return self
 
+
 	def every(self, interval):
 		self.interval = interval
 		return self
+
 
 	def at(self, timeStr):
 		"""
@@ -243,15 +275,18 @@ class Job(object):
 		self.atTime = datetime.time(hour, minute)
 		return self
 
+
 	def setScript(self, script):
 		self.script = script
 		self._setNextRun()
 		return self
 
+
 	def setType(self, type='script'):
 		if type in ('script', 'addon', 'plugin', 'command', 'process', 'json'):
 			self.type = type
 		return self
+
 
 	@property
 	def scriptbytype(self):
@@ -294,6 +329,7 @@ class Job(object):
 					action = "CallObject(" + self.script + ")"
 		return action
 
+
 	def run(self):
 		"""
 		Run the job and immediately reschedule it.
@@ -302,39 +338,51 @@ class Job(object):
 		runner.setDaemon(True)
 		runner.start()
 
+
 	def _run(self):
 		"""
 		Run the job and immediately reschedule it.
 		"""
-		commons.debug("Starting job: %s" %str(self), "Scheduler")
+		commons.debug("Starting job: %s" %str(self), "service.SchedulerJob")
 		if self.script is not None:
-			if self.type is ('script', 'addon', 'plugin'):
-				xbmc.executebuiltin(self.scriptbytype)
+			if self.type in ['script', 'addon', 'plugin']:
+				addon = self.scriptbytype
+				commons.debug("Executing addon: %s" %addon, "service.SchedulerJob")
+				xbmc.executebuiltin(addon)
 			elif str(self.type) == 'process':
 				process = self.scriptbytype.strip()[len("runprocess"):].strip()[1:-1].strip()
+				commons.debug("Executing process: %s" % process, "service.SchedulerJob")
 				commons.procexec(process)
 			elif str(self.type) == 'command':
 				command = self.scriptbytype.strip()[len("runcommand"):].strip()[1:-1].strip()
+				commons.debug("Executing command: %s" % command, "service.SchedulerJob")
 				xbmc.executebuiltin(command)
 			elif str(self.type) == 'json':
-				expression = self.scriptbytype.strip()[len("runjson"):].strip()[1:-1].strip()
-				xbmc.executeJSONRPC(expression)
+				call = self.scriptbytype.strip()[len("runjson"):].strip()[1:-1].strip()
+				commons.debug("Executing json call: %s" %call, "service.SchedulerJob")
+				xbmc.executeJSONRPC(call)
 			elif str(self.type) == 'object':
 				if isinstance(self.script, str):
 					function = self.scriptbytype.strip()[len("callobject"):].strip()[1:-1].strip()
+					commons.debug("Executing function: %s" %str(function), "service.SchedulerJob")
 					eval(function)
 				elif inspect.isclass(self.script):
 					if isinstance(self.script, threading.Thread):
+						commons.debug("Executing default method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "start" in dir(self.script):
+						commons.debug("Executing start method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "run" in dir(self.script):
+						commons.debug("Executing run method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.run()
 				elif hasattr(self.script, '__call__'):
+					commons.debug("Executing generic object: %s" % str(self.script), "service.SchedulerJob")
 					self.script()
 		self.lastRun = datetime.datetime.now()
 		self._setNextRun()
-		commons.debug("Finishing job: %s" %str(self), "Scheduler")
+		commons.debug("Finishing job: %s" %str(self), "service.SchedulerJob")
+
 
 	@property
 	def isReady(self):
@@ -342,6 +390,7 @@ class Job(object):
 		True if the job should be run now.
 		"""
 		return datetime.datetime.now() >= self.nextRun
+
 
 	def _setNextRun(self):
 		"""

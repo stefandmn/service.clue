@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from runners import *
+import os
 from scheduler import *
+from resources.runners import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -14,6 +15,7 @@ else:
 	import xbmcgui
 
 
+
 class ServiceSettings(xbmc.Monitor):
 	updateSettingsMethod = None
 
@@ -21,15 +23,18 @@ class ServiceSettings(xbmc.Monitor):
 		xbmc.Monitor.__init__(self)
 		self.updateSettingsMethod = kwargs['updateSettingsMethod']
 
+
 	def onSettingsChanged(self):
-		commons.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "ServiceSettings")
+		commons.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "service.Settings")
 		self.updateSettingsMethod()
+
 
 
 class ClueService:
 	WEEKDAYS = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 	JOBNAMES = [ "sysupdate", "libupdate", "libclean", "sysbackup", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
 	RUNNERS = {}
+
 
 	def __init__(self):
 		# Start jobs according to the input parameters
@@ -40,24 +45,39 @@ class ClueService:
 			self.initScheduler()
 		else:
 			_code = str(sys.argv[1]).strip()
-			commons.info('%s v%s has been started: %s' %(commons.AddonName(), commons.AddonVersion(), _code))
+			commons.info('%s v%s has been started: %s' %(commons.AddonName(), commons.AddonVersion(), _code), 'service')
 			_runner = self.getRunner(_code)
 			if _runner is not None:
-				commons.debug("Starting service runner: %s" %str(_runner))
+				commons.debug("Starting service runner: %s" %str(_runner), 'service')
 				_runner.run(*sys.argv[2::])
 			else:
 				commons.error("Unknown service runner: %s" %_code)
-		commons.debug('%s v%s has been terminated' %(commons.AddonName(), commons.AddonVersion()))
+		commons.debug('%s v%s has been terminated' %(commons.AddonName(), commons.AddonVersion()), 'service')
+
+
+	def readRunners(self):
+		"""Detect all implemented and declared service runners and build up the corresponding dictionary"""
+		self.RUNNERS.clear()
+		for cls in ServiceRunner.__subclasses__():
+			try:
+				runner = cls()
+				if not self.RUNNERS.has_key(runner.code()):
+					self.RUNNERS[runner.code()] = runner
+				else:
+					commons.error("Invalid signature of service runner, it has the same id with another one: %s " %runner, 'service')
+			except BaseException as be:
+				commons.error('Unexpected error while reading [%s] service runner: %s' %(str(cls),str(be)), 'service')
+
 
 	def getRunner(self, code):
-		if not ClueService.RUNNERS:
-			for cls in ServiceRunner.__subclasses__():
-				runnerInstance = cls()
-				ClueService.RUNNERS[runnerInstance.code()] = runnerInstance
-		if ClueService.RUNNERS.has_key(code):
-			return ClueService.RUNNERS[code]
-		else:
-			return None
+		"""Returns the service runner having the specified signature """
+		runner = None
+		if not self.RUNNERS:
+			self.readRunners()
+		if code is not None and self.RUNNERS.has_key(code):
+			runner = self.RUNNERS[code]
+		return runner
+
 
 	def isFirstTimeRunning(self):
 		# check if first run
@@ -70,10 +90,12 @@ class ClueService:
 			firstrun = threading.Thread(target=self._runFirstTime)
 			firstrun.start()
 
+
 	def _runFirstTime(self):
 		xbmc.sleep(5000)
-		commons.notice("Running for the first time and start Clue Plugin to review and update default system configuration")
+		commons.notice("Running for the first time and start Clue System Setup add-on to review and update default system configuration", 'service')
 		xbmc.executebuiltin('XBMC.RunScript(program.clue)')
+
 
 	def initScheduler(self):
 		infoFlag = commons.any2bool(xbmc.getInfoLabel("Window(10000).Property(SystemSetup.SchedulerStatus)"))
@@ -84,19 +106,22 @@ class ClueService:
 			self.setupScheduler()
 			self.startScheduler()
 		else:
-			commons.notice("Service component is already running!")
+			commons.notice("Service component is already running!", 'service')
+
 
 	def setupScheduler(self):
 		self.scheduler.removeAll()
 		self.loadScheduler()
+
 
 	def startScheduler(self):
 		while not xbmc.abortRequested:
 			self.scheduler.run()
 			xbmc.sleep(1000)
 
+
 	def loadScheduler(self):
-		commons.debug("Loading scheduler setting..")
+		commons.debug("Loading scheduler settings..", 'service')
 		for jobname in self.JOBNAMES:
 			job = None
 			cfg = {
@@ -137,12 +162,13 @@ class ClueService:
 					job.setType(cfg["type"])
 					commons.debug("Creating job: %s" %str(job))
 				elif job is not None and not cfg["script"]:
-					commons.error("Job '%s' is removed because no script has been configured to run" %jobname)
+					commons.error("Job '%s' is removed because no script has been configured to run" %jobname, 'service')
 					self.scheduler.remove(job)
 				else:
-					commons.error("Error creating job based on configuration: %s" %jobname)
+					commons.error("Error creating job based on configuration: %s" %jobname, 'service')
 			else:
-				commons.debug("Job '%s' is not enabled" %jobname)
+				commons.debug("Job '%s' is not enabled" %jobname, 'service')
+
 
 
 if __name__ == "__main__":

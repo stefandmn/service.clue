@@ -3,7 +3,7 @@
 import sys
 import time
 import inspect
-import commons
+import common
 import datetime
 import threading
 
@@ -343,45 +343,45 @@ class Job(object):
 		"""
 		Run the job and immediately reschedule it.
 		"""
-		commons.debug("Starting job: %s" %str(self), "service.SchedulerJob")
+		common.debug("Starting job: %s" %str(self), "service.SchedulerJob")
 		if self.script is not None:
 			if self.type in ['script', 'addon', 'plugin']:
 				addon = self.scriptbytype
-				commons.debug("Executing addon: %s" %addon, "service.SchedulerJob")
+				common.debug("Executing addon: %s" %addon, "service.SchedulerJob")
 				xbmc.executebuiltin(addon)
 			elif str(self.type) == 'process':
 				process = self.scriptbytype.strip()[len("runprocess"):].strip()[1:-1].strip()
-				commons.debug("Executing process: %s" % process, "service.SchedulerJob")
-				commons.procexec(process)
+				common.debug("Executing process: %s" % process, "service.SchedulerJob")
+				common.procexec(process)
 			elif str(self.type) == 'command':
 				command = self.scriptbytype.strip()[len("runcommand"):].strip()[1:-1].strip()
-				commons.debug("Executing command: %s" % command, "service.SchedulerJob")
+				common.debug("Executing command: %s" % command, "service.SchedulerJob")
 				xbmc.executebuiltin(command)
 			elif str(self.type) == 'json':
 				call = self.scriptbytype.strip()[len("runjson"):].strip()[1:-1].strip()
-				commons.debug("Executing json call: %s" %call, "service.SchedulerJob")
+				common.debug("Executing json call: %s" %call, "service.SchedulerJob")
 				xbmc.executeJSONRPC(call)
 			elif str(self.type) == 'object':
 				if isinstance(self.script, str):
 					function = self.scriptbytype.strip()[len("callobject"):].strip()[1:-1].strip()
-					commons.debug("Executing function: %s" %str(function), "service.SchedulerJob")
+					common.debug("Executing function: %s" %str(function), "service.SchedulerJob")
 					eval(function)
 				elif inspect.isclass(self.script):
 					if isinstance(self.script, threading.Thread):
-						commons.debug("Executing default method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing default method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "start" in dir(self.script):
-						commons.debug("Executing start method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing start method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "run" in dir(self.script):
-						commons.debug("Executing run method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing run method of runner object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.run()
 				elif hasattr(self.script, '__call__'):
-					commons.debug("Executing generic object: %s" % str(self.script), "service.SchedulerJob")
+					common.debug("Executing generic object: %s" % str(self.script), "service.SchedulerJob")
 					self.script()
 		self.lastRun = datetime.datetime.now()
 		self._setNextRun()
-		commons.debug("Finishing job: %s" %str(self), "service.SchedulerJob")
+		common.debug("Finishing job: %s" %str(self), "service.SchedulerJob")
 
 
 	@property

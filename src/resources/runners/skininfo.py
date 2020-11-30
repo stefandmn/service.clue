@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import commons
-from abstract import ServiceRunner
+import common
+from .abstract import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -13,7 +13,6 @@ if hasattr(sys.modules["__main__"], "xbmcgui"):
 	xbmcgui = sys.modules["__main__"].xbmcgui
 else:
 	import xbmcgui
-
 
 
 
@@ -38,7 +37,7 @@ class SkinInfo(ServiceRunner):
 
 
 	def getProperty(self, property):
-		return commons.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" % (str(self.id), property)))
+		return common.any2bool(xbmc.getInfoLabel("Window(%s).Property(%s)" % (str(self.id), property)))
 
 
 	@property
@@ -95,7 +94,7 @@ class SkinInfo(ServiceRunner):
 
 	def run(self, *arg):
 		# Check network mode
-		_status, _content = commons.procexec("/opt/clue/bin/setup -g network -m")
+		_status, _content = common.procexec("/opt/clue/bin/setup -g network -m")
 		if _status:
 			if _content is not None and _content == "repeater":
 				self.setNetworkRepeater()
@@ -111,7 +110,7 @@ class SkinInfo(ServiceRunner):
 				if self.isNetworkRouter:
 					self.resetNetworkRouter()
 		# Check network interface
-		_status, _content = commons.procexec("/opt/clue/bin/setup -g network -a")
+		_status, _content = common.procexec("/opt/clue/bin/setup -g network -a")
 		if _status:
 			if _content is not None and _content.startswith("wlan"):
 				self.setNetworkWireless()

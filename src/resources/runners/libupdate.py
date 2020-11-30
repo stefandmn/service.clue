@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import commons
-from abstract import ServiceRunner
+import common
+from .abstract import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
 else:
 	import xbmc
+
 
 
 class LibraryUpdater(ServiceRunner, xbmc.Monitor):
@@ -27,10 +28,10 @@ class LibraryUpdater(ServiceRunner, xbmc.Monitor):
 			elif str(arg[0]).strip().lower() in ('video', 'movies'):
 				self.video = True
 			else:
-				self.music = commons.any2bool(arg[0])
+				self.music = common.any2bool(arg[0])
 		if arg is not None and len(arg) >= 2:
-			self.music = commons.any2bool(arg[0])
-			self.video = commons.any2bool(arg[1])
+			self.music = common.any2bool(arg[0])
+			self.video = common.any2bool(arg[1])
 
 
 	def apply(self):
@@ -44,9 +45,9 @@ class LibraryUpdater(ServiceRunner, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
 			xbmc.executebuiltin("UpdateLibrary(music)")
 			xbmc.sleep(500)
-			commons.info("Update of music library have been successfully triggered", "LibraryUpdater")
+			common.info("Update of music library have been successfully triggered", "LibraryUpdater")
 		else:
-			commons.warn("Music library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			common.warn("Music library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
 			self.music = False
 
 
@@ -54,18 +55,18 @@ class LibraryUpdater(ServiceRunner, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
 			xbmc.executebuiltin("UpdateLibrary(video)")
 			xbmc.sleep(500)
-			commons.info("Update of video library have been successfully triggered", "LibraryUpdater")
+			common.info("Update of video library have been successfully triggered", "LibraryUpdater")
 		else:
-			commons.warn("Video library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			common.warn("Video library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
 			self.video = False
 
 
 	def onScanFinished(self, library):
 		if library == "music":
-			commons.info("Update of music library have been successfully finished", "LibraryUpdater")
+			common.info("Update of music library have been successfully finished", "LibraryUpdater")
 			self.music = False
 		elif library == "video":
-			commons.info("Update of video library have been successfully finished", "LibraryUpdater")
+			common.info("Update of video library have been successfully finished", "LibraryUpdater")
 			self.video = False
 		xbmc.sleep(1000)
 		if self.music or self.video:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import commons
-from abstract import ServiceRunner
+import common
+from .abstract import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -30,10 +30,10 @@ class LibraryCleaner(ServiceRunner, xbmc.Monitor):
 			elif str(arg[0]).strip().lower() in ('video', 'movies'):
 				self.video = True
 			else:
-				self.music = commons.any2bool(arg[0])
+				self.music = common.any2bool(arg[0])
 		if arg is not None and len(arg) >= 2:
-			self.music = commons.any2bool(arg[0])
-			self.video = commons.any2bool(arg[1])
+			self.music = common.any2bool(arg[0])
+			self.video = common.any2bool(arg[1])
 
 
 	def apply(self):
@@ -47,9 +47,9 @@ class LibraryCleaner(ServiceRunner, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
 			xbmc.executebuiltin("CleanLibrary(music)")
 			xbmc.sleep(500)
-			commons.info("Cleaning of music library have been successfully triggered", "LibraryCleaner")
+			common.info("Cleaning of music library have been successfully triggered", "LibraryCleaner")
 		else:
-			commons.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			common.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
 			self.music = False
 
 
@@ -57,18 +57,18 @@ class LibraryCleaner(ServiceRunner, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
 			xbmc.executebuiltin("CleanLibrary(video)")
 			xbmc.sleep(500)
-			commons.info("Cleaning of video library have been successfully triggered", "LibraryCleaner")
+			common.info("Cleaning of video library have been successfully triggered", "LibraryCleaner")
 		else:
-			commons.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			common.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
 			self.video = False
 
 
 	def onCleanFinished(self, library):
 		if library == "music":
-			commons.info("Cleaning of music library have been successfully finished", "LibraryCleaner")
+			common.info("Cleaning of music library have been successfully finished", "LibraryCleaner")
 			self.music = False
 		elif library == "video":
-			commons.info("Cleaning of video library have been successfully finished", "LibraryCleaner")
+			common.info("Cleaning of video library have been successfully finished", "LibraryCleaner")
 			self.video = False
 		xbmc.sleep(1000)
 		if self.music or self.video:

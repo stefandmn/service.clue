@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from abstract import ServiceRunner
+from .abstract import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
 else:
 	import xbmc
-
 
 
 

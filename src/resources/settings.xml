@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
 	<category label="32020">
-		<setting label="32021" type="bool" id="sysupdate" default="true"/>
+		<setting label="32021" type="bool" id="sysupdate" default="false"/>
 		<setting label="32022" type="bool" id="sysupdate_osupgrade" visible="eq(-1,true)" default="false"/>
 		<setting label="32027" type="bool" id="sysupdate_osintegrity" visible="eq(-2,true)" default="false"/>
 		<setting label="32101" type="enum" id="sysupdate_cycle" visible="eq(-3,true)" lvalues="32114|32115|32116|32117" default="1"/>

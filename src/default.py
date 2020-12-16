@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from scheduler import *
+from resources.scheduler import *
 from resources.runners import ServiceRunner
 
 if hasattr(sys.modules["__main__"], "xbmc"):
@@ -25,7 +25,7 @@ class ServiceSettings(xbmc.Monitor):
 
 
 	def onSettingsChanged(self):
-		common.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "service.Settings")
+		common.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "settings")
 		self.updateSettingsMethod()
 
 
@@ -48,7 +48,7 @@ class ClueService:
 			common.info('%s v%s has been started: %s' %(common.AddonName(), common.AddonVersion(), _code), 'service')
 			_runner = self.getRunner(_code)
 			if _runner is not None:
-				common.debug("Starting service runner: %s" %str(_runner), 'service')
+				common.debug("Starting service runner [%s] with the following parameters: %s" %(str(_runner), str(sys.argv[2::])), 'service')
 				_runner.run(*sys.argv[2::])
 			else:
 				common.error("Unknown service runner: %s" %_code)
@@ -94,7 +94,7 @@ class ClueService:
 	def _runFirstTime(self):
 		xbmc.sleep(5000)
 		common.notice("Running for the first time and start Clue System Setup add-on to review and update default system configuration", 'service')
-		xbmc.executebuiltin('XBMC.RunScript(program.clue)')
+		#xbmc.executebuiltin('XBMC.RunScript(program.clue)')
 
 
 	def initScheduler(self):

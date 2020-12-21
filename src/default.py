@@ -43,6 +43,7 @@ class ClueService:
 			# Check if it runs for the first time
 			self.isFirstTimeRunning()
 			self.initScheduler()
+			self.initService()
 		else:
 			_code = str(sys.argv[1]).strip()
 			common.info('%s v%s has been started: %s' %(common.AddonName(), common.AddonVersion(), _code), 'service')
@@ -114,6 +115,12 @@ class ClueService:
 			self.startScheduler()
 		else:
 			common.notice("Service component is already running!", 'service')
+
+
+	def initService(self):
+		mode = common.getSystemSetting("screensaver.mode")
+		if mode == '' or mode is None:
+			common.setSystemSetting("screensaver.mode", "")
 
 
 	def setupScheduler(self):

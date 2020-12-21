@@ -61,7 +61,7 @@ class ClueService:
 		for cls in ServiceRunner.__subclasses__():
 			try:
 				runner = cls()
-				if not self.RUNNERS.has_key(runner.code()):
+				if not runner.code() in self.RUNNERS:
 					self.RUNNERS[runner.code()] = runner
 				else:
 					common.error("Invalid signature of service runner, it has the same id with another one: %s " %runner, 'service')
@@ -74,7 +74,7 @@ class ClueService:
 		runner = None
 		if not self.RUNNERS:
 			self.readRunners()
-		if code is not None and self.RUNNERS.has_key(code):
+		if code is not None and code in self.RUNNERS:
 			runner = self.RUNNERS[code]
 		return runner
 
@@ -92,9 +92,16 @@ class ClueService:
 
 
 	def _runFirstTime(self):
+		# reset screensaver
+		common.setSystemSetting("screensaver.mode", "")
+		# setup locale based on your location
+		jsondata = common.urlcall("http://ip-api.com/json/", output='json')
+		if jsondata is not None:
+			if "country" in jsondata:
+				common.debug("Applying new value to setting [locale.timezonecountry] to: %s" %jsondata['country'])
+				common.setSystemSetting("locale.timezonecountry", jsondata['country'])
 		xbmc.sleep(5000)
-		common.notice("Running for the first time and start Clue System Setup add-on to review and update default system configuration", 'service')
-		#xbmc.executebuiltin('XBMC.RunScript(program.clue)')
+		#common.notice("Running for the first time and start Clue System Setup add-on to review and update default system configuration", 'service')
 
 
 	def initScheduler(self):

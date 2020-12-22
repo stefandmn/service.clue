@@ -1,4 +1,6 @@
 v2.0
+- Developed graphical prototyping library
+- System Setup moved in service addon
 - Source code compatible for Python3
 - Adapted addon source code to Clue v2 and Kodi 18+
 - New CCM process adopted
@@ -9,7 +11,7 @@ v1.4
 - Improve scheduler to define type of execution and allows to execute many type of jobs
 - Makes service to run also as executable script and redesign media DB clean and update
 - Reimplementation of scheduler manager and default configuration
-- Reimplementation of service runners and put them into a separate source file
+- Reimplementation of service tasks and put them into a separate source file
 - Redesign Scheduler service
 - Remove CacheServer and Downloader components
 - Integration with plugin.youtube

@@ -2,12 +2,7 @@
 
 import sys
 import common
-from .abstract import ServiceRunner
-
-if hasattr(sys.modules["__main__"], "xbmc"):
-	xbmc = sys.modules["__main__"].xbmc
-else:
-	import xbmc
+from .abcservice import ServiceTask
 
 if hasattr(sys.modules["__main__"], "xbmcgui"):
 	xbmcgui = sys.modules["__main__"].xbmcgui
@@ -15,12 +10,12 @@ else:
 	import xbmcgui
 
 
-
-class SetLabel(ServiceRunner):
+class SetLabel(ServiceTask):
+	key= "setlabel"
 
 
 	def code(self):
-		return "setlabel"
+		return self.key
 
 
 	def run(self, *args):
@@ -29,7 +24,15 @@ class SetLabel(ServiceRunner):
 		dialog = params.get("dialog")
 		dialog = 'string' if dialog is None or dialog == '' or (dialog.lower() != 'string' and dialog.lower() != 'number' and dialog.lower() != 'date' and dialog.lower() != 'time' and dialog.lower() != 'ipaddr') else dialog
 		self.debug('Using dialog type: %s' % str(dialog))
-		window = self.window(params.get("window"))
+		window = params.get("window")
+		try:
+			window = xbmcgui.getCurrentWindowId() if window is None else window
+			window = xbmcgui.getCurrentWindowDialogId() if window is None else window
+			if window is None:
+				window = xbmcgui.Window(window)
+		except BaseException as be:
+			self.error("Error discovering window handler: %s" %str(be))
+			window = None
 		if window is not None:
 			try:
 				field = params.get("field")
@@ -53,8 +56,6 @@ class SetLabel(ServiceRunner):
 				else:
 					data = None
 			self._set(control, data)
-		else:
-			self.error("No graphical window or dialog found")
 
 
 	def _get(self, control):

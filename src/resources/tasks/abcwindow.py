@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import os
 import abc
 import sys
 import common
+from .abcservice import ServiceTask
 
 if hasattr(sys.modules["__main__"], "xbmcgui"):
 	xbmcgui = sys.modules["__main__"].xbmcgui
@@ -11,134 +11,57 @@ else:
 	import xbmcgui
 
 
-
-class ServiceRunner(object):
+class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 	__metaclass__ = abc.ABCMeta
-	HOME = os.environ['HOME']
-	CONFIG_CACHE = os.environ.get('CONFIG_CACHE', '%s/.cache' % HOME)
-	USER_CONFIG = os.environ.get('USER_CONFIG', '%s/.config' % HOME)
+	key = "window"
 
 
-	def __init__(self):
+	def __init__(self, *args, **kwargs):
+		ServiceTask.__init__(self)
+		xbmcgui.WindowXMLDialog.__init__(self, *args, **kwargs)
+		self._wait = None
+
+
+	def load(self):
 		pass
 
 
-	def __repr__(self):
-		return str(self.__class__) + " (" + str(self.code()) + ")"
+	def dispose(self):
+		self.clearProperties()
+		self.close()
 
 
-	@abc.abstractmethod
-	def code(self):
-		return None
+	def start(self, *args):
 		pass
 
 
-	@abc.abstractmethod
-	def run(self, *arg):
-		pass
+	def run(self, *args):
+		self.start(args)
+		self.show()
 
 
-	def debug(self, txt):
-		common.debug(txt, "runner")
+	def show(self):
+		self.doModal()
 
 
-	def info(self, txt):
-		common.info(txt, "runner")
+	def onInit(self):
+		self._lock()
+		self.load()
+		self._unlock()
 
 
-	def notice(self, txt):
-		common.notice(txt, "runner")
+	def onClick(self, id):
+		_method = "onClick_%s" %str(id)
+		if hasattr(self, _method):
+			self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
+			self._function(".".join(["self", _method]))
 
 
-	def warn(self, txt):
-		common.warn(txt, "runner")
-
-
-	def error(self, txt):
-		common.error(txt, "runner")
-
-	@property
-	def windowid(self):
-		try:
-			id = xbmcgui.getCurrentWindowDialogId()
-		except:
-			id = None
-		if id is not None and id != '' and id != 0:
-			self.debug("Detected current dialog window id: %s " %str(id))
-			return id
-		else:
-			try:
-				id = xbmcgui.getCurrentWindowId()
-			except:
-				id = None
-			if id is not None and id != '' and id != 0:
-				self.debug("Detected current dialog window id: %s " % str(id))
-				return id
-			else:
-				return None
-
-
-	def window(self, id=None):
-		if id is None:
-			id = self.windowid
-		if id is not None:
-			try:
-				window = xbmcgui.WindowDialog(int(id))
-			except:
-				window = None
-			if window is not None:
-				self.debug("Detected dialog window object: %s " % str(window))
-				return window
-			else:
-				try:
-					window = xbmcgui.Window(int(id))
-				except:
-					window = None
-				if window is not None:
-					self.debug("Detected window object: %s " % str(window))
-					return window
-				else:
-					return None
-
-
-	def _function(self, cmd, *args, **kwargs):
-		if cmd is not None and cmd != '':
-			if str(cmd).find('.') > 0:
-				if str(cmd).startswith("self."):
-					cmd = str(cmd).split(".")[1]
-					return common.clscall(self, cmd, *args, **kwargs)
-				else:
-					cls = str(cmd).split(".")[0]
-					cmd = str(cmd).split(".")[1]
-					return common.clscall(cls, cmd, *args, **kwargs)
-			else:
-				return common.funcall(cmd, *args, **kwargs)
-		else:
-			return None
-
-
-	def _process(self, cmd):
-		if cmd is not None and cmd != '':
-			return common.procexec(cmd)
-		else:
-			return None
-
-
-	def any2int(self, v, error=False, none=True):
-		return common.any2int(v, error=error,none=none)
-
-
-	def any2float(self, v, error=False, none=True):
-		return common.any2float(v, error=error,none=none)
-
-
-	def any2str(self, v, error=False, none=True):
-		return common.any2str(v, error=error,none=none)
-
-
-	# Function: str2bool
-	def any2bool(self, v, error=False, none=True):
-		return common.any2bool(v, error=error,none=none)
+	def onFocus(self, id):
+		_method = "onFocus_%s" %str(id)
+		if hasattr(self, _method):
+			self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
+			self._function(".".join(["self", _method]))
 
 
 	@property
@@ -146,19 +69,45 @@ class ServiceRunner(object):
 		return common.Addon()
 
 
-	def translate(self, code):
-		return common.translate(code)
+	def _lock(self, txt=None):
+		"""
+		Lock the screen until execution of a backend command
+		:param txt: text message to be displayed
+		"""
+		if self._wait is None:
+			self._wait = xbmcgui.WindowXMLDialog("WaitDialog.xml", self.addon.getAddonInfo('path'))
+			self._wait.show()
+		if self._wait is not None and txt is not None:
+			self._wait.getExControl(1000).setLabel(txt)
+			self._wait.getExControl(1000).setVisible(True)
+
+
+	def _unlock(self):
+		"""
+		Unlocking the screen; should be executed once the backend command is finished
+		"""
+		if self._wait is not None:
+			self._wait.close()
+			self._wait = None
+
+
+	def set(self, id, value):
+		self.setProperty("Value.%s" %str(id), value)
+
+
+	def get(self, id):
+		return self.getProperty("Value.%s" %str(id))
 
 
 	def getExControl(self, control, mix=0):
 		"""Get control instance for any part for group"""
 		if control is not None:
 			if isinstance(control, int):
-				control = self.window().getControl(control)
+				control = self.getControl(control)
 			elif isinstance(control, str):
-				control = self.window().getControl(int(control))
+				control = self.getControl(int(control))
 			if mix > 0:
-				control = self.window().getControl(10 * control.getId() + mix)
+				control = self.getControl(10 * control.getId() + mix)
 			return control
 		else:
 			raise RuntimeError('Invalid control reference')
@@ -311,18 +260,18 @@ class ServiceRunner(object):
 			message = self.translate(message)
 		if isinstance(type, int):
 			if type == 0:
-				keyboard = self.getTextPadKeyboard(_input, message, False)
+				keyboard = common.StringInputDialog(_input, message, False)
 				keyboard.doModal()
 				if keyboard.isConfirmed():
 					_output = keyboard.getText()
 			elif type == 1:
-				_output = self.getNumPadKeyboard(_input, message)
+				_output = common.NumberInputDialog(_input, message)
 			elif type == 2:
-				_output = self.getIPAddrPadKeyboard(_input, message)
+				_output = common.IPAddrInputDialog(_input, message)
 			elif type == 3:
-				_output = self.getDatePadKeyboard(_input, message)
+				_output = common.DateInputDialog(_input, message)
 			elif type == 4:
-				_output = self.getTimePadKeyboard(_input, message)
+				_output = common.TimeInputDialog(_input, message)
 		if isinstance(type, list):
 			_output = self.getSelectDialog(message, type)
 		if _output != _input:
@@ -357,13 +306,3 @@ class ServiceRunner(object):
 				_answer = options[_index]
 		return _answer
 
-
-	def input(self, *args):
-		params = {}
-		if len(args) > 1:
-			for i in args:
-				arg = i
-				if arg.startswith('?'):
-					arg = arg[1:]
-				params.update(dict(common.urlparsequery(arg)))
-		return params

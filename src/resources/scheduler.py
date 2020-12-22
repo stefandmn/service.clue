@@ -334,9 +334,9 @@ class Job(object):
 		"""
 		Run the job and immediately reschedule it.
 		"""
-		runner=threading.Thread(target=self._run)
-		runner.setDaemon(True)
-		runner.start()
+		task=threading.Thread(target=self._run)
+		task.setDaemon(True)
+		task.start()
 
 
 	def _run(self):
@@ -368,13 +368,13 @@ class Job(object):
 					eval(function)
 				elif inspect.isclass(self.script):
 					if isinstance(self.script, threading.Thread):
-						common.debug("Executing default method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing default method of task object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "start" in dir(self.script):
-						common.debug("Executing start method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing start method of task object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.start()
 					elif "run" in dir(self.script):
-						common.debug("Executing run method of runner object: %s" % str(self.script), "service.SchedulerJob")
+						common.debug("Executing run method of task object: %s" % str(self.script), "service.SchedulerJob")
 						self.script.run()
 				elif hasattr(self.script, '__call__'):
 					common.debug("Executing generic object: %s" % str(self.script), "service.SchedulerJob")

@@ -2,7 +2,7 @@
 
 import os
 from resources.scheduler import *
-from resources.runners import ServiceRunner
+from resources.tasks import ServiceTask, WindowTask
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -29,55 +29,68 @@ class ServiceSettings(xbmc.Monitor):
 		self.updateSettingsMethod()
 
 
+TASKS = {}
+
 
 class ClueService:
 	WEEKDAYS = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 	JOBNAMES = [ "sysupdate", "libupdate", "libclean", "sysbackup", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
-	RUNNERS = {}
 
 
 	def __init__(self):
 		# Start jobs according to the input parameters
 		if len(sys.argv) <= 1:
-			common.debug('%s v%s has been started: %s' %(common.AddonName(), common.AddonVersion(), 'service'))
+			common.debug('%s v%s has been started as service: %s' %(common.AddonName(), common.AddonVersion(), 'service'))
 			# Check if it runs for the first time
 			self.isFirstTimeRunning()
 			self.initScheduler()
 			self.initService()
 		else:
 			_code = str(sys.argv[1]).strip()
-			common.info('%s v%s has been started: %s' %(common.AddonName(), common.AddonVersion(), _code), 'service')
-			_runner = self.getRunner(_code)
-			if _runner is not None:
-				common.debug("Starting service runner [%s] with the following parameters: %s" %(str(_runner), str(sys.argv[2::])), 'service')
-				_runner.run(*sys.argv[2::])
+			common.info('%s v%s has been started as task: %s' %(common.AddonName(), common.AddonVersion(), _code), 'service')
+			_task = self.getTask(_code)
+			if _task is not None:
+				common.debug("Starting service task [%s] with the following parameters: %s" %(str(_task), str(sys.argv[2::])), 'service')
+				_task.run(*sys.argv[2::])
 			else:
-				common.error("Unknown service runner: %s" %_code)
+				common.warn("No task found with identifier: %s" %_code)
 		common.debug('%s v%s has been terminated' %(common.AddonName(), common.AddonVersion()), 'service')
 
 
-	def readRunners(self):
-		"""Detect all implemented and declared service runners and build up the corresponding dictionary"""
-		self.RUNNERS.clear()
-		for cls in ServiceRunner.__subclasses__():
-			try:
-				runner = cls()
-				if not runner.code() in self.RUNNERS:
-					self.RUNNERS[runner.code()] = runner
-				else:
-					common.error("Invalid signature of service runner, it has the same id with another one: %s " %runner, 'service')
-			except BaseException as be:
-				common.error('Unexpected error while reading [%s] service runner: %s' %(str(cls),str(be)), 'service')
-
-
-	def getRunner(self, code):
-		"""Returns the service runner having the specified signature """
-		runner = None
-		if not self.RUNNERS:
-			self.readRunners()
-		if code is not None and code in self.RUNNERS:
-			runner = self.RUNNERS[code]
-		return runner
+	def getTask(self, code):
+		"""Returns the service task having the specified signature """
+		task = None
+		area = None
+		if code is None or code == "":
+			return task
+		else:
+			parts = str(code).split(".")
+			if len(parts) > 1:
+				area = parts[0]
+				code = parts[1]
+			if area is None or area == ServiceTask.key:
+				common.trace("Looking for [%s] task in [%s] area" %(code,area))
+				for cls in ServiceTask.__subclasses__():
+					try:
+						if cls.key == code and cls.__name__ != "WindowTask":
+							task = cls()
+							if task is not None:
+								common.debug("Found service task: %s" %task.code())
+								break
+					except BaseException as be:
+						common.error('Unexpected error while reading [%s] service task: %s' %(str(cls),str(be)), 'service')
+			if area is None or area == WindowTask.key:
+				common.trace("Looking for [%s] task in [%s] area" % (code, area))
+				for cls in WindowTask.__subclasses__():
+					try:
+						if cls.key == code:
+							task = cls(cls.__name__ + ".xml", common.AddonPath())
+							if task is not None:
+								common.debug("Found window task: %s" % task.code())
+								break
+					except BaseException as be:
+						common.error('Unexpected error while reading [%s] window task: %s' %(str(cls),str(be)), 'service')
+			return task
 
 
 	def isFirstTimeRunning(self):
@@ -95,14 +108,20 @@ class ClueService:
 	def _runFirstTime(self):
 		# reset screensaver
 		common.setSystemSetting("screensaver.mode", "")
+		xbmc.sleep(500)
 		# setup locale based on your location
-		jsondata = common.urlcall("http://ip-api.com/json/", output='json')
+		jsondata = common.urlcall("http://ip-api.com/json/", headers={"User-Agent": common.agent()}, output='json')
 		if jsondata is not None:
 			if "country" in jsondata:
 				common.debug("Applying new value to setting [locale.timezonecountry] to: %s" %jsondata['country'])
 				common.setSystemSetting("locale.timezonecountry", jsondata['country'])
-		xbmc.sleep(5000)
-		#common.notice("Running for the first time and start Clue System Setup add-on to review and update default system configuration", 'service')
+		xbmc.sleep(500)
+		# setup weather addon to enable it and take a default provider
+		common.setAddonSetting("weather.clue", "Enabled", True)
+		common.setAddonSetting("weather.clue", "ProviderCode", "yahoo")
+		xbmc.sleep(500)
+		# open Clue Setup console for configuration and parametrization
+		common.runBuiltinCommand("RunScript", "service.clue", "setup")
 
 
 	def initScheduler(self):
@@ -118,6 +137,7 @@ class ClueService:
 
 
 	def initService(self):
+		# Force screensaver custom configuration
 		mode = common.getSystemSetting("screensaver.mode")
 		if mode == '' or mode is None:
 			common.setSystemSetting("screensaver.mode", "")
@@ -149,13 +169,13 @@ class ClueService:
 			cfg["day"] = self.WEEKDAYS[cfg["day"]] if cfg["day"] >= 0 else -1
 			# Adapt job script
 			if jobname == "sysupdate":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.getAddonSetting(jobname + "_osupgrade"), common.getAddonSetting(jobname + "_osintegrity"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.setting(jobname + "_osupgrade"), common.setting(jobname + "_osintegrity"))
 				cfg["type"] = "script"
 			elif jobname == "libupdate":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.getAddonSetting(jobname + "_music"), common.getAddonSetting(jobname + "_video"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.setting(jobname + "_music"), common.setting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "libclean":
-				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.getAddonSetting(jobname + "_music"), common.getAddonSetting(jobname + "_video"))
+				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.setting(jobname + "_music"), common.setting(jobname + "_video"))
 				cfg["type"] = "script"
 			elif jobname == "sysbackup":
 				cfg["script"] = "RunScript(program.recovery, mode=backup)"

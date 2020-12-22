@@ -4,7 +4,7 @@ import os
 import sys
 import json
 import common
-from .abstract import ServiceRunner
+from .abcservice import ServiceTask
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -13,14 +13,22 @@ else:
 
 
 
-class Favourites(ServiceRunner):
+class Favourites(ServiceTask):
+	key = "favourites"
+
 
 	def code(self):
-		return "favourites"
+		return self.key
 
 
 	def run(self, *args):
-		params = self.input(args)
+		params = {}
+		if len(args) > 1:
+			for i in args:
+				arg = i
+				if arg.startswith('?'):
+					arg = arg[1:]
+				params.update(dict(common.urlparsequery(arg)))
 		if not "type" in params:
 			params['type'] = "media"
 		if not "path" in params:

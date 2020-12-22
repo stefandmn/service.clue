@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window>
+	<defaultcontrol always="true">-</defaultcontrol>
+	<allowoverlay>no</allowoverlay>
+
+	<controls>
+		<include>loadingIndicator</include>
+		<!-- message -->
+		<control type="label" id="1000">
+			<description>Message on the screen</description>
+			<posx>9-col</posx>
+			<posy>10-row</posy>
+			<width>9-col</width>
+			<font>itemTitle</font>
+			<textcolor>unselected</textcolor>
+			<shadowcolor>-</shadowcolor>
+			<align>center</align>
+			<aligny>center</aligny>
+		</control>
+	</controls>
+</window>

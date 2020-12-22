@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from .abstract import ServiceRunner
+from .abcservice import ServiceTask
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -10,9 +10,13 @@ else:
 
 
 
-class CecTrigger(ServiceRunner):
+class CecTrigger(ServiceTask):
+	key = "cectrigger"
+
+
 	def code(self):
-		return "cectrigger"
+		return self.key
+
 
 	def run(self, *arg):
 		action = arg[0] if len(arg) > 0 else None

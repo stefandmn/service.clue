@@ -2,7 +2,7 @@
 
 import sys
 import common
-from .abstract import ServiceRunner
+from .abcservice import ServiceTask
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -11,16 +11,19 @@ else:
 
 
 
-class LibraryCleaner(ServiceRunner, xbmc.Monitor):
+class LibraryCleaner(ServiceTask, xbmc.Monitor):
+	key = "libclean"
+
 
 	def __init__(self):
 		xbmc.Monitor.__init__(self)
+		ServiceTask.__init__(self)
 		self.music = False
 		self.video = False
 
 
 	def code(self):
-		return "libclean"
+		return self.key
 
 
 	def detect(self, arg):

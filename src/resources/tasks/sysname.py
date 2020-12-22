@@ -1,47 +1,41 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import common
-from .abstract import ServiceRunner
+from .abcwindow import WindowTask
 
 
 
-class Hostname(ServiceRunner):
+class SystemName(WindowTask):
+	key = "sysname"
 
 
 	def code(self):
-		return "hostname"
+		return self.key
 
 
-	def run(self, *args):
-		params = dict(arg.split("=") for arg in sys.argv[2].split("&"))
-		self.debug('Found parameters: %s' % str(params))
-		self._function(".".join(["self", params.get('method')]))
+	def load(self):
+		data = self._get()
+		self.debug("Collected host data: %s" % str(data))
+		self.set(1201, data)
 
 
-	def get(self):
-		data = self.__get()
-		self.debug("Collected data: %s" %str(data))
+	def onClick_1202(self):
+		self._lock()
+		data = self.get(1201)
 		if data is not None:
-			common.setSkinProperty(self.windowid, "ClueSetup.Hostname", str(data))
+			self._set(data)
+		self._unlock()
+		self.dispose()
 
 
-	def set(self):
-		data = self.getControlValue(1201)
-		if data is not None:
-			self.__set(data)
-
-
-	def __get(self):
+	def _get(self):
 		(_status, _content) = self._process('/bin/hostname')
-		if _status and _content is not None and _content != "":
-			return _content
-		else:
-			return None
+		data = _content if _status and _content is not None and _content != "" else None
+		return data
 
 
-	def __set(self, data):
+	def _set(self, data):
 		# change system hostname
 		hostname = open('/proc/sys/kernel/hostname', 'w')
 		hostname.write(data)
@@ -60,4 +54,4 @@ class Hostname(ServiceRunner):
 		hosts.write('::1\tlocalhost ip6-localhost ip6-loopback %s\n' %data)
 		hosts.close()
 		# update Kodi device name
-		common.setSystemSessing("services.devicename", data)
+		common.setSystemSetting("services.devicename", data)

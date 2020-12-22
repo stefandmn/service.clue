@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import common
-from .abstract import ServiceRunner
+from .abcservice import ServiceTask
 
 
 
-class SystemUpdater(ServiceRunner):
+class SystemUpdater(ServiceTask):
+	key = "sysupdate"
+
+
 	def __init__(self):
+		ServiceTask.__init__(self)
 		self.osupgrade = False
 		self.integrity = False
 
 
 	def code(self):
-		return "sysupdate"
+		return self.key
 
 
 	def detect(self, arg):

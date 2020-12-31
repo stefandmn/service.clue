@@ -7,9 +7,6 @@ from setlabel import SetLabel
 class SetValue(SetLabel):
 	key = "setvalue"
 
-	def code(self):
-		return self.key
-
 
 	def _get(self, control):
 		data = None

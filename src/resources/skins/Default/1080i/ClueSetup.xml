@@ -53,7 +53,7 @@
 				<posy>44</posy>
 				<width>12-col</width>
 				<font>pageTitle</font>
-				<label>32001</label>
+				<label>31901</label>
 				<textcolor>black</textcolor>
 				<shadowcolor>-</shadowcolor>
 			</control>
@@ -156,15 +156,15 @@
 				<content>
 					<item id="1">
                         <description>System Identity</description>
-						<label>32002</label>
-                        <label2>32003</label2>
+						<label>31902</label>
+                        <label2>31903</label2>
                         <property name="icon"></property>
                         <onclick>RunScript(service.clue,window.sysname)</onclick>
 					</item>
 					<item id="2">
 						<description>System Access</description>
-                        <label>32004</label>
-                        <label2>32005</label2>
+                        <label>31904</label>
+                        <label2>31905</label2>
                         <property name="icon"></property>
                         <onclick>RunScript(service.clue,window.sysaccess)</onclick>
 					</item>

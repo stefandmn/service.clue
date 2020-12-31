@@ -21,9 +21,6 @@ class LibraryUpdater(ServiceTask, xbmc.Monitor):
 		self.music = False
 		self.video = False
 
-	def code(self):
-		return self.key
-
 
 	def detect(self, arg):
 		if arg is not None and len(arg) == 1:

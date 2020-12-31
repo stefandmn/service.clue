@@ -15,10 +15,6 @@ class SystemUpdater(ServiceTask):
 		self.integrity = False
 
 
-	def code(self):
-		return self.key
-
-
 	def detect(self, arg):
 		if arg is not None and len(arg) == 1:
 			if str(arg[0]).strip().lower() in ('upgrade', 'osupgrade'):

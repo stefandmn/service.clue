@@ -17,10 +17,6 @@ class Favourites(ServiceTask):
 	key = "favourites"
 
 
-	def code(self):
-		return self.key
-
-
 	def run(self, *args):
 		params = {}
 		if len(args) > 1:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <window>
-	<defaultcontrol always="true">1201</defaultcontrol>
+	<defaultcontrol always="true">2201</defaultcontrol>
 	<allowoverlay>no</allowoverlay>
 	<previouswindow>1100</previouswindow>
 
@@ -12,7 +12,7 @@
 		<include>dateTime</include>
 
 		<!-- Header -->
-		<control type="group" id="1100">
+		<control type="group" id="2100">
 			<posx>58</posx>
 			<posy>210</posy>
 			<!--animations-->
@@ -36,7 +36,7 @@
 				<height>55</height>
 				<font>symbolLarge</font>
 				<align>center</align>
-				<label></label>
+				<label></label>
 				<textcolor>selected</textcolor>
 			</control>
 			<control type="image">
@@ -48,12 +48,12 @@
 				<colordiffuse>ffffffff</colordiffuse>
 				<aspectratio>stretch</aspectratio>
 			</control>
-			<control type="label" id="1101">
+			<control type="label" id="2101">
 				<posx>24</posx>
 				<posy>44</posy>
 				<width>12-col</width>
 				<font>pageTitle</font>
-				<label>31903</label>
+				<label>31905</label>
 				<textcolor>black</textcolor>
 				<shadowcolor>-</shadowcolor>
 			</control>
@@ -70,7 +70,7 @@
 		</control>
 
 		<!--Dialog -->
-		<control type="group" id="1200">
+		<control type="group" id="2200">
 			<!--animations-->
 			<include>modalDialogInOutVertical</include>
 			<posx>128</posx>
@@ -78,26 +78,33 @@
 			<width>26-col</width>
 			<height>18-row</height>
 			<control type="group">
-				<include content="PropertyStringEditbox">
-					<param name="id" value="1201"/>
-					<param name="label" value="31912"/>
-					<param name="up" value="1202"/>
-					<param name="down" value="1202"/>
+				<include content="PropertyLabelPopup">
+					<param name="id" value="2201"/>
+					<param name="label" value="31908"/>
+					<param name="up" value="2203"/>
+					<param name="down" value="2202"/>
 					<param name="posx" value="1-col"/>
 					<param name="posy" value="1-col"/>
-					<param name="lwidth" value="5-col"/>
-					<param name="bwidth" value="6-col"/>
-					<param name="balign" value="center"/>
+					<param name="width" value="10-col"/>
+					<param name="title" value="$LOCALIZE[31909]"/>
 				</include>
-
 				<include content="PropertyCheckbox">
-					<param name="id" value="1202"/>
-					<param name="label" value="31913"/>
-					<param name="up" value="1201"/>
-					<param name="down" value="1201"/>
+					<param name="id" value="2202"/>
+					<param name="label" value="31906"/>
+					<param name="up" value="2201"/>
+					<param name="down" value="2203"/>
 					<param name="posx" value="1-col"/>
 					<param name="posy" value="2-col"/>
-					<param name="width" value="11-col"/>
+					<param name="width" value="10-col"/>
+				</include>
+				<include content="PropertyCheckbox">
+					<param name="id" value="2203"/>
+					<param name="label" value="31907"/>
+					<param name="up" value="2202"/>
+					<param name="down" value="2201"/>
+					<param name="posx" value="1-col"/>
+					<param name="posy" value="3-col"/>
+					<param name="width" value="10-col"/>
 				</include>
 			</control>
 		</control>

@@ -14,10 +14,6 @@ class CecTrigger(ServiceTask):
 	key = "cectrigger"
 
 
-	def code(self):
-		return self.key
-
-
 	def run(self, *arg):
 		action = arg[0] if len(arg) > 0 else None
 		if action is None or action == 'toggle':

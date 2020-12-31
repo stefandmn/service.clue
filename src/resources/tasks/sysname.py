@@ -1,57 +1,39 @@
 # -*- coding: utf-8 -*-
 
-import os
-import common
-from .abcwindow import WindowTask
 
+from .abcwindow import WindowTask
 
 
 class SystemName(WindowTask):
 	key = "sysname"
 
 
-	def code(self):
-		return self.key
+	def init(self, *args):
+		self.setPropertyControlLabel(1201, 31903)
+		self.setPropertyControlValue(1202, True)
 
 
 	def load(self):
-		data = self._get()
-		self.debug("Collected host data: %s" % str(data))
-		self.set(1201, data)
+		data = self.sys.get_hostname()
+		self.debug("Found host name: %s" % str(data))
+		self.setPropertyControlValue(1201, data)
+
+
+	def onClick_1201(self):
+		self._lock()
+		name = self.getPropertyControlValue(1201)
+		sync = self.getPropertyControlValue(1202)
+		if name is not None:
+			if self.any2bool(sync):
+				self.sys.set_identity(name)
+			else:
+				self.sys.set_hostname(name)
+		self._unlock()
 
 
 	def onClick_1202(self):
-		self._lock()
-		data = self.get(1201)
-		if data is not None:
-			self._set(data)
-		self._unlock()
-		self.dispose()
-
-
-	def _get(self):
-		(_status, _content) = self._process('/bin/hostname')
-		data = _content if _status and _content is not None and _content != "" else None
-		return data
-
-
-	def _set(self, data):
-		# change system hostname
-		hostname = open('/proc/sys/kernel/hostname', 'w')
-		hostname.write(data)
-		hostname.close()
-		hostname = open('%s/hostname' % self.CONFIG_CACHE, 'w')
-		hostname.write(data)
-		hostname.close()
-		# adap hosts file
-		hosts = open('/etc/hosts', 'w')
-		user_hosts_file = self.HOME + '/.config/hosts.conf'
-		if os.path.isfile(user_hosts_file):
-			user_hosts = open(user_hosts_file, 'r')
-			hosts.write(user_hosts.read())
-			user_hosts.close()
-		hosts.write('127.0.0.1\tlocalhost %s\n' %data)
-		hosts.write('::1\tlocalhost ip6-localhost ip6-loopback %s\n' %data)
-		hosts.close()
-		# update Kodi device name
-		common.setSystemSetting("services.devicename", data)
+		sync = self.getPropertyControlValue(1202)
+		if self.any2bool(sync):
+			self.setPropertyControlLabel(1201, 31903)
+		else:
+			self.setPropertyControlLabel(1201, 31912)

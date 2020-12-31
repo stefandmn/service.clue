@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
 import abc
 import common
+from resources.appliance import Clue
+
 
 
 class ServiceTask(object):
 	__metaclass__ = abc.ABCMeta
 	key = "service"
-	HOME = os.environ['HOME']
-	CONFIG_CACHE = os.environ.get('CONFIG_CACHE', '%s/.cache' % HOME)
-	USER_CONFIG = os.environ.get('USER_CONFIG', '%s/.config' % HOME)
-
+	sys = Clue()
 
 	def __init__(self):
 		pass
@@ -21,9 +19,8 @@ class ServiceTask(object):
 		return str(self.__class__) + " (" + str(self.code()) + ")"
 
 
-	@abc.abstractmethod
 	def code(self):
-		pass
+		return self.key
 
 
 	@abc.abstractmethod
@@ -31,65 +28,74 @@ class ServiceTask(object):
 		pass
 
 
+	def trace(self, txt):
+		self.sys.trace(txt, "task." + self.code())
+
+
 	def debug(self, txt):
-		common.debug(txt, "task." + self.code())
+		self.sys.debug(txt, "task." + self.code())
 
 
 	def info(self, txt):
-		common.info(txt, "task." + self.code())
+		self.sys.info(txt, "task." + self.code())
 
 
 	def notice(self, txt):
-		common.notice(txt, "task." + self.code())
+		self.sys.notice(txt, "task." + self.code())
 
 
 	def warn(self, txt):
-		common.warn(txt, "task." + self.code())
+		self.sys.warn(txt, "task." + self.code())
 
 
 	def error(self, txt):
-		common.error(txt, "task." + self.code())
+		self.sys.error(txt, "task." + self.code())
 
 
-	def _function(self, cmd, *args, **kwargs):
+	def caller(self, cmd, *args, **kwargs):
 		if cmd is not None and cmd != '':
 			if str(cmd).find('.') > 0:
 				if str(cmd).startswith("self."):
 					cmd = str(cmd).split(".")[1]
-					return common.clscall(self, cmd, *args, **kwargs)
+					return self.method(self, cmd, *args, **kwargs)
 				else:
 					cls = str(cmd).split(".")[0]
 					cmd = str(cmd).split(".")[1]
-					return common.clscall(cls, cmd, *args, **kwargs)
+					return self.method(cls, cmd, *args, **kwargs)
 			else:
-				return common.funcall(cmd, *args, **kwargs)
+				return self.function(cmd, *args, **kwargs)
 		else:
 			return None
 
 
-	def _process(self, cmd):
-		if cmd is not None and cmd != '':
-			return common.procexec(cmd)
-		else:
-			return None
+	def method(self, cls, mtd, *args, **kwargs):
+		return self.sys.method(cls, mtd, *args, **kwargs)
+
+
+	def function(self, fnc, *args, **kwargs):
+		return self.sys.function(fnc, *args, **kwargs)
+
+
+	def process(self, cmd):
+		return self.sys.process(cmd)
 
 
 	def any2int(self, v, error=False, none=True):
-		return common.any2int(v, error=error,none=none)
+		return self.sys.any2int(v, error=error, none=none)
 
 
 	def any2float(self, v, error=False, none=True):
-		return common.any2float(v, error=error,none=none)
+		return self.sys.any2float(v, error=error, none=none)
 
 
 	def any2str(self, v, error=False, none=True):
-		return common.any2str(v, error=error,none=none)
+		return self.sys.any2str(v, error=error, none=none)
 
 
 	# Function: str2bool
 	def any2bool(self, v, error=False, none=True):
-		return common.any2bool(v, error=error,none=none)
+		return self.sys.any2bool(v, error=error, none=none)
 
 
 	def translate(self, code):
-		return common.translate(code)
+		return self.sys.translate(code)

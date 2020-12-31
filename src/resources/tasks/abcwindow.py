@@ -22,21 +22,21 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 		self._wait = None
 
 
+	def __del__(self):
+		self.trace("Disposing all window properties")
+		self.clearProperties()
+
+
 	def load(self):
 		pass
 
 
-	def dispose(self):
-		self.clearProperties()
-		self.close()
-
-
-	def start(self, *args):
+	def init(self, *args):
 		pass
 
 
 	def run(self, *args):
-		self.start(args)
+		self.init(args)
 		self.show()
 
 
@@ -51,17 +51,23 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 
 
 	def onClick(self, id):
-		_method = "onClick_%s" %str(id)
-		if hasattr(self, _method):
-			self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
-			self._function(".".join(["self", _method]))
+		self.trace("Click event for %d" %id)
+		if not self.hasPropertyControlCallable(id):
+			_method = "onClick_%s" % str(id)
+			self.trace("Checking method: %s" %_method)
+			if hasattr(self, _method):
+				self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
+				self.caller(".".join(["self", _method]))
 
 
 	def onFocus(self, id):
-		_method = "onFocus_%s" %str(id)
-		if hasattr(self, _method):
-			self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
-			self._function(".".join(["self", _method]))
+		self.trace("Focus event for %d" %id)
+		if not self.hasPropertyControlCallable(id):
+			_method = "onFocus_%s" %str(id)
+			self.trace("Checking method: %s" % _method)
+			if hasattr(self, _method):
+				self.debug("Calling method: %s.%s" %( self.__class__.__name__,str(_method)))
+				self.caller(".".join(["self", _method]))
 
 
 	@property
@@ -89,14 +95,6 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 		if self._wait is not None:
 			self._wait.close()
 			self._wait = None
-
-
-	def set(self, id, value):
-		self.setProperty("Value.%s" %str(id), value)
-
-
-	def get(self, id):
-		return self.getProperty("Value.%s" %str(id))
 
 
 	def getExControl(self, control, mix=0):
@@ -306,3 +304,71 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 				_answer = options[_index]
 		return _answer
 
+
+	def setPropertyControlEnable(self, id, enable=True):
+		self.setProperty("Enable.%s" % str(id), str(enable).lower())
+
+
+	def setPropertyControlVisible(self, id, visible=True):
+		self.setProperty("Visible.%s" % str(id), str(visible).lower())
+
+
+	def setPropertyControlLabel(self, id, label):
+		if label is not None and isinstance(label, int):
+			label = self.translate(label)
+			if label is None:
+				label = ''
+		self.setProperty("Label.%s" %str(id), label)
+
+
+	def getPropertyControlLabel(self, id):
+		return self.getProperty("Label.%s" %str(id))
+
+
+	def setPropertyControlValue(self, id, value=None):
+		if value is None:
+			value = ''
+		self.setProperty("Value.%s" %str(id), str(value))
+
+
+	def getPropertyControlValue(self, id):
+		return self.getProperty("Value.%s" %str(id))
+
+
+	def setPropertyControlPreAction(self, id, action0=None):
+		if action0 is not None and action0 != '':
+			self.setProperty("Action0.%s" % str(id), action0)
+		elif self.getProperty("Action0.%s" %str(id)) is not None or self.getProperty("Action0.%s" %str(id)) == '':
+			self.setProperty("Action0.%s" % str(id), "")
+
+
+	def setPropertyControlActions(self, id, action1=None, action2=None, action3=None):
+		if action1 is not None and action1 != '':
+			self.setProperty("Action1.%s" % str(id), action1)
+		elif self.getProperty("Action1.%s" %str(id)) is not None or self.getProperty("Action1.%s" %str(id)) == '':
+			self.setProperty("Action1.%s" % str(id), "")
+		if action2 is not None and action2 != '':
+			self.setProperty("Action2.%s" % str(id), action1)
+		elif self.getProperty("Action2.%s" %str(id)) is not None or self.getProperty("Action2.%s" %str(id)) == '':
+			self.setProperty("Action2.%s" % str(id), "")
+		if action3 is not None and action3 != '':
+			self.setProperty("Action3.%s" % str(id), action1)
+		elif self.getProperty("Action3.%s" %str(id)) is not None or self.getProperty("Action3.%s" %str(id)) == '':
+			self.setProperty("Action3.%s" % str(id), "")
+
+
+	def setPropertyControlCallback(self, id):
+		self.setProperty("Callback.%s" % str(id), "on")
+
+
+	def hasPropertyControlCallable(self, id):
+		v = self.getProperty("Callback.%s" %str(id))
+		if v is not None and v != '':
+			return not self.any2bool(v)
+
+
+	def DlgNotificationMsg(self, text, time=7500):
+		common.DlgNotificationMsg(text, time=time)
+
+	def StringInputDialog(self, title="Input", default="", hidden=False):
+		return common.StringInputDialog(title=title, default=default, hidden=hidden)

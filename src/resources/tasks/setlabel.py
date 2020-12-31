@@ -14,10 +14,6 @@ class SetLabel(ServiceTask):
 	key= "setlabel"
 
 
-	def code(self):
-		return self.key
-
-
 	def run(self, *args):
 		params = dict(arg.split("=") for arg in sys.argv[2].split("&"))
 		self.debug('Found parameters: %s' %str(params))

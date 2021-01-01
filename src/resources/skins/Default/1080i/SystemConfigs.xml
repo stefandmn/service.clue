@@ -12,7 +12,7 @@
 		<include>dateTime</include>
 
 		<!-- Header -->
-		<control type="group" id="2100">
+		<control type="group" id="1100">
 			<posx>58</posx>
 			<posy>210</posy>
 			<!--animations-->
@@ -36,7 +36,7 @@
 				<height>55</height>
 				<font>symbolLarge</font>
 				<align>center</align>
-				<label></label>
+				<label></label>
 				<textcolor>selected</textcolor>
 			</control>
 			<control type="image">
@@ -48,12 +48,12 @@
 				<colordiffuse>ffffffff</colordiffuse>
 				<aspectratio>stretch</aspectratio>
 			</control>
-			<control type="label" id="2101">
+			<control type="label" id="1101">
 				<posx>24</posx>
 				<posy>44</posy>
 				<width>12-col</width>
 				<font>pageTitle</font>
-				<label>31905</label>
+				<label>31917</label>
 				<textcolor>black</textcolor>
 				<shadowcolor>-</shadowcolor>
 			</control>
@@ -78,33 +78,22 @@
 			<width>26-col</width>
 			<height>18-row</height>
 			<control type="group">
-				<include content="PropertyLabelPopup">
+				<include content="PropertyNumberEditbox">
 					<param name="id" value="1201"/>
-					<param name="label" value="31908"/>
-					<param name="up" value="1203"/>
+					<param name="label" value="31936"/>
+					<param name="up" value="1202"/>
 					<param name="down" value="1202"/>
 					<param name="posx" value="1-col"/>
 					<param name="posy" value="1-col"/>
-					<param name="width" value="10-col"/>
-					<param name="title" value="$LOCALIZE[31909]"/>
+					<param name="lwidth" value="5-col"/>
+					<param name="bwidth" value="3-col"/>
+					<param name="balign" value="center"/>
 				</include>
-				<include content="PropertyCheckbox">
-					<param name="id" value="1202"/>
-					<param name="label" value="31906"/>
-					<param name="up" value="1201"/>
-					<param name="down" value="1203"/>
-					<param name="posx" value="1-col"/>
-					<param name="posy" value="2-col"/>
-					<param name="width" value="10-col"/>
-				</include>
-				<include content="PropertyCheckbox">
-					<param name="id" value="1203"/>
-					<param name="label" value="31907"/>
-					<param name="up" value="1202"/>
-					<param name="down" value="1201"/>
-					<param name="posx" value="1-col"/>
-					<param name="posy" value="3-col"/>
-					<param name="width" value="10-col"/>
+				<include content="Label">
+					<param name="id" value="12011"/>
+					<param name="label" value="MB"/>
+					<param name="posx" value="9-col"/>
+					<param name="posy" value="1-col"/>
 				</include>
 			</control>
 		</control>

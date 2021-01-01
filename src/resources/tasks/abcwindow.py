@@ -367,8 +367,13 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 			return not self.any2bool(v)
 
 
+	def NotificationMsg(self, text, time=10000):
+		common.NotificationMsg(text, time=time)
+
+
 	def DlgNotificationMsg(self, text, time=7500):
 		common.DlgNotificationMsg(text, time=time)
+
 
 	def StringInputDialog(self, title="Input", default="", hidden=False):
 		return common.StringInputDialog(title=title, default=default, hidden=hidden)

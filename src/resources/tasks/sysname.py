@@ -9,6 +9,7 @@ class SystemName(WindowTask):
 
 
 	def init(self, *args):
+		self.setPropertyControlCallback(1201)
 		self.setPropertyControlLabel(1201, 31903)
 		self.setPropertyControlValue(1202, True)
 

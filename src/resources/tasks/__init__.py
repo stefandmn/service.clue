@@ -3,7 +3,7 @@
 __all__ = ['ServiceTask', 'WindowTask',
 		   'LibraryUpdater', 'LibraryCleaner', 'SystemUpdater', 'CecTrigger','Favourites',
 		   'SetLabel', 'SetValue',
-		   'ClueSetup', 'SystemName', 'SystemAccess']
+		   'ClueSetup', 'SystemName', 'SystemAccess', 'SystemConfigs']
 
 from .abcservice import ServiceTask
 from .abcwindow import WindowTask
@@ -17,3 +17,4 @@ from .setvalue import SetValue
 from .setup import ClueSetup
 from .sysname import SystemName
 from .sysaccess import SystemAccess
+from .sysconfigs import SystemConfigs

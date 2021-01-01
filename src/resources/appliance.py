@@ -122,6 +122,51 @@ class System:
 			self.debug("No password provided")
 
 
+	def get_property(self, conf_file_name, option, default=None):
+		if os.path.exists(conf_file_name):
+			with open(conf_file_name, 'r') as conf_file:
+				for line in conf_file:
+					if line != '' and line.strip().startswith(option):
+						if '=' in line:
+							if line.strip().split('=')[0].strip() == option.strip():
+								default = line.strip().split('=')[-1].strip()
+			conf_file.close()
+		return default
+
+
+	def set_property(self, conf_file_name, option, value):
+		lines = []
+		changed = False
+		if os.path.isfile(conf_file_name):
+			with open(conf_file_name, 'r') as conf_file:
+				for line in conf_file:
+					if line != '' and (line.strip().startswith(option) or (line.strip().startswith('#') and line.strip()[1:].strip().startswith(option))):
+						if '=' in line:
+							if line.strip().split('=')[0].strip() == option.strip():
+								line = '%s=%s' % (option, value)
+								changed = True
+					lines.append(line.strip())
+			conf_file.close()
+		if not changed:
+			lines.append('%s=%s' % (option, value))
+		with open(conf_file_name, 'w') as conf_file:
+			conf_file.write('\n'.join(lines) + '\n')
+		conf_file.close()
+
+
+	def remount_boot(self, write=False):
+		if write:
+			flag = "rw"
+		else:
+			flag = "ro"
+		_status, _output = self.process('mount -o remount,%s /dev/mmcblk0p1 /boot' %flag)
+		if _status:
+			if _output is not None and _output != '':
+				self.trace("Remount of /boot partition: %s" %_output)
+		else:
+			self.error("Error executing remount of /boot partition: %s" %_output)
+
+
 
 class Identity(System):
 
@@ -200,30 +245,12 @@ class Services(Identity):
 			conf_file_name = '%s/services/%s.conf' % (self.CONFIG_CACHE, service)
 		elif os.path.exists('%s/services/%s.disabled' % (self.CONFIG_CACHE, service)):
 			conf_file_name = '%s/services/%s.disabled' % (self.CONFIG_CACHE, service)
-		if os.path.exists(conf_file_name):
-			with open(conf_file_name, 'r') as conf_file:
-				for line in conf_file:
-					if option in line:
-						if '=' in line:
-							default = line.strip().split('=')[-1]
-		return default
+		return self.get_property(conf_file_name, option=option, default=default)
 
 
 	def set_appservice_option(self, service, option, value):
-		lines = []
-		changed = False
 		conf_file_name = '%s/services/%s.conf' % (self.CONFIG_CACHE, service)
-		if os.path.isfile(conf_file_name):
-			with open(conf_file_name, 'r') as conf_file:
-				for line in conf_file:
-					if option in line:
-						line = '%s=%s' % (option, value)
-						changed = True
-					lines.append(line.strip())
-		if changed == False:
-			lines.append('%s=%s' % (option, value))
-		with open(conf_file_name, 'w') as conf_file:
-			conf_file.write('\n'.join(lines) + '\n')
+		self.set_property(conf_file_name, option=option, value=value)
 
 
 	def get_appservice_status(self, service):

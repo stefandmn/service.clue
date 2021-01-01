@@ -169,74 +169,74 @@
                         <onclick>RunScript(service.clue,window.sysaccess)</onclick>
 					</item>
 					<item id="3">
-                        <description>GPU Memory</description>
-                        <label>GPU Memory</label>
-                        <label2>GPU Memory Split</label2>
+                        <description>System Configuration</description>
+                        <label>31916</label>
+                        <label2>31917</label2>
                         <property name="icon"></property>
-                        <onclick>ActivateWindow(5003)</onclick>
+                        <onclick>RunScript(service.clue,window.sysconfigs)</onclick>
 					</item>
 					<item id="4">
-                        <description>File System</description>
-                        <label>File System</label>
-                        <label2>File System Options</label2>
-                        <property name="icon"></property>
+                        <description>System Services</description>
+                        <label>31918</label>
+                        <label2>31919</label2>
+                        <property name="icon"></property>
                         <onclick>ActivateWindow(5004)</onclick>
 					</item>
 					<item id="5">
                         <description>Drives</description>
-                        <label>Drives</label>
-                        <label2>Local and Network Drives</label2>
+                        <label>31920</label>
+                        <label2>31921</label2>
                         <property name="icon"></property>
                         <onclick>ActivateWindow(5005)</onclick>
 					</item>
 					<item id="6">
-                        <description>Overclocking</description>
-                        <label>Overclocking</label>
-                        <label2>CPU Overclocking</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5006)</onclick>
+                        <description>Network</description>
+                        <label>31922</label>
+                        <label2>31923</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="7">
-                        <description>Licenses</description>
-                        <label>Licenses</label>
-                        <label2>Codec Licenses</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5007)</onclick>
+                        <description>Bluetooth</description>
+                        <label>31924</label>
+                        <label2>31925</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="8">
-                        <description>Bridge</description>
-                        <label>Bridge</label>
-                        <label2>HomeKit Bridge</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5008)</onclick>
+                        <description>Tethering</description>
+                        <label>31926</label>
+                        <label2>31927</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="9">
-                        <description>Surveillance</description>
-                        <label>Surveillance</label>
-                        <label2>Video Surveillance</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5009)</onclick>
+                        <description>VPN Client</description>
+                        <label>31934</label>
+                        <label2>31935</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="10">
-                        <description>Network</description>
-                        <label>Network</label>
-                        <label2>Network Interfaces</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5010)</onclick>
+                        <description>Licenses</description>
+                        <label>31928</label>
+                        <label2>31929</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="11">
-                        <description>Router</description>
-                        <label>Router</label>
-                        <label2>Access Point</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(5011)</onclick>
+                        <description>Bridge</description>
+                        <label>31930</label>
+                        <label2>31931</label2>
+                        <property name="icon"></property>
+                        <onclick>noop</onclick>
 					</item>
 					<item id="12">
-						<description>Repeater</description>
-						<label>Repeater</label>
-						<label2>Extend Network</label2>
-						<property name="icon"></property>
-						<onclick>ActivateWindow(5012)</onclick>
+                        <description>Surveillance</description>
+                        <label>31932</label>
+                        <label2>31933</label2>
+                        <property name="icon"></property>
+                       <onclick>noop</onclick>
 					</item>
 				</content>
 			</control>

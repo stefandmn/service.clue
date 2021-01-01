@@ -10,32 +10,32 @@ class SystemAccess(WindowTask):
 
 
 	def init(self, *args):
-		self.setPropertyControlCallback(2201)
-		self.setPropertyControlCallback(2202)
-		self.setPropertyControlCallback(2203)
+		self.setPropertyControlCallback(1201)
+		self.setPropertyControlCallback(1202)
+		self.setPropertyControlCallback(1203)
 		sshd_status = self.sys.get_appservice_status("sshd")
 		sshd_disablepasswd = self.sys.get_appservice_option(self.SSH_SERVICENAME, self.SSH_PROP_DISABLEPWAUTH)
-		self.setPropertyControlValue(2202, sshd_status)
-		self.setPropertyControlEnable(2203, sshd_status)
-		self.setPropertyControlValue(2203, self.any2bool(sshd_disablepasswd))
+		self.setPropertyControlValue(1202, sshd_status)
+		self.setPropertyControlEnable(1203, sshd_status)
+		self.setPropertyControlValue(1203, self.any2bool(sshd_disablepasswd))
 
 
-	def onClick_2201(self):
+	def onClick_1201(self):
 		try:
-			pwd = self.getPropertyControlValue(2201)
+			pwd = self.getPropertyControlValue(1201)
 			self.debug("Get current password: %s" %pwd)
 			self.sys.check_root_access(pwd)
-			self.DlgNotificationMsg(self.translate(31914))
+			self.NotificationMsg(self.translate(31914), time=5000)
 			passwd1 = self.StringInputDialog(title=self.translate(31910), hidden=True)
 			passwd2 = self.StringInputDialog(title=self.translate(31911), hidden=True)
 			self.sys.set_root_password(passwd1, passwd2)
-			self.DlgNotificationMsg(self.translate(31915))
+			self.NotificationMsg(self.translate(31915), time=5000)
 		except BaseException as be:
 			self.DlgNotificationMsg(str(be))
 
 
-	def onClick_2202(self):
-		status = self.any2bool(self.getPropertyControlValue(2202))
+	def onClick_1202(self):
+		status = self.any2bool(self.getPropertyControlValue(1202))
 		sysinfo = self.sys.get_sysservice_status(self.SSH_SERVICENAME)
 		appinfo = self.sys.get_appservice_status(self.SSH_SERVICENAME)
 		self.debug("SSH service has been %s, currently the service is %s, and is configured as %s service" %("enabled" if not status else "disabled", "running" if sysinfo else "stopped", "enabled" if appinfo else "disabled"))
@@ -53,11 +53,11 @@ class SystemAccess(WindowTask):
 				self.sys.stop_sysservice(self.SSH_SERVICENAME)
 		elif not status and not sysinfo and not appinfo:
 			self.DlgNotificationMsg(self.translate(32901))
-		self.setPropertyControlEnable(2203, status)
+		self.setPropertyControlEnable(1203, status)
 
 
-	def onClick_2203(self):
-		status = self.any2bool(self.getPropertyControlValue(2203))
+	def onClick_1203(self):
+		status = self.any2bool(self.getPropertyControlValue(1203))
 		appinfo = self.sys.get_appservice_status(self.SSH_SERVICENAME)
 		self.debug("SSH service configuration to disable password authentication has been %s, taking into account the service is %s" %("enabled" if status else "disabled", "enabled" if appinfo else "disabled"))
 		if appinfo:

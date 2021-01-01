@@ -205,3 +205,15 @@ msgstr ""
 msgctxt "#32220"
 msgid "Custom #10 Scheduler Script"
 msgstr ""
+
+msgctxt "#32900"
+msgid "Nothing to be done, SSH service is already enabled"
+msgstr "
+
+msgctxt "#32901"
+msgid "Nothing to be done, SSH service is already disabled"
+msgstr "
+
+msgctxt "#32902"
+msgid "Nothing to be done, SSH service is currently disabled"
+msgstr "

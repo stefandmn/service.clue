@@ -189,6 +189,11 @@ class Services(Identity):
 		return not self.get_sysservice_status(service)
 
 
+	def restart_sysservice(self, service):
+		self.process("/usr/bin/systemctl restart %s" % service)
+		return self.get_sysservice_status(service)
+
+
 	def get_appservice_option(self, service, option, default=None):
 		conf_file_name = ''
 		if os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):

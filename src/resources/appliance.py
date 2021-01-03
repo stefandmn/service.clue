@@ -78,6 +78,135 @@ class System:
 		return common.translate(code)
 
 
+	def hwtype(self):
+		_status, _output = self.process('uname -m')
+		if _status:
+			return _output
+		else:
+			self.error("Error reading hardware type: %s" %_output)
+			return None
+
+
+	def kernelversion(self):
+		_status, _output = self.process('uname -r')
+		if _status:
+			return _output
+		else:
+			self.error("Error reading kernel version: %s" %_output)
+			return None
+
+
+	def chipset(self):
+		_status, _output = self.process('cat /proc/cpuinfo | grep Hardware | cut -d":" -f2 | tr -d " "')
+		if _status:
+			return _output
+		else:
+			self.error("Error reading chipset: %s" %_output)
+			return None
+
+
+	def serialnumber(self):
+		_status, _output = self.process('cat /proc/cpuinfo | grep Serial | cut -d":" -f2 | tr -d " "')
+		if _status:
+			return _output
+		else:
+			self.error("Error reading serial number: %s" %_output)
+			return None
+
+
+	def model(self):
+		_model = None
+		_status, _output = self.process('grep Revision /proc/cpuinfo | cut -d " " -f 2 | sed "s/^1000//"')
+		if _status:
+			if _output == "0002": 
+				model = "B"
+			elif _output == "0003":
+				model = "B"
+			elif _output == "0004":
+				model = "B"
+			elif _output == "0005":
+				model = "B"
+			elif _output == "0006":
+				model = "B"
+			elif _output == "0007":
+				model = "A"
+			elif _output == "0008":
+				model = "A"
+			elif _output == "0009":
+				model = "A"
+			elif _output == "000d":
+				model = "B"
+			elif _output == "000e":
+				model = "B"
+			elif _output == "000f":
+				model = "B"
+			elif _output == "0010":
+				model = "B+"
+			elif _output == "0011":
+				model = "Compute Module 1"
+			elif _output == "0012":
+				model = "A+"
+			elif _output == "0013":
+				model = "B+"
+			elif _output == "0014":
+				model = "Compute Module 1 (Embest, China)"
+			elif _output == "0015":
+				model = "A+ (Embest, China)"
+			elif _output == "a01040":
+				model = "2 Model B"
+			elif _output == "a01041":
+				model = "2 Model B (Sony, UK)"
+			elif _output == "a21041":
+				model = "2 Model B (Embest, China)"
+			elif _output == "a22042":
+				model = "2 Model B+"
+			elif _output == "900021":
+				model = "A+"
+			elif _output == "900032":
+				model = "B+"
+			elif _output == "900092":
+				model = "Zero"
+			elif _output == "900093":
+				model = "Zero"
+			elif _output == "920093":
+				model = "Zero"
+			elif _output == "9000c1":
+				model = "Zero W"
+			elif _output == "a02082":
+				model = "3 Model B (Sony, UK)"
+			elif _output == "a020a0":
+				model = "Compute Module 3 (Lite)"
+			elif _output == "a22082":
+				model = "3 Model B (Embest, China)"
+			elif _output == "a32082":
+				model = "3 Model B (Sony, Japan)"
+			elif _output == "a52082":
+				model = "3 Model B (Stadium, UK)"
+			elif _output == "a22083":
+				model = "3 Model B (Embest, China)"
+			elif _output == "a03111":
+				model = "4 (Sony, UK)"
+			elif _output == "b03111":
+				model = "4 (Sony, UK)"
+			elif _output == "c03111":
+				model = "4 (Sony, UK)"
+			else:
+				model = "unknown (%s)" %_output
+			return model
+		else:
+			self.error("Error reading device model: %s" %_output)
+			return None
+
+
+	def cputemp(self):
+		_status, _output = self.process('/opt/vc/bin/vcgencmd measure_temp | cut -c "6-9"')
+		if _status:
+			return _output
+		else:
+			self.error("Error reading CPU temperature: %s" % _output)
+			return None
+
+
 	def check_root_access(self, pwd):
 		if pwd:
 			stream = os.popen('more /etc/shadow | grep root')
@@ -90,8 +219,10 @@ class System:
 			self.trace("Encrypted input password: %s" %inputpwd)
 			if inputpwd != password:
 				raise RuntimeError("Password doesn't match")
+			return True
 		else:
 			self.debug("No password provided")
+			return False
 
 
 	def set_root_password(self, pwd1, pwd2):
@@ -118,8 +249,10 @@ class System:
 			outs, errs = shell.communicate()
 			code = shell.returncode
 			self.debug("Results of [passwd] system command execution: code=%s, stdout=%s, strerr=%s" %(str(code),str(outs),str(errs)))
+			return code == 0
 		else:
 			self.debug("No password provided")
+			return False
 
 
 	def get_property(self, conf_file_name, option, default=None):
@@ -137,21 +270,48 @@ class System:
 	def set_property(self, conf_file_name, option, value):
 		lines = []
 		changed = False
+		ignored = False
 		if os.path.isfile(conf_file_name):
+			if value is None or value == "":
+				usecase = -1
+			elif value == "#":
+				usecase = 0
+			else:
+				usecase = 1
+				value = str(value)
 			with open(conf_file_name, 'r') as conf_file:
 				for line in conf_file:
-					if line != '' and (line.strip().startswith(option) or (line.strip().startswith('#') and line.strip()[1:].strip().startswith(option))):
-						if '=' in line:
-							if line.strip().split('=')[0].strip() == option.strip():
-								line = '%s=%s' % (option, value)
-								changed = True
-					lines.append(line.strip())
+					if usecase == 1:
+						if line != '' and (line.strip().startswith(option) or (line.strip().startswith('#') and line.strip()[1:].strip().startswith(option))):
+							if '=' in line:
+								if line.strip().split('=')[0].strip() == option.strip():
+									line = '%s=%s' % (option, value)
+									changed = True
+					elif usecase == 0:
+						if line != '' and (line.strip().startswith(option)):
+							if '=' in line:
+								if line.strip().split('=')[0].strip() == option.strip():
+									line = '# ' + line
+									changed = True
+					elif usecase == -1:
+						if line != '' and (line.strip().startswith(option)):
+							if '=' in line:
+								if line.strip().split('=')[0].strip() == option.strip():
+									ignored = True
+									changed = True
+					if not ignored:
+						lines.append(line.strip())
+					else:
+						ignored = False
 			conf_file.close()
-		if not changed:
-			lines.append('%s=%s' % (option, value))
-		with open(conf_file_name, 'w') as conf_file:
-			conf_file.write('\n'.join(lines) + '\n')
-		conf_file.close()
+			if not changed and usecase == 1:
+				lines.append('%s=%s' % (option, value))
+			with open(conf_file_name, 'w') as conf_file:
+				conf_file.write('\n'.join(lines))
+				conf_file.write("\n")
+			conf_file.close()
+		else:
+			self.error("Configuration file not found: %s" %conf_file_name)
 
 
 	def remount_boot(self, write=False):
@@ -284,4 +444,133 @@ class Services(Identity):
 
 
 class Clue(Services):
-	pass
+	FILE_BOOT_CONFIG = "/boot/config.txt"
+	PROP_GPU_MEM = "gpu_mem"
+	PROP_ARM_FREQ = "arm_freq"
+	PROP_CORE_FREQ = "core_freq"
+	PROP_SDRAM_FREQ = "sdram_freq"
+	PROP_OVERVOLTAGE = "over_voltage"
+	PROP_FORCE_TURBO = "force_turbo"
+
+
+	def get_gpu_memorysplit(self):
+		return self.get_property(self.FILE_BOOT_CONFIG, self.PROP_GPU_MEM, 128)
+
+
+	def set_gpu_memorysplit(self, memory):
+		self.remount_boot(True)
+		self.set_property(self.FILE_BOOT_CONFIG, self.PROP_GPU_MEM, memory)
+		self.remount_boot(False)
+
+
+	def get_overclocking_profiles(self):
+		_profiles = []
+		if self.hwtype() == "armv6l":
+			_profiles = ["None", "Modest", "Medium", "High", "Turbo"]
+		elif self.hwtype() == "armv7l":
+			_profiles = ["None", "High"]
+		return _profiles
+
+
+	def get_currentoverclocking_profile(self):
+		_profile = None
+		_hwtype = self.hwtype()
+		_freq = self.get_property("/boot/config.txt", "arm_freq")
+		if _hwtype == "armv6l":
+			if _freq is None:
+				_profile = "None"
+			elif _freq == "700":
+				_profile= "None"
+			elif _freq == "800":
+				_profile= "Modest"
+			elif _freq == "900":
+				_profile= "Medium"
+			elif _freq == "950":
+				_profile= "High"
+			elif _freq == "1000":
+				_profile= "Turbo"
+			else:
+				self.warn("Unknown frequency to recognize the overclocking profile: %s" % str(_freq))
+				_profile = "Unknown"
+		elif _hwtype == "armv7l":
+			if _freq is None:
+				_profile = "None"
+			elif _freq == "900":
+				_profile= "None"
+			elif _freq == "1000":
+				_profile= "High"
+			else:
+				_profile = "Unknown"
+				self.warn("Unknown frequency to recognize the overclocking profile: %s" % str(_freq))
+		else:
+			_profile = "Unknown"
+			self.warn("Unknown hardware type to identify the overclocking profile: %s" % str(_hwtype))
+		return _profile
+
+
+	def set_overclocking_profile(self, profile):
+		_hwtype = self.hwtype()
+		if _hwtype == "armv6l":
+			self.remount_boot(True)
+			if profile is None or profile == "None":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 700)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 400)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+			elif profile == "Modest":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 800)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 400)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+			elif profile == "Medium":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 900)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 2)
+			elif profile == "High":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 950)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 6)
+			elif profile == "Turbo":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 1000)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 500)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 600)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 6)
+			else:
+				self.warn("Unknown overclocking profile to apply: %s" %str(profile))
+			self.remount_boot(False)
+		elif _hwtype == "armv7l":
+			self.remount_boot(True)
+			if profile is None or profile == "None":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 900)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+			elif profile == "High":
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 1000)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 500)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 500)
+				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 2)
+			else:
+				self.warn("Unknown overclocking profile to apply: %s" % str(profile))
+			self.remount_boot(False)
+		else:
+			self.warn("Unknown hardware type to apply the overclocking profile: %s" % str(_hwtype))
+
+
+	def get_turbomode(self):
+		return self.any2bool(self.get_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO))
+
+
+	def set_turbomode(self, value):
+		self.remount_boot(True)
+		if value:
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO, 1)
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, None)
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, None)
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, None)
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, None)
+		else:
+			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO, 0)
+		self.remount_boot(False)

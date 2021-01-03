@@ -78,7 +78,7 @@
 			<width>26-col</width>
 			<height>18-row</height>
 			<control type="group">
-				<include content="PropertyLabelPopup">
+				<include content="PropertyPopupHiddenValue">
 					<param name="id" value="1201"/>
 					<param name="label" value="31908"/>
 					<param name="up" value="1203"/>
@@ -88,7 +88,7 @@
 					<param name="width" value="10-col"/>
 					<param name="title" value="$LOCALIZE[31909]"/>
 				</include>
-				<include content="PropertyCheckbox">
+				<include content="PropertyRadiobutton">
 					<param name="id" value="1202"/>
 					<param name="label" value="31906"/>
 					<param name="up" value="1201"/>
@@ -97,7 +97,7 @@
 					<param name="posy" value="2-col"/>
 					<param name="width" value="10-col"/>
 				</include>
-				<include content="PropertyCheckbox">
+				<include content="PropertyRadiobutton">
 					<param name="id" value="1203"/>
 					<param name="label" value="31907"/>
 					<param name="up" value="1202"/>

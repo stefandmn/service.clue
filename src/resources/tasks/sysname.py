@@ -24,6 +24,7 @@ class SystemName(WindowTask):
 		self._lock()
 		name = self.getPropertyControlValue(1201)
 		sync = self.getPropertyControlValue(1202)
+		self.trace("Applying [%s] as new identity name %s" %(name, ("for host and device" if sync else "only for host")))
 		if name is not None:
 			if self.any2bool(sync):
 				self.sys.set_identity(name)

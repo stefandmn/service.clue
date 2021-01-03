@@ -241,5 +241,23 @@
 				</content>
 			</control>
 		</control>
+
+		<!-- Reboot Flag -->
+		<control type="group">
+			<visible>String.IsEqual(Window(Home).Property(System.Reboot),on)</visible>
+			<!--animations-->
+			<include>modalDialogInOutVertical</include>
+			<posx>20</posx>
+			<posy>660</posy>
+			<control type="label">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>5-col</width>
+				<font>smallest</font>
+				<label>31990</label>
+				<textcolor>selected</textcolor>
+				<shadowcolor>-</shadowcolor>
+			</control>
+		</control>
 	</controls>
 </window>

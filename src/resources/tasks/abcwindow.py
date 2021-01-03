@@ -97,6 +97,14 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 			self._wait = None
 
 
+	def mark4reboot(self):
+		common.runBuiltinCommand("SetProperty(System.Reboot,on,10000)")
+
+
+	def cancelreboot(self):
+		common.runBuiltinCommand("SetPrClearPropertyoperty(System.Reboot,10000)")
+
+
 	def getExControl(self, control, mix=0):
 		"""Get control instance for any part for group"""
 		if control is not None:
@@ -331,11 +339,26 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 		self.setProperty("Value.%s" %str(id), str(value))
 
 
+	def setPropertyControlOptionData(self, id, values=None):
+		if values is None:
+			values = ''
+		if isinstance(values, list):
+			data = "".join(values)
+			if data.find("|") < 0:
+				data = "|".join(values)
+			elif data.find("/") < 0:
+				data = "/".join(values)
+			else:
+				data = ":".join(values)
+			values = data
+		self.setProperty("Data.%s" %str(id), str(values))
+
+
 	def getPropertyControlValue(self, id):
 		return self.getProperty("Value.%s" %str(id))
 
 
-	def setPropertyControlPreAction(self, id, action0=None):
+	def setPropertyControlAction(self, id, action0=None):
 		if action0 is not None and action0 != '':
 			self.setProperty("Action0.%s" % str(id), action0)
 		elif self.getProperty("Action0.%s" %str(id)) is not None or self.getProperty("Action0.%s" %str(id)) == '':

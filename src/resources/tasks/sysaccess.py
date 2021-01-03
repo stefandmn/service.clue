@@ -23,13 +23,15 @@ class SystemAccess(WindowTask):
 	def onClick_1201(self):
 		try:
 			pwd = self.getPropertyControlValue(1201)
-			self.debug("Get current password: %s" %pwd)
-			self.sys.check_root_access(pwd)
-			self.NotificationMsg(self.translate(31914), time=5000)
-			passwd1 = self.StringInputDialog(title=self.translate(31910), hidden=True)
-			passwd2 = self.StringInputDialog(title=self.translate(31911), hidden=True)
-			self.sys.set_root_password(passwd1, passwd2)
-			self.NotificationMsg(self.translate(31915), time=5000)
+			self.trace("Get current password: %s" %pwd)
+			result = self.sys.check_root_access(pwd)
+			if result:
+				self.NotificationMsg(self.translate(31914), time=5000)
+				passwd1 = self.StringInputDialog(title=self.translate(31910), hidden=True)
+				passwd2 = self.StringInputDialog(title=self.translate(31911), hidden=True)
+				result = self.sys.set_root_password(passwd1, passwd2)
+				if result:
+					self.NotificationMsg(self.translate(31915), time=5000)
 		except BaseException as be:
 			self.DlgNotificationMsg(str(be))
 
@@ -38,7 +40,7 @@ class SystemAccess(WindowTask):
 		status = self.any2bool(self.getPropertyControlValue(1202))
 		sysinfo = self.sys.get_sysservice_status(self.SSH_SERVICENAME)
 		appinfo = self.sys.get_appservice_status(self.SSH_SERVICENAME)
-		self.debug("SSH service has been %s, currently the service is %s, and is configured as %s service" %("enabled" if not status else "disabled", "running" if sysinfo else "stopped", "enabled" if appinfo else "disabled"))
+		self.trace("SSH service has been %s, currently the service is %s, and is configured as %s service" %("enabled" if not status else "disabled", "running" if sysinfo else "stopped", "enabled" if appinfo else "disabled"))
 		if status and (not sysinfo or not appinfo):
 			if not appinfo:
 				self.sys.enable_appservice(self.SSH_SERVICENAME)

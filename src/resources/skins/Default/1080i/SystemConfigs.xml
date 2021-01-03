@@ -36,7 +36,7 @@
 				<height>55</height>
 				<font>symbolLarge</font>
 				<align>center</align>
-				<label></label>
+				<label></label>
 				<textcolor>selected</textcolor>
 			</control>
 			<control type="image">
@@ -78,22 +78,92 @@
 			<width>26-col</width>
 			<height>18-row</height>
 			<control type="group">
-				<include content="PropertyNumberEditbox">
+				<include content="PropertyEditbox">
 					<param name="id" value="1201"/>
 					<param name="label" value="31936"/>
 					<param name="up" value="1202"/>
 					<param name="down" value="1202"/>
+					<param name="right" value="1204"/>
 					<param name="posx" value="1-col"/>
 					<param name="posy" value="1-col"/>
 					<param name="lwidth" value="5-col"/>
 					<param name="bwidth" value="3-col"/>
 					<param name="balign" value="center"/>
+					<param name="dialog" value="number"/>
+					<param name="title" value="$LOCALIZE[31938]"/>
 				</include>
 				<include content="Label">
 					<param name="id" value="12011"/>
 					<param name="label" value="MB"/>
 					<param name="posx" value="9-col"/>
 					<param name="posy" value="1-col"/>
+					<param name="color" value="unselected"/>
+				</include>
+				<include content="PropertyRadiobutton">
+					<param name="id" value="1202"/>
+					<param name="label" value="31941"/>
+					<param name="up" value="1201"/>
+					<param name="down" value="1203"/>
+					<param name="right" value="1205"/>
+					<param name="posx" value="1-col"/>
+					<param name="posy" value="2-col"/>
+					<param name="width" value="8-col"/>
+				</include>
+				<include content="PropertyEditbox">
+					<param name="id" value="1203"/>
+					<param name="label" value="31937"/>
+					<param name="up" value="1202"/>
+					<param name="down" value="1201"/>
+					<param name="right" value="1205"/>
+					<param name="posx" value="1-col"/>
+					<param name="posy" value="3-col"/>
+					<param name="lwidth" value="5-col"/>
+					<param name="bwidth" value="3-col"/>
+					<param name="balign" value="center"/>
+					<param name="dialog" value="select"/>
+					<param name="title" value="$LOCALIZE[31939]"/>
+				</include>
+				<include content="PropertyRadiobutton">
+					<param name="id" value="1204"/>
+					<param name="label" value="31942"/>
+					<param name="up" value="1207"/>
+					<param name="down" value="1205"/>
+					<param name="left" value="1201"/>
+					<param name="posx" value="12-col"/>
+					<param name="posy" value="1-col"/>
+					<param name="width" value="8-col"/>
+				</include>
+				<include content="PropertyRadiobutton">
+					<param name="id" value="1205"/>
+					<param name="label" value="31943"/>
+					<param name="up" value="1204"/>
+					<param name="down" value="1206"/>
+					<param name="left" value="1202"/>
+					<param name="posx" value="12-col"/>
+					<param name="posy" value="2-col"/>
+					<param name="width" value="8-col"/>
+				</include>
+				<include content="PropertyPopupHiddenValue">
+					<param name="id" value="1206"/>
+					<param name="label" value="31944"/>
+					<param name="up" value="1205"/>
+					<param name="down" value="1207"/>
+					<param name="left" value="1203"/>
+					<param name="posx" value="12-col"/>
+					<param name="posy" value="3-col"/>
+					<param name="width" value="8-col"/>
+					<param name="dialog" value="none"/>
+				</include>
+				<include content="PropertyPopupHiddenValue">
+					<param name="id" value="1207"/>
+					<param name="label" value="31945"/>
+					<param name="up" value="1206"/>
+					<param name="down" value="1204"/>
+					<param name="left" value="1203"/>
+					<param name="posx" value="12-col"/>
+					<param name="posy" value="4-col"/>
+					<param name="width" value="8-col"/>
+					<param name="dialog" value="none"/>
 				</include>
 			</control>
 		</control>

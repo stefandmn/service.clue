@@ -78,7 +78,7 @@
 			<width>26-col</width>
 			<height>18-row</height>
 			<control type="group">
-				<include content="PropertyStringEditbox">
+				<include content="PropertyEditbox">
 					<param name="id" value="1201"/>
 					<param name="label" value="31912"/>
 					<param name="up" value="1202"/>
@@ -88,9 +88,11 @@
 					<param name="lwidth" value="5-col"/>
 					<param name="bwidth" value="6-col"/>
 					<param name="balign" value="center"/>
+					<param name="dialog" value="string"/>
+					<param name="title" value="$LOCALIZE[31940]"/>
 				</include>
 
-				<include content="PropertyCheckbox">
+				<include content="PropertyRadiobutton">
 					<param name="id" value="1202"/>
 					<param name="label" value="31913"/>
 					<param name="up" value="1201"/>

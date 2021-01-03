@@ -2,7 +2,7 @@
 
 import os
 from resources.scheduler import *
-from resources.tasks import ServiceTask, WindowTask
+from resources.tasks import ServiceTask, GraphicTask, WindowTask
 
 if hasattr(sys.modules["__main__"], "xbmc"):
 	xbmc = sys.modules["__main__"].xbmc
@@ -28,8 +28,6 @@ class ServiceSettings(xbmc.Monitor):
 		common.debug("Settings have been updated and will trigger re-loading of scheduler jobs", "settings")
 		self.updateSettingsMethod()
 
-
-TASKS = {}
 
 
 class ClueService:
@@ -72,13 +70,24 @@ class ClueService:
 				common.trace("Looking for [%s] task in [%s] area" %(code,area))
 				for cls in ServiceTask.__subclasses__():
 					try:
-						if cls.key == code and cls.__name__ != "WindowTask":
+						if cls.key == code and cls.__name__ != "GraphicTask" and cls.__name__ != "WindowTask":
 							task = cls()
 							if task is not None:
 								common.debug("Found service task: %s" %task.code())
 								break
 					except BaseException as be:
-						common.error('Unexpected error while reading [%s] service task: %s' %(str(cls),str(be)), 'service')
+						common.error('Unexpected error while calling [%s] service task: %s' %(str(cls),str(be)), 'service')
+			if area is None or area == GraphicTask.key:
+				common.trace("Looking for [%s] task in [%s] area" %(code,area))
+				for cls in GraphicTask.__subclasses__():
+					try:
+						if cls.key == code:
+							task = cls()
+							if task is not None:
+								common.debug("Found graphic task: %s" %task.code())
+								break
+					except BaseException as be:
+						common.error('Unexpected error while calling [%s] graphic task: %s' %(str(cls),str(be)), 'service')
 			if area is None or area == WindowTask.key:
 				common.trace("Looking for [%s] task in [%s] area" % (code, area))
 				for cls in WindowTask.__subclasses__():
@@ -89,7 +98,7 @@ class ClueService:
 								common.debug("Found window task: %s" % task.code())
 								break
 					except BaseException as be:
-						common.error('Unexpected error while reading [%s] window task: %s' %(str(cls),str(be)), 'service')
+						common.error('Unexpected error while calling [%s] window task: %s' %(str(cls),str(be)), 'service')
 			return task
 
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import abc
-import common
 from resources.appliance import Clue
 
 

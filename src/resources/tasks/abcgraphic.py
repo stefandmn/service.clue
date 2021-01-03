@@ -20,7 +20,7 @@ class GraphicTask(ServiceTask):
 		params = dict(arg.split("=") for arg in sys.argv[2].split("&"))
 		self.debug('Found parameters: %s' %str(params))
 		self._dialog = params.get("dialog")
-		self._dialog = 'string' if self._dialog is None or self._dialog == '' or (self._dialog.lower() != 'string' and self._dialog.lower() != 'number' and self._dialog.lower() != 'date' and self._dialog.lower() != 'time' and self._dialog.lower() != 'ipaddr' and self._dialog.lower() != 'select') else self._dialog
+		self._dialog = 'string' if self._dialog is None or self._dialog == '' or (self._dialog.lower() != 'string' and self._dialog.lower() != 'number' and self._dialog.lower() != 'date' and self._dialog.lower() != 'time' and self._dialog.lower() != 'ipaddr' and self._dialog.lower() != 'select' and self._dialog.lower() != 'none') else self._dialog
 		self.trace('Using dialog type: %s' % str(self._dialog))
 		self._wid = params.get("window")
 		self.trace('Using window id: %s' % str(self._wid))
@@ -45,9 +45,8 @@ class GraphicTask(ServiceTask):
 		except BaseException as be:
 			self.error("Error discovering window handler: %s" %str(be))
 			self._window = None
-		# run pre-setup process to collect or adjust the data
-		self._presetup()
-		if self._window is not None:
+		if self._window is not None and self._dialog != 'none':
+			self._presetup()
 			if self._dialog == 'string':
 				self._data = common.StringInputDialog(title=self._title, default=self._default)
 			elif self._dialog == 'number':
@@ -62,13 +61,15 @@ class GraphicTask(ServiceTask):
 				self._data = common.SelectDialog(title=self._title, default=self._default, options=self._data)
 			else:
 				self._data = None
-			# run setup process to use the collected data
 			self._setup()
-			# process callback process
-			if self._callback is not None:
-				common.runBuiltinCommand(self._callback, wait=True)
 		else:
-			self.error("Window handler is unknown")
+			if self._dialog != 'none':
+				self.error("Window handler is unknown")
+			else:
+				self.debug("Process skipped due to rejected input dialog from XML window definition")
+		# process callback process
+		if self._callback is not None:
+			common.runBuiltinCommand(self._callback, wait=True)
 
 
 	@abc.abstractmethod

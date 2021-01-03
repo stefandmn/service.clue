@@ -198,6 +198,7 @@
                         <description>Network</description>
                         <label>31922</label>
                         <label2>31923</label2>
+						<property name="icon"></property>
                         <onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>

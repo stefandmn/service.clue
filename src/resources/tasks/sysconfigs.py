@@ -52,3 +52,17 @@ class SystemConfigs(WindowTask):
 			self.sys.set_overclocking_profile(value)
 			self.mark4reboot()
 			self._unlock()
+
+
+	def onClick_1206(self):
+		if self.YesNoDialog(31946):
+			pass
+		else:
+			self.warn("Reset Kodi to Default operation has been Cancelled")
+
+
+	def onClick_1207(self):
+		if self.YesNoDialog(31947):
+			pass
+		else:
+			self.warn("Reset System to Default operation has been Cancelled")

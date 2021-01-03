@@ -401,3 +401,11 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 
 	def StringInputDialog(self, title="Input", default="", hidden=False):
 		return common.StringInputDialog(title=title, default=default, hidden=hidden)
+
+
+	def YesNoDialog(self, message):
+		return common.YesNoDialog(message)
+
+
+	def OkDialog(self, message):
+		return common.OkDialog(message)

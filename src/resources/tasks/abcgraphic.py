@@ -58,7 +58,7 @@ class GraphicTask(ServiceTask):
 			elif self._dialog == 'ipaddr':
 				self._data = common.IPAddrInputDialog(title=self._title, default=self._default)
 			elif self._dialog == 'select':
-				self._data = common.SelectDialog(title=self._title, default=self._default, options=self._data)
+				self._data = common.SelectDialog(title=self._title, default=self._default, options=self._data, output="value")
 			else:
 				self._data = None
 			self._setup()

@@ -41,6 +41,7 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 
 
 	def show(self):
+		common.runBuiltinCommand("Dialog.Close(busydialog)")
 		self.doModal()
 
 

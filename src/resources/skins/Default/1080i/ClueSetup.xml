@@ -159,6 +159,7 @@
 						<label>31902</label>
                         <label2>31903</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>RunScript(service.clue,window.sysname)</onclick>
 					</item>
 					<item id="2">
@@ -166,6 +167,7 @@
                         <label>31904</label>
                         <label2>31905</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>RunScript(service.clue,window.sysaccess)</onclick>
 					</item>
 					<item id="3">
@@ -173,6 +175,7 @@
                         <label>31916</label>
                         <label2>31917</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>RunScript(service.clue,window.sysconfigs)</onclick>
 					</item>
 					<item id="4">
@@ -180,20 +183,22 @@
                         <label>31918</label>
                         <label2>31919</label2>
                         <property name="icon"></property>
-                        <onclick>ActivateWindow(5004)</onclick>
+                        <onclick>ActivateWindow(busydialog)</onclick>
+						<onclick>noop</onclick>
 					</item>
 					<item id="5">
                         <description>Drives</description>
                         <label>31920</label>
                         <label2>31921</label2>
                         <property name="icon"></property>
-                        <onclick>ActivateWindow(5005)</onclick>
+                        <onclick>ActivateWindow(busydialog)</onclick>
+						<onclick>noop</onclick>
 					</item>
 					<item id="6">
                         <description>Network</description>
                         <label>31922</label>
                         <label2>31923</label2>
-                        <property name="icon"></property>
+                        <onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="7">
@@ -201,6 +206,7 @@
                         <label>31924</label>
                         <label2>31925</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="8">
@@ -208,6 +214,7 @@
                         <label>31926</label>
                         <label2>31927</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="9">
@@ -215,6 +222,7 @@
                         <label>31934</label>
                         <label2>31935</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="10">
@@ -222,6 +230,7 @@
                         <label>31928</label>
                         <label2>31929</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="11">
@@ -229,6 +238,7 @@
                         <label>31930</label>
                         <label2>31931</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
 					<item id="12">
@@ -236,6 +246,7 @@
                         <label>31932</label>
                         <label2>31933</label2>
                         <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
                        <onclick>noop</onclick>
 					</item>
 				</content>

@@ -1,4 +1,8 @@
 v2.0
+- Bring Clue System Setup in service.clue addon and define the configuration areas like window tasks
+_ Add and implement new tasks: set label, setvalue, setproperty, recovery
+- Improve the existing tasks and add additional template tasks: service, graphic and window
+- Transform runners in scheduler tasks
 - Developed graphical prototyping library
 - System Setup moved in service addon
 - Source code compatible for Python3

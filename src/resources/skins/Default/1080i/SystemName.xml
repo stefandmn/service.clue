@@ -79,6 +79,7 @@
 			<height>18-row</height>
 			<control type="group">
 				<include content="PropertyEditbox">
+					<param name="description" value="Set Hostname/Device Name"/>
 					<param name="id" value="1201"/>
 					<param name="label" value="31912"/>
 					<param name="up" value="1202"/>
@@ -91,8 +92,8 @@
 					<param name="dialog" value="string"/>
 					<param name="title" value="$LOCALIZE[31940]"/>
 				</include>
-
 				<include content="PropertyRadiobutton">
+					<param name="description" value="Keep Device Name in Synch with Host Name"/>
 					<param name="id" value="1202"/>
 					<param name="label" value="31913"/>
 					<param name="up" value="1201"/>

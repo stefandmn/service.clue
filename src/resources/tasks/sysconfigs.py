@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import common
 from .abcwindow import WindowTask
 
 
@@ -19,6 +19,8 @@ class SystemConfigs(WindowTask):
 		self.setPropertyControlValue(1201, self.sys.get_gpu_memorysplit())
 		self.setPropertyControlValue(1202, self.sys.get_turbomode())
 		self.setPropertyControlEnable(1203, not self.sys.get_turbomode())
+		self.setPropertyControlValue(1204, common.setting("recovery"))
+		self.setPropertyControlValue(1205, common.setting("sysupdate"))
 		self.setPropertyControlOptionData(1203, self.sys.get_overclocking_profiles())
 		self.setPropertyControlValue(1203, self.sys.get_currentoverclocking_profile())
 
@@ -52,6 +54,25 @@ class SystemConfigs(WindowTask):
 			self.sys.set_overclocking_profile(value)
 			self.mark4reboot()
 			self._unlock()
+
+
+	def onClick_1204(self):
+		value = self.getPropertyControlValue(1204)
+		if self.any2bool(value):
+			self.trace("Activating system recovery process to run in backup mode")
+			common.setAddonSetting("service.clue", "recovery", True)
+			common.setAddonSetting("service.clue", "recovery_type", "backup")
+		else:
+			common.setAddonSetting("service.clue", "recovery", False)
+
+
+	def onClick_1205(self):
+		value = self.getPropertyControlValue(1205)
+		if self.any2bool(value):
+			self.trace("Activating automatic system updates")
+			common.setAddonSetting("service.clue", "sysupdate", True)
+		else:
+			common.setAddonSetting("service.clue", "sysupdate", False)
 
 
 	def onClick_1206(self):

@@ -46,9 +46,9 @@ class LibraryCleaner(ServiceTask, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
 			xbmc.executebuiltin("CleanLibrary(music)")
 			xbmc.sleep(500)
-			common.info("Cleaning of music library have been successfully triggered", "LibraryCleaner")
+			self.info("Cleaning of music library have been successfully triggered")
 		else:
-			common.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			self.warn("Music library is currently scanned, so the cleaning procedure will be skipped this time")
 			self.music = False
 
 
@@ -56,18 +56,18 @@ class LibraryCleaner(ServiceTask, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
 			xbmc.executebuiltin("CleanLibrary(video)")
 			xbmc.sleep(500)
-			common.info("Cleaning of video library have been successfully triggered", "LibraryCleaner")
+			self.info("Cleaning of video library have been successfully triggered")
 		else:
-			common.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time", "LibraryCleaner")
+			self.warn("Video library is currently scanned, so the cleaning procedure will be skipped this time")
 			self.video = False
 
 
 	def onCleanFinished(self, library):
 		if library == "music":
-			common.info("Cleaning of music library have been successfully finished", "LibraryCleaner")
+			self.info("Cleaning of music library have been successfully finished")
 			self.music = False
 		elif library == "video":
-			common.info("Cleaning of video library have been successfully finished", "LibraryCleaner")
+			self.info("Cleaning of video library have been successfully finished")
 			self.video = False
 		xbmc.sleep(1000)
 		if self.music or self.video:

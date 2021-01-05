@@ -49,7 +49,7 @@ msgid "Media Library Clean"
 msgstr ""
 
 msgctxt "#32025"
-msgid "System Backup"
+msgid "System Recovery"
 msgstr ""
 
 msgctxt "#32026"
@@ -76,6 +76,9 @@ msgctxt "#32031"
 msgid "     Clean Video database"
 msgstr ""
 
+msgctxt "#32032"
+msgid "     Recovery Type"
+msgstr ""
 
 msgctxt "#32101"
 msgid "     Type of schedule"

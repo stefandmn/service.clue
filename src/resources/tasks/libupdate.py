@@ -46,9 +46,9 @@ class LibraryUpdater(ServiceTask, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningMusic'):
 			xbmc.executebuiltin("UpdateLibrary(music)")
 			xbmc.sleep(500)
-			common.info("Update of music library have been successfully triggered", "LibraryUpdater")
+			self.info("Update of music library have been successfully triggered")
 		else:
-			common.warn("Music library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			self.warn("Music library is currently scanned, so the update procedure will be skipped this time")
 			self.music = False
 
 
@@ -56,18 +56,18 @@ class LibraryUpdater(ServiceTask, xbmc.Monitor):
 		if not xbmc.getCondVisibility('Library.IsScanningVideo'):
 			xbmc.executebuiltin("UpdateLibrary(video)")
 			xbmc.sleep(500)
-			common.info("Update of video library have been successfully triggered", "LibraryUpdater")
+			self.info("Update of video library have been successfully triggered")
 		else:
-			common.warn("Video library is currently scanned, so the update procedure will be skipped this time", "LibraryUpdater")
+			self.warn("Video library is currently scanned, so the update procedure will be skipped this time")
 			self.video = False
 
 
 	def onScanFinished(self, library):
 		if library == "music":
-			common.info("Update of music library have been successfully finished", "LibraryUpdater")
+			self.info("Update of music library have been successfully finished")
 			self.music = False
 		elif library == "video":
-			common.info("Update of video library have been successfully finished", "LibraryUpdater")
+			self.info("Update of video library have been successfully finished")
 			self.video = False
 		xbmc.sleep(1000)
 		if self.music or self.video:

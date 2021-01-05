@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __all__ = ['ServiceTask', 'GraphicTask', 'WindowTask',
-		   'LibraryUpdater', 'LibraryCleaner', 'SystemUpdater', 'CecTrigger','Favourites',
+		   'LibraryUpdater', 'LibraryCleaner', 'SystemUpdater', 'CecTrigger', 'Favourites', 'Recovery',
 		   'SetLabel', 'SetValue', 'SetProperty',
 		   'ClueSetup', 'SystemName', 'SystemAccess', 'SystemConfigs']
 
@@ -13,6 +13,7 @@ from .libclean import LibraryCleaner
 from .sysupdate import SystemUpdater
 from .cectrigger import CecTrigger
 from .favourites import Favourites
+from .recovery import Recovery
 from .setlabel import SetLabel
 from .setvalue import SetValue
 from .setproperty import SetProperty

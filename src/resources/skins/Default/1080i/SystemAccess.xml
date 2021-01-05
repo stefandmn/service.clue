@@ -79,6 +79,7 @@
 			<height>18-row</height>
 			<control type="group">
 				<include content="PropertyPopupHiddenValue">
+					<param name="description" value="Change Root Password"/>
 					<param name="id" value="1201"/>
 					<param name="label" value="31908"/>
 					<param name="up" value="1203"/>
@@ -89,6 +90,7 @@
 					<param name="title" value="$LOCALIZE[31909]"/>
 				</include>
 				<include content="PropertyRadiobutton">
+					<param name="description" value="Enable SSH Access"/>
 					<param name="id" value="1202"/>
 					<param name="label" value="31906"/>
 					<param name="up" value="1201"/>
@@ -98,6 +100,7 @@
 					<param name="width" value="10-col"/>
 				</include>
 				<include content="PropertyRadiobutton">
+					<param name="description" value="Disable SSH Password"/>
 					<param name="id" value="1203"/>
 					<param name="label" value="31907"/>
 					<param name="up" value="1202"/>

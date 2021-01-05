@@ -2,12 +2,17 @@
 <settings>
 	<category label="32020">
 		<setting label="32021" type="bool" id="sysupdate" default="false"/>
-		<setting label="32022" type="bool" id="sysupdate_osupgrade" visible="eq(-1,true)" default="false"/>
-		<setting label="32027" type="bool" id="sysupdate_osintegrity" visible="eq(-2,true)" default="false"/>
-		<setting label="32101" type="enum" id="sysupdate_cycle" visible="eq(-3,true)" lvalues="32114|32115|32116|32117" default="1"/>
-		<setting label="32104" type="number" id="sysupdate_interval" visible="eq(-4,true)" default="1"/>
-		<setting label="32102" type="enum" id="sysupdate_day" visible="eq(-5,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124" default="0"/>
-		<setting label="32103" type="time" id="sysupdate_time" visible="eq(-6,true) + lt(-3,2)" default="06:00"/>
+		<setting label="32101" type="enum" id="sysupdate_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="sysupdate_interval" visible="eq(-2,true)" default="1"/>
+		<setting label="32102" type="enum" id="sysupdate_day" visible="eq(-3,true) + eq(-1,0)" lvalues="32119|32120|32121|32122|32123|32124" default="0"/>
+		<setting label="32103" type="time" id="sysupdate_time" visible="eq(-4,true) + lt(-1,2)" default="06:00"/>
+		<setting type="sep"/>
+		<setting label="32025" type="bool" id="recovery" default="false" enable="System.HasAddon(program.recovery)"/>
+		<setting label="32032" type="select" id="recovery_type" visible="eq(-1,true)" default="backup" values="backup|restore"/>
+		<setting label="32101" type="enum" id="recovery_cycle" visible="eq(-2,true)" lvalues="32114|32115|32116|32117" default="1"/>
+		<setting label="32104" type="number" id="recovery_interval" visible="eq(-3,true)" default="1"/>
+		<setting label="32102" type="enum" id="recovery_day" visible="eq(-4,true) + eq(-3,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
+		<setting label="32103" type="time" id="recovery_time" visible="eq(-5,true) + lt(-4,2)" default="05:30"/>
 		<setting type="sep"/>
 		<setting label="32023" type="bool" id="libupdate" default="true"/>
 		<setting label="32029" type="bool" id="libupdate_music" visible="eq(-1,true)" default="true"/>
@@ -15,7 +20,7 @@
 		<setting label="32101" type="enum" id="libupdate_cycle" visible="eq(-3,true)" lvalues="32114|32115|32116|32117" default="1"/>
 		<setting label="32104" type="number" id="libupdate_interval" visible="eq(-4,true)" default="1"/>
 		<setting label="32102" type="enum" id="libupdate_day" visible="eq(-5,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
-		<setting label="32103" type="time" id="libupdate_time" visible="eq(-6,true) + lt(-3,2)" default="05:00"/>
+		<setting label="32103" type="time" id="libupdate_time" visible="eq(-6,true) + lt(-3,2)" default="04:00"/>
 		<setting type="sep"/>
 		<setting label="32024" type="bool" id="libclean" default="true"/>
 		<setting label="32031" type="bool" id="libclean_music" visible="eq(-1,true)" default="true"/>
@@ -24,12 +29,6 @@
 		<setting label="32104" type="number" id="libclean_interval" visible="eq(-4,true)" default="1"/>
 		<setting label="32102" type="enum" id="libclean_day" visible="eq(-5,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
 		<setting label="32103" type="time" id="libclean_time" visible="eq(-6,true) + lt(-3,2)" default="04:30"/>
-		<setting type="sep"/>
-		<setting label="32025" type="bool" id="sysbackup" default="false" enable="System.HasAddon(program.recovery)"/>
-		<setting label="32101" type="enum" id="sysbackup_cycle" visible="eq(-1,true)" lvalues="32114|32115|32116|32117" default="1"/>
-		<setting label="32104" type="number" id="sysbackup_interval" visible="eq(-2,true)" default="1"/>
-		<setting label="32102" type="enum" id="sysbackup_day" visible="eq(-3,true) + eq(-2,0)" lvalues="32119|32120|32121|32122|32123|32124|32125" default="0"/>
-		<setting label="32103" type="time" id="sysbackup_time" visible="eq(-4,true) + lt(-3,2)" default="06:30"/>
 	</category>
 	<category label="32026">
 		<setting label="32211" type="bool" id="custom1" default="false"/>

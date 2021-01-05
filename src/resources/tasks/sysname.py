@@ -10,8 +10,9 @@ class SystemName(WindowTask):
 
 	def init(self, *args):
 		self.setPropertyControlCallback(1201)
+		self.setPropertyControlCallback(1202)
 		self.setPropertyControlLabel(1201, 31903)
-		self.setPropertyControlValue(1202, True)
+		self.setPropertyControlValue(1202, True if self.sys.get_hostname() == self.sys.get_devicename() else False)
 
 
 	def load(self):

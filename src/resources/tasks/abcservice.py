@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import abc
+import common
 from resources.appliance import Clue
 
 
@@ -98,3 +99,14 @@ class ServiceTask(object):
 
 	def translate(self, code):
 		return self.sys.translate(code)
+
+
+	def params(self, *args):
+		params = {}
+		if len(args) > 1:
+			for i in args:
+				arg = i
+				if arg.startswith('?'):
+					arg = arg[1:]
+				params.update(dict(common.urlparsequery(arg)))
+		return params

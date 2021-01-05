@@ -41,10 +41,10 @@ class Favourites(ServiceTask):
 		if "path" in params:
 			self.add(params)
 		else:
-			common.error("No reference specified for the new item in Favourites container!", "service.Runner.Favourites")
+			self.error("No reference specified for the new item in Favourites container!")
 
 
 	def add(self, params):
 		cmd = {"jsonrpc": "2.0", "method": "Favourites.AddFavourite", "params": {"title": params["title"], "type": params["type"], "path": params["path"]}, "id": "1"}
 		answer = json.loads(xbmc.executeJSONRPC(json.dumps(cmd)))
-		common.info("Adding favourite item: %s" % answer, "Favourites")
+		self.info("Adding favourite item: %s" % answer)

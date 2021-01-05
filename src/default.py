@@ -32,7 +32,7 @@ class ServiceSettings(xbmc.Monitor):
 
 class ClueService:
 	WEEKDAYS = ['monday', "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-	JOBNAMES = [ "sysupdate", "libupdate", "libclean", "sysbackup", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
+	JOBNAMES = [ "sysupdate", "libupdate", "libclean", "recovery", "custom1", "custom2", "custom3", "custom4", "custom5", "custom6", "custom7", "custom8", "custom9", "custom10"]
 
 
 	def __init__(self):
@@ -186,8 +186,8 @@ class ClueService:
 			elif jobname == "libclean":
 				cfg["script"] = "RunScript(%s, %s, %s, %s)" %(common.AddonId(), jobname, common.setting(jobname + "_music"), common.setting(jobname + "_video"))
 				cfg["type"] = "script"
-			elif jobname == "sysbackup":
-				cfg["script"] = "RunScript(program.recovery, mode=backup)"
+			elif jobname == "recovery":
+				cfg["script"] = "RunScript(%s, %s, %s)" %(common.AddonId(), jobname, "mode=%s" %common.setting(jobname + "_type"))
 				cfg["type"] = "script"
 			# Create job instance
 			if cfg["enabled"] and cfg["script"] is not None and cfg["script"] != '':

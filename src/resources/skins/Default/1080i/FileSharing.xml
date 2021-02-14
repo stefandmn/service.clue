@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<window>
+	<defaultcontrol always="true">1201</defaultcontrol>
+	<allowoverlay>no</allowoverlay>
+	<previouswindow>1100</previouswindow>
+
+	<controls>
+		<!--background-->
+		<include>globalBackground</include>
+		<!--date and time-->
+		<include>dateTime</include>
+
+		<!-- Header -->
+		<control type="group" id="1100">
+			<posx>58</posx>
+			<posy>210</posy>
+			<!--animations-->
+			<include>modalDialogInOutVertical</include>
+			<!--General info-->
+			<control type="image">
+				<posx>-58</posx>
+				<posy>44</posy>
+				<width>2000</width>
+				<height>1-row</height>
+				<texture>masks/selected.png</texture>
+				<colordiffuse>ffffffff</colordiffuse>
+				<aspectratio>stretch</aspectratio>
+			</control>
+			<!--Dialog Icon-->
+			<control type="label">
+				<description>Dialog logo</description>
+				<posx>-57</posx>
+				<posy>45</posy>
+				<width>55</width>
+				<height>55</height>
+				<font>symbolLarge</font>
+				<align>center</align>
+				<label></label>
+				<textcolor>selected</textcolor>
+			</control>
+			<control type="image">
+				<posx>-1</posx>
+				<posy>44</posy>
+				<width>3</width>
+				<height>1-row</height>
+				<texture>masks/black.png</texture>
+				<colordiffuse>ffffffff</colordiffuse>
+				<aspectratio>stretch</aspectratio>
+			</control>
+			<control type="label" id="1101">
+				<posx>24</posx>
+				<posy>44</posy>
+				<width>12-col</width>
+				<font>pageTitle</font>
+				<label>31959</label>
+				<textcolor>black</textcolor>
+				<shadowcolor>-</shadowcolor>
+			</control>
+			<!--overlay-->
+			<control type="image">
+				<posx>-48</posx>
+				<posy>2-row</posy>
+				<width>fullscreenWidth</width>
+				<height>7-row</height>
+				<texture>masks/black.png</texture>
+				<colordiffuse>88ffffff</colordiffuse>
+				<aspectratio>stretch</aspectratio>
+			</control>
+		</control>
+
+		<!--Dialog -->
+		<control type="group" id="1200">
+			<!--animations-->
+			<include>modalDialogInOutVertical</include>
+			<posx>128</posx>
+			<posy>320</posy>
+			<width>26-col</width>
+			<height>18-row</height>
+			<control type="group" >
+				<control type="group" id="1201">
+					<include content="PropertyRadiobutton">
+						<param name="description" value="Enable Samba Services"/>
+						<param name="id" value="1210"/>
+						<param name="label" value="31950"/>
+						<param name="up" value="1216"/>
+						<param name="down" value="1211"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="0-col"/>
+						<param name="posy" value="1-col"/>
+						<param name="width" value="8-col"/>
+					</include>
+					<include content="PropertyEditbox">
+						<param name="description" value="Workgroup"/>
+						<param name="id" value="1211"/>
+						<param name="label" value="31956"/>
+						<param name="up" value="1210"/>
+						<param name="down" value="1212"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="1-col"/>
+						<param name="posy" value="2-col"/>
+						<param name="lwidth" value="3-col"/>
+						<param name="bwidth" value="4-col"/>
+						<param name="balign" value="center"/>
+						<param name="dialog" value="string"/>
+						<param name="title" value="$LOCALIZE[31956]"/>
+					</include>
+					<include content="PropertyEditbox">
+						<param name="description" value="Username"/>
+						<param name="id" value="1212"/>
+						<param name="label" value="31951"/>
+						<param name="up" value="1211"/>
+						<param name="down" value="1213"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="1-col"/>
+						<param name="posy" value="3-col"/>
+						<param name="lwidth" value="3-col"/>
+						<param name="bwidth" value="4-col"/>
+						<param name="balign" value="center"/>
+						<param name="dialog" value="string"/>
+						<param name="title" value="$LOCALIZE[31951]"/>
+					</include>
+					<include content="PropertyEditbox">
+						<param name="description" value="Password"/>
+						<param name="id" value="1213"/>
+						<param name="label" value="31952"/>
+						<param name="up" value="1212"/>
+						<param name="down" value="1214"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="1-col"/>
+						<param name="posy" value="4-col"/>
+						<param name="lwidth" value="3-col"/>
+						<param name="bwidth" value="4-col"/>
+						<param name="balign" value="center"/>
+						<param name="dialog" value="string"/>
+						<param name="title" value="$LOCALIZE[31952]"/>
+					</include>
+				</control>
+				<control type="group" id="1202">
+					<include content="PropertyRadiobutton">
+						<param name="description" value="Secure"/>
+						<param name="id" value="1214"/>
+						<param name="label" value="31953"/>
+						<param name="up" value="1213"/>
+						<param name="down" value="1215"/>
+						<param name="left" value="1201"/>
+						<param name="right" value="1203"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="1-col"/>
+						<param name="width" value="8-col"/>
+					</include>
+					<include content="PropertyRadiobutton">
+						<param name="description" value="Autoshare"/>
+						<param name="id" value="1215"/>
+						<param name="label" value="31960"/>
+						<param name="up" value="1214"/>
+						<param name="down" value="1216"/>
+						<param name="left" value="1201"/>
+						<param name="right" value="1203"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="2-col"/>
+						<param name="width" value="8-col"/>
+					</include>
+					<include content="Label">
+						<param name="description" value="Supported Protocol Versions"/>
+						<param name="label" value="31957"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="3-col"/>
+						<param name="width" value="8-col"/>
+						<param name="color" value="unselected"/>
+					</include>
+					<include content="PropertyPopupDisplayValue">
+						<param name="description" value="Min Protocol"/>
+						<param name="id" value="1216"/>
+						<param name="value" value="31954"/>
+						<param name="up" value="1215"/>
+						<param name="down" value="1210"/>
+						<param name="left" value="1201"/>
+						<param name="right" value="1217"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="4-col"/>
+						<param name="width" value="3-col"/>
+						<param name="dialog" value="select"/>
+						<param name="title" value="$LOCALIZE[31954]"/>
+					</include>
+					<include content="PropertyPopupDisplayValue">
+						<param name="description" value="Max Protocol"/>
+						<param name="id" value="1217"/>
+						<param name="value" value="31955"/>
+						<param name="up" value="1216"/>
+						<param name="down" value="1210"/>
+						<param name="left" value="1216"/>
+						<param name="right" value="1203"/>
+						<param name="posx" value="15-col"/>
+						<param name="posy" value="4-col"/>
+						<param name="width" value="3-col"/>
+						<param name="dialog" value="select"/>
+						<param name="title" value="$LOCALIZE[31955]"/>
+					</include>
+				</control>
+				<control type="group" id="1203">
+					<visible>String.IsEqual(Window.Property(Samba.Restart),true)</visible>
+					<include content="Button">
+						<param name="description" value="Restart"/>
+						<param name="id" value="1218"/>
+						<param name="label" value="31991"/>
+						<param name="up" value="1217"/>
+						<param name="down" value="1210"/>
+						<param name="left" value="1202"/>
+						<param name="right" value="1201"/>
+						<param name="posx" value="19-col"/>
+						<param name="posy" value="1-col"/>
+						<param name="width" value="3-col"/>
+					</include>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

@@ -62,7 +62,7 @@
 				<posx>-48</posx>
 				<posy>2-row</posy>
 				<width>fullscreenWidth</width>
-				<height>7-row</height>
+				<height>9-row</height>
 				<texture>masks/black.png</texture>
 				<colordiffuse>88ffffff</colordiffuse>
 				<aspectratio>stretch</aspectratio>
@@ -171,30 +171,54 @@
                         <onclick>RunScript(service.clue,window.sysaccess)</onclick>
 					</item>
 					<item id="3">
-                        <description>System Configuration</description>
+                        <description>System Maintenance</description>
                         <label>31916</label>
                         <label2>31917</label2>
-                        <property name="icon"></property>
+                        <property name="icon"></property>
 						<onclick>ActivateWindow(busydialog)</onclick>
-                        <onclick>RunScript(service.clue,window.sysconfigs)</onclick>
+                        <onclick>RunScript(service.clue,window.maintenance)</onclick>
 					</item>
 					<item id="4">
-                        <description>System Services</description>
-                        <label>31918</label>
-                        <label2>31919</label2>
-                        <property name="icon"></property>
+                        <description>Mirror</description>
+                        <label>31961</label>
+                        <label2>31962</label2>
+                        <property name="icon"></property>
                         <onclick>ActivateWindow(busydialog)</onclick>
-						<onclick>noop</onclick>
+						<onclick>RunScript(service.clue,window.mirror)</onclick>
 					</item>
 					<item id="5">
-                        <description>Drives</description>
-                        <label>31920</label>
-                        <label2>31921</label2>
-                        <property name="icon"></property>
-                        <onclick>ActivateWindow(busydialog)</onclick>
-						<onclick>noop</onclick>
+						<description>Overclocking</description>
+                        <label>31965</label>
+                        <label2>31966</label2>
+                        <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
+                        <onclick>RunScript(service.clue,window.overclocking)</onclick>
 					</item>
 					<item id="6">
+						<description>Memory</description>
+                        <label>31963</label>
+                        <label2>31964</label2>
+                        <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
+                        <onclick>RunScript(service.clue,window.memory)</onclick>
+					</item>
+					<item id="7">
+                        <description>Licenses</description>
+                        <label>31928</label>
+                        <label2>31929</label2>
+                        <property name="icon"></property>
+						<onclick>ActivateWindow(busydialog)</onclick>
+                       <onclick>RunScript(service.clue,window.licenses)</onclick>
+					</item>
+					<item id="8">
+                        <description>Samba Services</description>
+                        <label>31958</label>
+                        <label2>31959</label2>
+                        <property name="icon"></property>
+                        <onclick>ActivateWindow(busydialog)</onclick>
+						<onclick>RunScript(service.clue,window.samba)</onclick>
+					</item>
+					<item id="9">
                         <description>Network</description>
                         <label>31922</label>
                         <label2>31923</label2>
@@ -202,7 +226,7 @@
                         <onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
-					<item id="7">
+					<item id="10">
                         <description>Bluetooth</description>
                         <label>31924</label>
                         <label2>31925</label2>
@@ -210,7 +234,7 @@
 						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
-					<item id="8">
+					<item id="11">
                         <description>Tethering</description>
                         <label>31926</label>
                         <label2>31927</label2>
@@ -218,7 +242,7 @@
 						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
-					<item id="9">
+					<item id="12">
                         <description>VPN Client</description>
                         <label>31934</label>
                         <label2>31935</label2>
@@ -226,15 +250,7 @@
 						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
-					<item id="10">
-                        <description>Licenses</description>
-                        <label>31928</label>
-                        <label2>31929</label2>
-                        <property name="icon"></property>
-						<onclick>ActivateWindow(busydialog)</onclick>
-                        <onclick>noop</onclick>
-					</item>
-					<item id="11">
+					<item id="13">
                         <description>Bridge</description>
                         <label>31930</label>
                         <label2>31931</label2>
@@ -242,7 +258,7 @@
 						<onclick>ActivateWindow(busydialog)</onclick>
                         <onclick>noop</onclick>
 					</item>
-					<item id="12">
+					<item id="14">
                         <description>Surveillance</description>
                         <label>31932</label>
                         <label2>31933</label2>
@@ -260,7 +276,7 @@
 			<!--animations-->
 			<include>modalDialogInOutVertical</include>
 			<posx>20</posx>
-			<posy>660</posy>
+			<posy>765</posy>
 			<control type="label">
 				<posx>0</posx>
 				<posy>0</posy>

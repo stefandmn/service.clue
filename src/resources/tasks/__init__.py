@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 
 __all__ = ['ServiceTask', 'GraphicTask', 'WindowTask',
-		   'LibraryUpdater', 'LibraryCleaner', 'SystemUpdater', 'CecTrigger', 'Favourites', 'Recovery',
+		   'LibraryUpdater', 'LibraryCleaner', 'CecTrigger', 'Favourites', 'Recovery',
 		   'SetLabel', 'SetValue', 'SetProperty',
-		   'ClueSetup', 'SystemName', 'SystemAccess', 'SystemConfigs']
+		   'ClueSetup', 'SystemName', 'SystemAccess', 'Maintenance', 'RemoteScreen',
+		   'Overclocking', 'Memory', 'Licenses', 'FileSharing']
 
-from .abcservice import ServiceTask
-from abcgraphic import GraphicTask
-from .abcwindow import WindowTask
-from .libupdate import LibraryUpdater
-from .libclean import LibraryCleaner
-from .sysupdate import SystemUpdater
-from .cectrigger import CecTrigger
-from .favourites import Favourites
-from .recovery import Recovery
-from .setlabel import SetLabel
-from .setvalue import SetValue
-from .setproperty import SetProperty
-from .cluesetup import ClueSetup
-from .sysname import SystemName
-from .sysaccess import SystemAccess
-from .sysconfigs import SystemConfigs
+from resources.tasks.abcservice import ServiceTask
+from resources.tasks.abcgraphic import GraphicTask
+from resources.tasks.abcwindow import WindowTask
+from resources.tasks.libupdate import LibraryUpdater
+from resources.tasks.libclean import LibraryCleaner
+from resources.tasks.cectrigger import CecTrigger
+from resources.tasks.favourites import Favourites
+from resources.tasks.recovery import Recovery
+from resources.tasks.setlabel import SetLabel
+from resources.tasks.setvalue import SetValue
+from resources.tasks.setproperty import SetProperty
+from resources.tasks.setup.cluesetup import ClueSetup
+from resources.tasks.setup.sysname import SystemName
+from resources.tasks.setup.sysaccess import SystemAccess
+from resources.tasks.setup.maintenance import Maintenance
+from resources.tasks.setup.mirror import RemoteScreen
+from resources.tasks.setup.overclocking import Overclocking
+from resources.tasks.setup.memory import Memory
+from resources.tasks.setup.licenses import Licenses
+from resources.tasks.setup.samba import FileSharing

@@ -27,11 +27,11 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 		self.clearProperties()
 
 
-	def load(self):
+	def init(self, *args):
 		pass
 
 
-	def init(self, *args):
+	def load(self):
 		pass
 
 
@@ -318,8 +318,16 @@ class WindowTask(ServiceTask, xbmcgui.WindowXMLDialog):
 		self.setProperty("Enable.%s" % str(id), str(enable).lower())
 
 
+	def setPropertyControlDisable(self, id, enable=True):
+		self.setProperty("Enable.%s" % str(id), str(not enable).lower())
+
+
 	def setPropertyControlVisible(self, id, visible=True):
 		self.setProperty("Visible.%s" % str(id), str(visible).lower())
+
+
+	def setPropertyControlHIdden(self, id, visible=True):
+		self.setProperty("Visible.%s" % str(id), str(not visible).lower())
 
 
 	def setPropertyControlLabel(self, id, label):

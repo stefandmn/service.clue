@@ -6,11 +6,12 @@ import common
 import subprocess
 
 
-
 class System:
 	HOME = os.environ['HOME']
-	CONFIG_CACHE = os.environ.get('CONFIG_CACHE', '%s/.cache' % HOME)
-	USER_CONFIG = os.environ.get('USER_CONFIG', '%s/.config' % HOME)
+	KODI = '%s/.kodi' % HOME
+	CACHE = '%s/.cache' % HOME
+	CONFIG = '%s/.config' % HOME
+	SERVICES = '%s/services' % CACHE
 
 
 	def method(self, cls, mtd, *args, **kwargs):
@@ -78,12 +79,16 @@ class System:
 		return common.translate(code)
 
 
+	def wait(self, time):
+		common.sleep(time*1000)
+
+
 	def hwtype(self):
 		_status, _output = self.process('uname -m')
 		if _status:
 			return _output
 		else:
-			self.error("Error reading hardware type: %s" %_output)
+			self.error("Error reading hardware type: %s" % _output)
 			return None
 
 
@@ -92,7 +97,7 @@ class System:
 		if _status:
 			return _output
 		else:
-			self.error("Error reading kernel version: %s" %_output)
+			self.error("Error reading kernel version: %s" % _output)
 			return None
 
 
@@ -101,7 +106,7 @@ class System:
 		if _status:
 			return _output
 		else:
-			self.error("Error reading chipset: %s" %_output)
+			self.error("Error reading chipset: %s" % _output)
 			return None
 
 
@@ -110,7 +115,7 @@ class System:
 		if _status:
 			return _output
 		else:
-			self.error("Error reading serial number: %s" %_output)
+			self.error("Error reading serial number: %s" % _output)
 			return None
 
 
@@ -118,7 +123,7 @@ class System:
 		_model = None
 		_status, _output = self.process('grep Revision /proc/cpuinfo | cut -d " " -f 2 | sed "s/^1000//"')
 		if _status:
-			if _output == "0002": 
+			if _output == "0002":
 				model = "B"
 			elif _output == "0003":
 				model = "B"
@@ -191,10 +196,10 @@ class System:
 			elif _output == "c03111":
 				model = "4 (Sony, UK)"
 			else:
-				model = "unknown (%s)" %_output
+				model = "unknown (%s)" % _output
 			return model
 		else:
-			self.error("Error reading device model: %s" %_output)
+			self.error("Error reading device model: %s" % _output)
 			return None
 
 
@@ -212,11 +217,11 @@ class System:
 			stream = os.popen('more /etc/shadow | grep root')
 			output = stream.read()
 			password = output.split(':')[1]
-			self.trace("Found encoded password: %s" %password)
-			hashcode = password[0:password.find('$',3)+1]
-			self.trace("Calculated has code based on hashing method SHA-512: %s" %hashcode)
+			self.trace("Found encoded password: %s" % password)
+			hashcode = password[0:password.find('$', 3) + 1]
+			self.trace("Calculated has code based on hashing method SHA-512: %s" % hashcode)
 			inputpwd = crypt.crypt(pwd, hashcode)
-			self.trace("Encrypted input password: %s" %inputpwd)
+			self.trace("Encrypted input password: %s" % inputpwd)
 			if inputpwd != password:
 				raise RuntimeError("Password doesn't match")
 			return True
@@ -229,11 +234,11 @@ class System:
 		if pwd1 and pwd2:
 			shell = subprocess.Popen(["passwd"], shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0)
 			readout1 = shell.stdout.readline()
-			self.debug("Command executed, output: %s" %readout1)
+			self.debug("Command executed, output: %s" % readout1)
 			try:
 				shell.stdin.write('%s\n' % pwd1)
 				readout2 = shell.stdout.readline()
-				self.debug("Input submitted, second output: %s" %readout2)
+				self.debug("Input submitted, second output: %s" % readout2)
 			except:
 				readout2 = shell.stdout.readline()
 				shell.communicate()
@@ -248,7 +253,7 @@ class System:
 				raise RuntimeError(readout3)
 			outs, errs = shell.communicate()
 			code = shell.returncode
-			self.debug("Results of [passwd] system command execution: code=%s, stdout=%s, strerr=%s" %(str(code),str(outs),str(errs)))
+			self.debug("Results of [passwd] system command execution: code=%s, stdout=%s, strerr=%s" % (str(code), str(outs), str(errs)))
 			return code == 0
 		else:
 			self.debug("No password provided")
@@ -263,29 +268,47 @@ class System:
 						if '=' in line:
 							if line.strip().split('=')[0].strip() == option.strip():
 								default = line.strip().split('=')[-1].strip()
+								if default.startswith('"') and default.endswith('"'):
+									default = default[1:-1]
+								elif default.startswith("'") and default.endswith("'"):
+									default = default[1:-1]
+								elif default.endswith(";"):
+									default = default[0:-1]
 			conf_file.close()
 		return default
 
 
-	def set_property(self, conf_file_name, option, value):
+	def set_property(self, conf_file_name, option, value, beautify=False, quote=False, squote=False, semicolon=False):
 		lines = []
 		changed = False
 		ignored = False
 		if os.path.isfile(conf_file_name):
 			if value is None or value == "":
+				# delete
 				usecase = -1
 			elif value == "#":
+				# comment
 				usecase = 0
 			else:
+				# set/add
 				usecase = 1
 				value = str(value)
+				if quote:
+					value = '"' + value + '"'
+				elif squote:
+					value = "'" + value + "'"
+				if semicolon:
+					value = value + ";"
 			with open(conf_file_name, 'r') as conf_file:
 				for line in conf_file:
 					if usecase == 1:
 						if line != '' and (line.strip().startswith(option) or (line.strip().startswith('#') and line.strip()[1:].strip().startswith(option))):
 							if '=' in line:
-								if line.strip().split('=')[0].strip() == option.strip():
-									line = '%s=%s' % (option, value)
+								if line.strip().split('=')[0].strip() == option.strip() or (line.strip().startswith('#') and line.strip()[1:].strip().split('=')[0].strip() == option.strip()):
+									if beautify:
+										line = '%s = %s' % (option, value)
+									else:
+										line = '%s=%s' % (option, value)
 									changed = True
 					elif usecase == 0:
 						if line != '' and (line.strip().startswith(option)):
@@ -305,13 +328,16 @@ class System:
 						ignored = False
 			conf_file.close()
 			if not changed and usecase == 1:
-				lines.append('%s=%s' % (option, value))
+				if beautify:
+					lines.append('%s = %s' % (option, value))
+				else:
+					lines.append('%s=%s' % (option, value))
 			with open(conf_file_name, 'w') as conf_file:
 				conf_file.write('\n'.join(lines))
 				conf_file.write("\n")
 			conf_file.close()
 		else:
-			self.error("Configuration file not found: %s" %conf_file_name)
+			self.error("Configuration file not found: %s" % conf_file_name)
 
 
 	def remount_boot(self, write=False):
@@ -319,17 +345,30 @@ class System:
 			flag = "rw"
 		else:
 			flag = "ro"
-		_status, _output = self.process('mount -o remount,%s /dev/mmcblk0p1 /boot' %flag)
+		_status, _output = self.process('mount -o remount,%s /dev/mmcblk0p1 /boot' % flag)
 		if _status:
 			if _output is not None and _output != '':
-				self.trace("Remount of /boot partition: %s" %_output)
+				self.trace("Remount of /boot partition: %s" % _output)
 		else:
-			self.error("Error executing remount of /boot partition: %s" %_output)
+			self.error("Error executing remount of /boot partition: %s" % _output)
+
+
+	def copyfile(self, src, dst):
+		_status, _content = self.process("/usr/bin/cp -rf %s %s" %(src, dst))
+		if not _status and _content is not None:
+			self.error("Error copying file [%s] to [%s]: %s" %(src, dst, _content))
+		return _status
+
+
+	def movefile(self, src, dst):
+		_status, _content = self.process("/usr/bin/mv -f %s %s" %(src, dst))
+		if not _status and _content is not None:
+			self.error("Error moving file [%s] to [%s]: %s" %(src, dst, _content))
+		return _status
 
 
 
 class Identity(System):
-
 
 	def get_hostname(self):
 		# read the hostname running an external process
@@ -347,7 +386,7 @@ class Identity(System):
 		hostname = open('/proc/sys/kernel/hostname', 'w')
 		hostname.write(name)
 		hostname.close()
-		hostname = open('%s/hostname' % self.CONFIG_CACHE, 'w')
+		hostname = open('%s/hostname' % self.CACHE, 'w')
 		hostname.write(name)
 		hostname.close()
 		# adap hosts file
@@ -375,9 +414,8 @@ class Identity(System):
 
 class Services(Identity):
 
-
 	def get_sysservice_status(self, service):
-		(_status, _content) = self.process("/usr/bin/systemctl is-active %s" % service)
+		_status, _content = self.process("/usr/bin/systemctl is-active %s" % service)
 		if _status and _content is not None and _content == "active":
 			return True
 		else:
@@ -385,81 +423,118 @@ class Services(Identity):
 
 
 	def start_sysservice(self, service):
-		self.process("/usr/bin/systemctl start %s" % service)
-		return self.get_sysservice_status(service)
-
+		_status, _output = self.process("/usr/bin/systemctl start %s" % service)
+		if _status:
+			return self.get_sysservice_status(service), ""
+		else:
+			return _status, _output
 
 	def stop_sysservice(self, service):
-		self.process("/usr/bin/systemctl stop %s" % service)
-		return not self.get_sysservice_status(service)
+		_status, _output = self.process("/usr/bin/systemctl stop %s" % service)
+		if _status:
+			return not self.get_sysservice_status(service), ""
+		else:
+			return _status, _output
 
 
 	def restart_sysservice(self, service):
-		self.process("/usr/bin/systemctl restart %s" % service)
-		return self.get_sysservice_status(service)
+		_status, _output = self.process("/usr/bin/systemctl restart %s" % service)
+		if _status:
+			return self.get_sysservice_status(service), ""
+		else:
+			return _status, _output
 
 
 	def get_appservice_option(self, service, option, default=None):
-		conf_file_name = ''
-		if os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
-			conf_file_name = '%s/services/%s.conf' % (self.CONFIG_CACHE, service)
-		elif os.path.exists('%s/services/%s.disabled' % (self.CONFIG_CACHE, service)):
-			conf_file_name = '%s/services/%s.disabled' % (self.CONFIG_CACHE, service)
+		conf_file_name = '%s/%s.conf' % (self.SERVICES, service)
+		if not os.path.exists(conf_file_name):
+			conf_file_name = '%s/%s.disabled' % (self.SERVICES, service)
 		return self.get_property(conf_file_name, option=option, default=default)
 
 
-	def set_appservice_option(self, service, option, value):
-		conf_file_name = '%s/services/%s.conf' % (self.CONFIG_CACHE, service)
-		self.set_property(conf_file_name, option=option, value=value)
+	def set_appservice_option(self, service, option, value, conf=None, beautify=False, quote=False, squote=False, semicolon=False):
+		conf = service if conf is None or conf == "" else conf
+		conf_file_name = '%s/%s.conf' % (self.SERVICES, conf)
+		if not os.path.exists(conf_file_name):
+			conf_file_name = '%s/%s.disabled' % (self.SERVICES, conf)
+		if os.path.exists(conf_file_name):
+			self.set_property(conf_file_name, option=option, value=value, beautify=beautify, quote=quote, squote=squote, semicolon=semicolon)
 
 
-	def get_appservice_status(self, service):
+	def get_appservice_status(self, service, conf=None):
 		if self.get_sysservice_status(service):
-			if os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
+			conf = service if conf is None or conf == "" else conf
+			if os.path.exists('%s/%s.conf' % (self.SERVICES, conf)):
 				return True
 		return False
 
 
-	def enable_appservice(self, service):
-		if not os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
-			if os.path.exists('%s/services/%s.disabled' % (self.CONFIG_CACHE, service)):
-				os.rename('%s/services/%s.disabled' % (self.CONFIG_CACHE, service), '%s/services/%s.conf' % (self.CONFIG_CACHE, service))
+	def enable_appservice(self, service, conf=None):
+		conf = service if conf is None or conf == "" else conf
+		if not os.path.exists('%s/%s.conf' % (self.SERVICES, conf)):
+			if os.path.exists('%s/%s.disabled' % (self.SERVICES, conf)):
+				os.rename('%s/%s.disabled' % (self.SERVICES, conf), '%s/%s.conf' % (self.SERVICES, conf))
 			else:
-				os.replace('/usr/share/services/%s.conf' %service, '%s/services/%s.conf' % (self.CONFIG_CACHE, service))
-		if os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
-			return self.start_sysservice(service)
+				self.copyfile('/usr/share/services/%s.conf' % conf, '%s/%s.conf' % (self.SERVICES, conf))
+		if os.path.exists('%s/%s.conf' % (self.SERVICES, conf)):
+			if not self.get_sysservice_status(service):
+				return self.start_sysservice(service)
+			else:
+				return True, ""
 		else:
-			return False
+			return False, "Configuration file not found"
 
 
-	def disable_appservice(self, service):
-		self.stop_sysservice(service)
-		if os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
-			os.rename('%s/services/%s.conf' % (self.CONFIG_CACHE, service), '%s/services/%s.disabled' % (self.CONFIG_CACHE, service))
-		if not os.path.exists('%s/services/%s.conf' % (self.CONFIG_CACHE, service)):
-			return not self.get_sysservice_status(service)
+	def disable_appservice(self, service, conf=None):
+		if self.get_sysservice_status(service):
+			_status, _output = self.stop_sysservice(service)
 		else:
-			return False
+			_status = True
+			_output = ""
+		if _status:
+			conf = service if conf is None or conf == "" else conf
+			if os.path.exists('%s/%s.conf' % (self.SERVICES, conf)):
+				os.rename('%s/%s.conf' % (self.SERVICES, conf), '%s/%s.disabled' % (self.SERVICES, conf))
+			if not os.path.exists('%s/%s.conf' % (self.SERVICES, conf)):
+				return True, ""
+			else:
+				return False, "Configuration file still active"
+		else:
+			return _status, _output
+
+
+	def set_appservice_status(self, service, value, conf=None):
+		if not isinstance(value, bool):
+			raise RuntimeError("Invalid service status value: %s" % str(value))
+		if value:
+			return self.enable_appservice(service, conf=conf)
+		else:
+			return self.disable_appservice(service, conf=conf)
 
 
 
 class Clue(Services):
-	FILE_BOOT_CONFIG = "/boot/config.txt"
-	PROP_GPU_MEM = "gpu_mem"
-	PROP_ARM_FREQ = "arm_freq"
-	PROP_CORE_FREQ = "core_freq"
-	PROP_SDRAM_FREQ = "sdram_freq"
-	PROP_OVERVOLTAGE = "over_voltage"
-	PROP_FORCE_TURBO = "force_turbo"
+	FILE_BOOT = "/boot/config.txt"
+	FILE_SWAP = "swap.conf"
+	PROP_BOOT_GPU_MEM = "gpu_mem"
+	PROP_BOOT_ARM_FREQ = "arm_freq"
+	PROP_BOOT_CORE_FREQ = "core_freq"
+	PROP_BOOT_SDRAM_FREQ = "sdram_freq"
+	PROP_BOOT_OVERVOLTAGE = "over_voltage"
+	PROP_BOOT_FORCE_TURBO = "force_turbo"
+	PROP_BOOT_MPG2 = "decode_MPG2"
+	PROP_BOOT_WVC1 = "decode_WVC1"
+	PROP_SWAP_ENABLED = "SWAP_ENABLED"
+	PROP_SWAP_SIZE = "SWAPFILESIZE"
 
 
 	def get_gpu_memorysplit(self):
-		return self.get_property(self.FILE_BOOT_CONFIG, self.PROP_GPU_MEM, 128)
+		return self.get_property(self.FILE_BOOT, self.PROP_BOOT_GPU_MEM, 128)
 
 
 	def set_gpu_memorysplit(self, memory):
 		self.remount_boot(True)
-		self.set_property(self.FILE_BOOT_CONFIG, self.PROP_GPU_MEM, memory)
+		self.set_property(self.FILE_BOOT, self.PROP_BOOT_GPU_MEM, memory)
 		self.remount_boot(False)
 
 
@@ -480,15 +555,15 @@ class Clue(Services):
 			if _freq is None:
 				_profile = "None"
 			elif _freq == "700":
-				_profile= "None"
+				_profile = "None"
 			elif _freq == "800":
-				_profile= "Modest"
+				_profile = "Modest"
 			elif _freq == "900":
-				_profile= "Medium"
+				_profile = "Medium"
 			elif _freq == "950":
-				_profile= "High"
+				_profile = "High"
 			elif _freq == "1000":
-				_profile= "Turbo"
+				_profile = "Turbo"
 			else:
 				self.warn("Unknown frequency to recognize the overclocking profile: %s" % str(_freq))
 				_profile = "Unknown"
@@ -496,9 +571,9 @@ class Clue(Services):
 			if _freq is None:
 				_profile = "None"
 			elif _freq == "900":
-				_profile= "None"
+				_profile = "None"
 			elif _freq == "1000":
-				_profile= "High"
+				_profile = "High"
 			else:
 				_profile = "Unknown"
 				self.warn("Unknown frequency to recognize the overclocking profile: %s" % str(_freq))
@@ -513,45 +588,45 @@ class Clue(Services):
 		if _hwtype == "armv6l":
 			self.remount_boot(True)
 			if profile is None or profile == "None":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 700)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 400)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 700)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 400)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 0)
 			elif profile == "Modest":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 800)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 400)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 800)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 400)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 0)
 			elif profile == "Medium":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 900)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 2)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 900)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 2)
 			elif profile == "High":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 950)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 6)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 950)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 6)
 			elif profile == "Turbo":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 1000)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 500)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 600)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 6)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 1000)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 500)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 600)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 6)
 			else:
-				self.warn("Unknown overclocking profile to apply: %s" %str(profile))
+				self.warn("Unknown overclocking profile to apply: %s" % str(profile))
 			self.remount_boot(False)
 		elif _hwtype == "armv7l":
 			self.remount_boot(True)
 			if profile is None or profile == "None":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 900)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 250)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 450)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 0)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 900)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 250)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 450)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 0)
 			elif profile == "High":
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, 1000)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, 500)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, 500)
-				self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, 2)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, 1000)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, 500)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, 500)
+				self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, 2)
 			else:
 				self.warn("Unknown overclocking profile to apply: %s" % str(profile))
 			self.remount_boot(False)
@@ -560,17 +635,78 @@ class Clue(Services):
 
 
 	def get_turbomode(self):
-		return self.any2bool(self.get_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO))
+		return self.any2bool(self.get_property(self.FILE_BOOT, self.PROP_BOOT_FORCE_TURBO))
 
 
 	def set_turbomode(self, value):
 		self.remount_boot(True)
 		if value:
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO, 1)
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_ARM_FREQ, None)
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_CORE_FREQ, None)
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_SDRAM_FREQ, None)
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_OVERVOLTAGE, None)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_FORCE_TURBO, 1)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_ARM_FREQ, None)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_CORE_FREQ, None)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_SDRAM_FREQ, None)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_OVERVOLTAGE, None)
 		else:
-			self.set_property(self.FILE_BOOT_CONFIG, self.PROP_FORCE_TURBO, 0)
+			self.set_property(self.FILE_BOOT, self.PROP_BOOT_FORCE_TURBO, 0)
+		self.remount_boot(False)
+
+
+	def is_swap_enabled(self):
+		if os.path.exists(self.CONFIG + "/" + self.FILE_SWAP):
+			return self.any2bool(self.get_property(self.CONFIG + "/" + self.FILE_SWAP, self.PROP_SWAP_ENABLED, "no"))
+		else:
+			return self.any2bool(self.get_property("/etc/" + self.FILE_SWAP, self.PROP_SWAP_ENABLED, "no"))
+
+
+	def set_swap_enabled(self, enabled=True):
+		if not os.path.exists(self.CONFIG + "/" + self.FILE_SWAP):
+			self.copyfile("/etc/" + self.FILE_SWAP, self.CONFIG + "/" + self.FILE_SWAP)
+		if enabled:
+			self.set_property(self.CONFIG + "/" + self.FILE_SWAP, self.PROP_SWAP_ENABLED, "yes", quote=True)
+		else:
+			self.set_property(self.CONFIG + "/" + self.FILE_SWAP, self.PROP_SWAP_ENABLED, "no", quote=True)
+
+
+	def get_swap_size(self):
+		if os.path.exists(self.CONFIG + "/" + self.FILE_SWAP):
+			return self.get_property(self.CONFIG + "/" + self.FILE_SWAP, "SWAPFILESIZE", "no")
+		else:
+			return self.get_property("/etc/" + self.FILE_SWAP, "SWAPFILESIZE", "no")
+
+
+	def set_swap_size(self, size):
+		if not os.path.exists(self.CONFIG + "/" + self.FILE_SWAP):
+			self.copyfile("/etc/" + self.FILE_SWAP, self.CONFIG + "/" + self.FILE_SWAP)
+		if size is not None:
+			self.set_property(self.CONFIG + "/" + self.FILE_SWAP, "SWAPFILESIZE", size, quote=True)
+		else:
+			self.set_property(self.CONFIG + "/" + self.FILE_SWAP, "SWAPFILESIZE", "0", quote=True)
+
+
+	def get_licenses(self):
+		mpg2 = self.get_property(self.FILE_BOOT, self.PROP_BOOT_MPG2)
+		wvc1 = self.get_property(self.FILE_BOOT, self.PROP_BOOT_WVC1)
+		mpg2 = "" if mpg2 == '0x00000000' or mpg2 is None else mpg2
+		wvc1 = "" if wvc1 == '0x00000000' or wvc1 is None else wvc1
+		return (mpg2, wvc1)
+
+
+	def set_licenses(self, mpg2, wvc1):
+		self.set_mpg2_license(mpg2)
+		self.set_wvc1_licenses(wvc1)
+
+
+	def set_mpg2_license(self, value):
+		self.remount_boot(True)
+		value = ("0x%s" % value) if value is not None and value != '' and value != "'0x00000000'" and not value.startswith("0x") else value
+		value = "#" if value is None or value == '' or value == "'0x00000000'" else value
+		self.set_property(self.FILE_BOOT, self.PROP_BOOT_MPG2, value)
+		self.remount_boot(False)
+
+
+	def set_wvc1_licenses(self, value):
+		self.remount_boot(True)
+		value = ("0x%s" % value) if value is not None and value != '' and value != "'0x00000000'" and not value.startswith("0x") else value
+		value = "#" if value is None or value == '' or value == "'0x00000000'" else value
+		self.set_property(self.FILE_BOOT, self.PROP_BOOT_WVC1, value)
 		self.remount_boot(False)

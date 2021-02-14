@@ -29,7 +29,7 @@ class SystemConfigs(WindowTask):
 		value = self.getPropertyControlValue(1201)
 		if value is not None and value != '':
 			self._lock()
-			self.trace("Applying [%s] value for [%s] configuration property within %s file" %(str(value), self.sys.PROP_GPU_MEM, self.sys.FILE_BOOT_CONFIG))
+			self.trace("Applying [%s] value for [%s] configuration property within %s file" % (str(value), self.sys.PROP_BOOT_GPU_MEM, self.sys.FILE_BOOT))
 			self.sys.set_gpu_memorysplit(value)
 			self.mark4reboot()
 			self._unlock()

@@ -698,15 +698,15 @@ class Clue(Services):
 
 	def set_mpg2_license(self, value):
 		self.remount_boot(True)
-		value = ("0x%s" % value) if value is not None and value != '' and value != "'0x00000000'" and not value.startswith("0x") else value
-		value = "#" if value is None or value == '' or value == "'0x00000000'" else value
+		value = ("0x%s" % value) if value is not None and value != '' and str(value).replace('0', '').lower() != "x" and not value.startswith("0x") else value
+		value = "#" if value is None or value == '' or str(value).replace('0', '').lower() == "x" else value
 		self.set_property(self.FILE_BOOT, self.PROP_BOOT_MPG2, value)
 		self.remount_boot(False)
 
 
 	def set_wvc1_licenses(self, value):
 		self.remount_boot(True)
-		value = ("0x%s" % value) if value is not None and value != '' and value != "'0x00000000'" and not value.startswith("0x") else value
-		value = "#" if value is None or value == '' or value == "'0x00000000'" else value
+		value = ("0x%s" % value) if value is not None and value != '' and str(value).replace('0', '').lower() != "x" and not value.startswith("0x") else value
+		value = "#" if value is None or value == '' or str(value).replace('0', '').lower() == "x" else value
 		self.set_property(self.FILE_BOOT, self.PROP_BOOT_WVC1, value)
 		self.remount_boot(False)

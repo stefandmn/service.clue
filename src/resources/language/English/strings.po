@@ -220,3 +220,11 @@ msgstr "
 msgctxt "#32902"
 msgid "Nothing to be done, SSH service is currently disabled"
 msgstr "
+
+msgctxt "#32903"
+msgid "New system update has been found, start downloading the new release!"
+msgstr ""
+
+msgctxt "#32904"
+msgid "New system update has been found and downloaded, do you want to reboot to apply it now?"
+msgstr ""

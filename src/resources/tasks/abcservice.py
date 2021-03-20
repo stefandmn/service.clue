@@ -92,7 +92,6 @@ class ServiceTask(object):
 		return self.sys.any2str(v, error=error, none=none)
 
 
-	# Function: str2bool
 	def any2bool(self, v, error=False, none=True):
 		return self.sys.any2bool(v, error=error, none=none)
 

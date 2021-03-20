@@ -11,6 +11,7 @@ class System:
 	KODI = '%s/.kodi' % HOME
 	CACHE = '%s/.cache' % HOME
 	CONFIG = '%s/.config' % HOME
+	UPDATE = '%s/.update' % HOME
 	SERVICES = '%s/services' % CACHE
 
 
@@ -514,6 +515,7 @@ class Services(Identity):
 
 
 class Clue(Services):
+	URLBASE_LATEST = "https://amsd.go.ro/clue/repos/releases/latest.json"
 	FILE_BOOT = "/boot/config.txt"
 	FILE_SWAP = "swap.conf"
 	PROP_BOOT_GPU_MEM = "gpu_mem"
@@ -710,3 +712,83 @@ class Clue(Services):
 		value = "#" if value is None or value == '' or str(value).replace('0', '').lower() == "x" else value
 		self.set_property(self.FILE_BOOT, self.PROP_BOOT_WVC1, value)
 		self.remount_boot(False)
+
+
+	@property
+	def currentrelease(self):
+		try:
+			sysinfo = common.sysinfo()
+			if sysinfo is not None and sysinfo != {}:
+				return sysinfo["VERSION_ID"]
+			else:
+				return None
+		except BaseException as be:
+			self.error("Error reading current system release details: %s" %str(be))
+			return None
+
+
+	@property
+	def latestrelease(self):
+		try:
+			latest = common.urlcall(self.URLBASE_LATEST, output='json')
+			sysinfo = common.sysinfo()
+			if sysinfo is not None and sysinfo != {}:
+				device = sysinfo["DEVICE"]
+			else:
+				device = None
+			if latest is not None and latest != {} and device is not None:
+				return latest["devices"][device]["version"]
+			else:
+				return None
+		except BaseException as be:
+			self.error("Error reading latest release details published in repository: %s" %str(be))
+			return None
+
+
+	@property
+	def check_updates(self):
+		device = None
+		system = None
+		latest = None
+		try:
+			latest = common.urlcall(self.URLBASE_LATEST, output='json')
+			sysinfo = common.sysinfo()
+			if sysinfo is not None and sysinfo != {}:
+				device = sysinfo["DEVICE"]
+				system = sysinfo["VERSION_ID"]
+			if latest is not None and latest != {} and device is not None:
+				latest = latest["devices"][device]["version"]
+		except BaseException as be:
+			self.error("Error checking latest release vs current system version: %s" %str(be))
+		if system is not None and latest is not None and latest > system:
+			latest.update(latest["devices"][device])
+			latest["device"] = device
+			del latest["devices"]
+			return latest
+		else:
+			return None
+
+
+	def doanload_updates(self):
+		release = self.check_updates()
+		if release is not None:
+			url = release["url"]
+			file = url[url.rfind("/")+1:len(url)]
+			if not os.path.exists(self.UPDATE):
+				os.makedirs(self.UPDATE)
+			file = os.path.join(self.UPDATE, file)
+			try:
+				data = common.urlcall(url, output='binary')
+				handler = open(file, 'wb')
+				handler.write(data)
+				handler.close()
+				self.trace('Successfully wrote data to file: %s' %file)
+				return True
+			except IOError as e:
+				common.error('Unable to write data to [%s] file: %s' %(file, str(e)))
+				return False
+			except Exception as e:
+				common.error('Unknown error while downloading/writing data to [%s] file: %s' %(file, str(e)))
+				return False
+		else:
+			return False

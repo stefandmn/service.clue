@@ -18,14 +18,10 @@ class Recovery(ServiceTask):
 		return self.any2bool(common.getSkinProperty(10000, "SystemRecovery.Running"))
 
 
-	def init(self, *args):
+	def run(self, *args):
 		params = self.params(args)
 		if "mode" in params:
 			self.mode = params['mode'] if params['mode'] in ["backup", "restore"] else "backup"
-
-
-	def run(self, *args):
-		self.init(args)
 		if not self._isrunnung():
 			self.info("Starting system recovery process in %s mode" %self.mode)
 			common.runBuiltinCommand("RunScript", "program.recovery", "mode=%s" %self.mode)

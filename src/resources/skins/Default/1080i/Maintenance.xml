@@ -83,12 +83,24 @@
 						<param name="description" value="Enable System Backup"/>
 						<param name="id" value="1211"/>
 						<param name="label" value="31942"/>
-						<param name="up" value="1216"/>
+						<param name="up" value="1222"/>
 						<param name="down" value="1212"/>
-						<param name="right" value="1202"/>
+						<param name="right" value="1215"/>
 						<param name="posx" value="1-col"/>
 						<param name="posy" value="1-col"/>
 						<param name="width" value="8-col"/>
+					</include>
+					<include content="PropertyButton">
+						<param name="description" value="Run Backup"/>
+						<param name="id" value="1215"/>
+						<param name="label" value="31945"/>
+						<param name="up" value="1222"/>
+						<param name="down" value="1216"/>
+						<param name="left" value="1211"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="1-col"/>
+						<param name="width" value="1-row"/>
 					</include>
 					<include content="PropertyRadiobutton">
 						<param name="description" value="Enable Automatic Updates"/>
@@ -96,15 +108,29 @@
 						<param name="label" value="31943"/>
 						<param name="up" value="1211"/>
 						<param name="down" value="1213"/>
-						<param name="right" value="1202"/>
+						<param name="right" value="1216"/>
 						<param name="posx" value="1-col"/>
 						<param name="posy" value="2-col"/>
 						<param name="width" value="8-col"/>
 					</include>
+					<include content="PropertyButton">
+						<param name="description" value="Run Update"/>
+						<param name="id" value="1216"/>
+						<param name="font" value="symbolLarge"/>
+						<param name="label" value=""/>
+						<param name="up" value="1215"/>
+						<param name="down" value="1213"/>
+						<param name="left" value="1212"/>
+						<param name="right" value="1202"/>
+						<param name="posx" value="10-col"/>
+						<param name="posy" value="2-col"/>
+						<param name="width" value="1-row"/>
+					</include>
 					<include content="PropertyRadiobutton">
 						<param name="description" value="Enable Avahi Service"/>
 						<param name="id" value="1213"/>
-						<param name="label" value="31967"/>
+						<param name="font" value="symbolLarge"/>
+						<param name="label" value=""/>
 						<param name="up" value="1212"/>
 						<param name="down" value="1214"/>
 						<param name="right" value="1202"/>
@@ -117,7 +143,7 @@
 						<param name="id" value="1214"/>
 						<param name="label" value="31968"/>
 						<param name="up" value="1213"/>
-						<param name="down" value="1215"/>
+						<param name="down" value="1221"/>
 						<param name="right" value="1202"/>
 						<param name="posx" value="1-col"/>
 						<param name="posy" value="4-col"/>
@@ -127,24 +153,24 @@
 				<control type="group" id="1202">
 					<include content="PropertyPopupHiddenValue">
 						<param name="description" value="Reset Kodi to Default"/>
-						<param name="id" value="1215"/>
+						<param name="id" value="1221"/>
 						<param name="label" value="31944"/>
 						<param name="up" value="1214"/>
-						<param name="down" value="1216"/>
+						<param name="down" value="1222"/>
 						<param name="left" value="1201"/>
-						<param name="posx" value="12-col"/>
+						<param name="posx" value="13-col"/>
 						<param name="posy" value="1-col"/>
 						<param name="width" value="8-col"/>
 						<param name="dialog" value="none"/>
 					</include>
 					<include content="PropertyPopupHiddenValue">
 						<param name="description" value="Reset System to Default"/>
-						<param name="id" value="1216"/>
+						<param name="id" value="1222"/>
 						<param name="label" value="31945"/>
-						<param name="up" value="1215"/>
+						<param name="up" value="1221"/>
 						<param name="down" value="1211"/>
 						<param name="left" value="1201"/>
-						<param name="posx" value="12-col"/>
+						<param name="posx" value="13-col"/>
 						<param name="posy" value="2-col"/>
 						<param name="width" value="8-col"/>
 						<param name="dialog" value="none"/>

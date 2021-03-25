@@ -22,17 +22,17 @@ class LibraryUpdater(ServiceTask, xbmc.Monitor):
 		self.video = False
 
 
-	def detect(self, arg):
-		if arg is not None and len(arg) == 1:
-			if str(arg[0]).strip().lower() in ('music', 'audio'):
+	def detect(self, args):
+		if args is not None and len(args) == 1:
+			if str(args[0]).strip().lower() in ('music', 'audio'):
 				self.music = True
-			elif str(arg[0]).strip().lower() in ('video', 'movies'):
+			elif str(args[0]).strip().lower() in ('video', 'movies'):
 				self.video = True
 			else:
-				self.music = common.any2bool(arg[0])
-		if arg is not None and len(arg) >= 2:
-			self.music = common.any2bool(arg[0])
-			self.video = common.any2bool(arg[1])
+				self.music = common.any2bool(args[0])
+		if args is not None and len(args) >= 2:
+			self.music = common.any2bool(args[0])
+			self.video = common.any2bool(args[1])
 
 
 	def apply(self):

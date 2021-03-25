@@ -13,7 +13,7 @@ class SystemAccess(WindowTask):
 		self.setPropertyControlCallback(1201)
 		self.setPropertyControlCallback(1202)
 		self.setPropertyControlCallback(1203)
-		sshd_status = self.sys.get_appservice_status("sshd")
+		sshd_status = self.sys.get_appservice_status(self.SSH_SERVICENAME)
 		sshd_disablepasswd = self.sys.get_appservice_option(self.SSH_SERVICENAME, self.SSH_PROP_DISABLEPWAUTH)
 		self.setPropertyControlValue(1202, sshd_status)
 		self.setPropertyControlEnable(1203, sshd_status)

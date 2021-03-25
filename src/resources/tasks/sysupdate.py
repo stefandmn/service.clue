@@ -10,15 +10,24 @@ class SystemUpdater(ServiceTask):
 
 
 	def __init__(self):
+		self.silent = True
 		ServiceTask.__init__(self)
 
 
-	def run(self, *arg):
+	def run(self, *args):
+		params = self.params(args)
+		if "silent" in params:
+			self.silent = self.any2bool(params['silent'])
+		common.setSkinProperty(10000, "SystemUpdate.Running", "true")
 		update = self.sys.check_updates()
 		if update is not None:
 			common.DlgNotificationMsg(32903, time=7500)
 			common.sleep(10)
 			update = self.sys.doanload_updates()
 			if update:
-				self.notice("Reboot system to apply downloaded release update")
-				common.runBuiltinCommand("Reboot")
+				if not self.silent:
+					common.AskRestart(32904)
+				else:
+					self.notice("Reboot system to apply downloaded release update")
+					common.runBuiltinCommand("Reboot")
+		common.setSkinProperty(10000, "SystemUpdate.Running")

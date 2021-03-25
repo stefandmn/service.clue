@@ -24,7 +24,7 @@ class ServiceTask(object):
 
 
 	@abc.abstractmethod
-	def run(self, *arg):
+	def run(self, *args):
 		pass
 
 

@@ -66,6 +66,25 @@ class Maintenance(WindowTask):
 
 
 	def onClick_1215(self):
+		if not self._isrecoveryrunnung():
+			self.setPropertyControlDisable(1215)
+			self.info("Starting system backup process")
+			common.runBuiltinCommand("RunScript", "service.clue", "recovery,mode=backup")
+		else:
+			self.warn("System backup process is already running")
+
+
+	def onClick_1216(self):
+		if not self._isupdaterunnung():
+			self.setPropertyControlDisable(1216)
+			self.info("Starting system update process")
+			common.runBuiltinCommand("RunScript", "service.clue", "sysupdate,silent=off")
+		else:
+			self.warn("System update process is already running")
+
+
+
+	def onClick_1221(self):
 		if self.YesNoDialog(31946):
 			open("%s/reset_kodi" % self.sys.CACHE, 'a').close()
 			self.mark4reboot()
@@ -74,10 +93,18 @@ class Maintenance(WindowTask):
 			self.warn("Soft reset operation has been Cancelled")
 
 
-	def onClick_1216(self):
+	def onClick_1222(self):
 		if self.YesNoDialog(31947):
 			open("%s/reset_clue" % self.sys.CACHE, 'a').close()
 			self.mark4reboot()
 			self.NotificationMsg(31949)
 		else:
 			self.warn("Hard reset operation has been Cancelled")
+
+
+	def _isrecoveryrunnung(self):
+		return self.any2bool(common.getSkinProperty(10000, "SystemRecovery.Running"))
+
+
+	def _isupdaterunnung(self):
+		return self.any2bool(common.getSkinProperty(10000, "SystemUpdate.Running"))

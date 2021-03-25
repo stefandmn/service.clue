@@ -14,8 +14,8 @@ class CecTrigger(ServiceTask):
 	key = "cectrigger"
 
 
-	def run(self, *arg):
-		action = arg[0] if len(arg) > 0 else None
+	def run(self, *args):
+		action = args[0] if len(args) > 0 else None
 		if action is None or action == 'toggle':
 			xbmc.executebuiltin("CECToggleState")
 		elif action == 'start' or action == 'active':

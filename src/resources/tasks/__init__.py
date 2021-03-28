@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __all__ = ['ServiceTask', 'GraphicTask', 'WindowTask',
-		   'LibraryUpdater', 'LibraryCleaner', 'CecTrigger', 'Favourites', 'Recovery',
+		   'LibraryUpdater', 'LibraryCleaner', 'CecTrigger', 'Favourites', 'Recovery', "SystemUpdate"
 		   'SetLabel', 'SetValue', 'SetProperty',
 		   'ClueSetup', 'SystemName', 'SystemAccess', 'Maintenance', 'RemoteScreen',
 		   'Overclocking', 'Memory', 'Licenses', 'FileSharing']
@@ -14,6 +14,7 @@ from resources.tasks.libclean import LibraryCleaner
 from resources.tasks.cectrigger import CecTrigger
 from resources.tasks.favourites import Favourites
 from resources.tasks.recovery import Recovery
+from resources.tasks.sysupdate import SystemUpdate
 from resources.tasks.setlabel import SetLabel
 from resources.tasks.setvalue import SetValue
 from resources.tasks.setproperty import SetProperty

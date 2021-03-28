@@ -5,7 +5,7 @@ from .abcservice import ServiceTask
 
 
 
-class SystemUpdater(ServiceTask):
+class SystemUpdate(ServiceTask):
 	key = "sysupdate"
 
 

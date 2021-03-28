@@ -715,7 +715,7 @@ class Clue(Services):
 
 
 	@property
-	def currentrelease(self):
+	def currentversion(self):
 		try:
 			sysinfo = common.sysinfo()
 			if sysinfo is not None and sysinfo != {}:
@@ -728,7 +728,7 @@ class Clue(Services):
 
 
 	@property
-	def latestrelease(self):
+	def publiclversion(self):
 		try:
 			latest = common.urlcall(self.URLBASE_LATEST, output='json')
 			sysinfo = common.sysinfo()
@@ -745,7 +745,6 @@ class Clue(Services):
 			return None
 
 
-	@property
 	def check_updates(self):
 		device = None
 		system = None
@@ -757,13 +756,11 @@ class Clue(Services):
 				device = sysinfo["DEVICE"]
 				system = sysinfo["VERSION_ID"]
 			if latest is not None and latest != {} and device is not None:
-				latest = latest["devices"][device]["version"]
+				latest = latest["devices"][device]
 		except BaseException as be:
 			self.error("Error checking latest release vs current system version: %s" %str(be))
-		if system is not None and latest is not None and latest > system:
-			latest.update(latest["devices"][device])
-			latest["device"] = device
-			del latest["devices"]
+		if system is not None and latest is not None and "device" in latest and latest["version"] > system:
+			self.debug("New version found version: %s" %str(latest))
 			return latest
 		else:
 			return None
@@ -778,6 +775,7 @@ class Clue(Services):
 				os.makedirs(self.UPDATE)
 			file = os.path.join(self.UPDATE, file)
 			try:
+				self.debug("Downloading new release: %s" %url)
 				data = common.urlcall(url, output='binary')
 				handler = open(file, 'wb')
 				handler.write(data)

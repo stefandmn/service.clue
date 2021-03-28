@@ -13,8 +13,8 @@ class Maintenance(WindowTask):
 		self.setPropertyControlCallback(1212)
 		self.setPropertyControlCallback(1213)
 		self.setPropertyControlCallback(1214)
-		self.setPropertyControlCallback(1215)
-		self.setPropertyControlCallback(1216)
+		self.setPropertyControlCallback(1221)
+		self.setPropertyControlCallback(1222)
 
 
 	def load(self):
@@ -22,8 +22,16 @@ class Maintenance(WindowTask):
 		self.setPropertyControlValue(1212, common.setting("sysupdate"))
 		self.setPropertyControlValue(1213, self.sys.get_appservice_status("avahi-daemon", "avahi"))
 		self.setPropertyControlValue(1214, self.sys.get_appservice_status("cron", "crond"))
-		self.setPropertyControlEnable(1215)
-		self.setPropertyControlEnable(1216)
+		if self._isrecoveryrunnung():
+			self.setPropertyControlDisable(1215)
+		else:
+			self.setPropertyControlEnable(1215)
+		if self._isupdaterunnung():
+			self.setPropertyControlDisable(1216)
+		else:
+			self.setPropertyControlEnable(1216)
+		self.setPropertyControlEnable(1221)
+		self.setPropertyControlEnable(1222)
 
 
 	def onClick_1211(self):
@@ -66,21 +74,33 @@ class Maintenance(WindowTask):
 
 
 	def onClick_1215(self):
-		if not self._isrecoveryrunnung():
-			self.setPropertyControlDisable(1215)
-			self.info("Starting system backup process")
-			common.runBuiltinCommand("RunScript", "service.clue", "recovery,mode=backup")
-		else:
-			self.warn("System backup process is already running")
+		if self.YesNoDialog(31994):
+			if not self._isrecoveryrunnung():
+				self.setPropertyControlDisable(1215)
+				self.info("Starting system backup process")
+				self._lock()
+				common.runBuiltinCommand("RunScript", "service.clue", "service.recovery,mode=backup")
+				while self._isrecoveryrunnung():
+					common.sleep()
+				self._unlock()
+				self.setPropertyControlEnable(1215)
+			else:
+				self.warn("System backup process is already running")
 
 
 	def onClick_1216(self):
-		if not self._isupdaterunnung():
-			self.setPropertyControlDisable(1216)
-			self.info("Starting system update process")
-			common.runBuiltinCommand("RunScript", "service.clue", "sysupdate,silent=off")
-		else:
-			self.warn("System update process is already running")
+		if self.YesNoDialog(31995):
+			if not self._isupdaterunnung():
+				self.setPropertyControlDisable(1216)
+				self.info("Starting system update process")
+				self._lock()
+				common.runBuiltinCommand("RunScript", "service.clue", "service.sysupdate,silent=off")
+				while self._isupdaterunnung():
+					common.sleep()
+				self._unlock()
+				self.setPropertyControlEnable(1216)
+			else:
+				self.warn("System update process is already running")
 
 
 

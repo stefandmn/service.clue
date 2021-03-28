@@ -759,8 +759,8 @@ class Clue(Services):
 				latest = latest["devices"][device]
 		except BaseException as be:
 			self.error("Error checking latest release vs current system version: %s" %str(be))
-		if system is not None and latest is not None and "device" in latest and latest["version"] > system:
-			self.debug("New version found version: %s" %str(latest))
+		if system is not None and latest is not None and latest["version"] > system:
+			self.debug("New version found: %s" %str(latest["version"]))
 			return latest
 		else:
 			return None

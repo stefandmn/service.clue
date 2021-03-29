@@ -100,12 +100,13 @@ class ServiceTask(object):
 		return self.sys.translate(code)
 
 
-	def params(self, *args):
+	def params(self, args):
 		params = {}
-		if len(args) > 1:
-			for i in args:
-				arg = i
-				if arg.startswith('?'):
-					arg = arg[1:]
-				params.update(dict(common.urlparsequery(arg)))
+		for arg in args:
+			if arg.startswith('?'):
+				arg = arg[1:]
+			vars = common.urlparsequery(arg)
+			if vars is not None and len(vars) > 0:
+				for var in vars:
+					params[var[0]] = var[1]
 		return params

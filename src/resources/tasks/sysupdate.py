@@ -18,7 +18,6 @@ class SystemUpdate(ServiceTask):
 		params = self.params(args)
 		if "silent" in params:
 			self.silent = self.any2bool(params['silent'])
-		self.debug("*** TEST silent = %s, params = %s" %(self.silent, str(params)))
 		common.setSkinProperty(10000, "SystemUpdate.Running", "true")
 		update = self.sys.check_updates()
 		if update is not None:
@@ -30,5 +29,5 @@ class SystemUpdate(ServiceTask):
 					common.AskRestart(32904)
 				else:
 					self.notice("Reboot system to apply downloaded release update")
-					#common.runBuiltinCommand("Reboot")
+					common.runBuiltinCommand("Reboot")
 		common.setSkinProperty(10000, "SystemUpdate.Running")

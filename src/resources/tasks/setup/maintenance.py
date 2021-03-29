@@ -80,6 +80,7 @@ class Maintenance(WindowTask):
 				self.info("Starting system backup process")
 				self._lock()
 				common.runBuiltinCommand("RunScript", "service.clue", "service.recovery,mode=backup")
+				common.setSkinProperty(10000, "SystemRecovery.Running", "true")
 				while self._isrecoveryrunnung():
 					common.sleep()
 				self._unlock()
@@ -95,6 +96,7 @@ class Maintenance(WindowTask):
 				self.info("Starting system update process")
 				self._lock()
 				common.runBuiltinCommand("RunScript", "service.clue", "service.sysupdate,silent=off")
+				common.setSkinProperty(10000, "SystemUpdate.Running", "true")
 				while self._isupdaterunnung():
 					common.sleep()
 				self._unlock()
